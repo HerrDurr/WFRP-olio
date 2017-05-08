@@ -6,6 +6,16 @@ class Olio(name: String, race: String) {
   val myCareer = new Career
   
   /*
+   * Returns the current career.
+   */
+  def career = this.myCareer.current
+  
+  /*
+   * Returns the previous career.
+   */
+  def exCareer = this.myCareer.previous
+  
+  /*
    * Returns the creature's known skills and their levels.
    */
   def skills = {
@@ -20,6 +30,8 @@ class Olio(name: String, race: String) {
     
   }
   
-  
+  def weapons {
+    
+  }
   
 }
