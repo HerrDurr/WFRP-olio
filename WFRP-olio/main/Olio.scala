@@ -2,6 +2,11 @@ package main
 
 class Olio(name: String, race: String) {
   
+  val attributes = {
+    Vector("WS","BS","S","T","Ag","Int","WP","Fel","A","W","SB","TB","M","Mag","IP","FP").map(x => (x,0))
+                                                                                         .toMap
+  }
+  
   
   val myCareer = new Career
   
@@ -22,13 +27,6 @@ class Olio(name: String, race: String) {
     
   }
   
-  /*
-   * Returns the creature's known attributes and their levels.
-   */
-  def attributes {
-    
-    
-  }
   
   def weapons {
     
