@@ -1,5 +1,7 @@
 package main
 
+/*KUKKUUU!*/
+
 class Weapon(name: String, staticDmg: Boolean) {
   
   name match {
