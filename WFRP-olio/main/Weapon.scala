@@ -20,9 +20,62 @@ import scala.io.Source
  * etc.
  */
 
-class Weapon(name: String) {
+class Weapon {
+  
+  private var weaponGroup = ""
+  
+  private var weaponName = ""
+  
+  private var staticDmg: Option[Int] = None
+  
+  private var additiveDmg: Option[Int] = None
   
   
+  
+  def name = this.weaponName
+  
+  
+  def changeName(input: String): Unit = {
+    this.weaponName = input
+  }
+  
+  
+  def group = this.weaponGroup
+  
+  
+  def changeGroup(input: String): Unit = {
+    this.weaponGroup = input
+  }
+  
+  
+  /**
+   * The Olio class will call this, giving its own SB as the parameter, and the method will return
+   * the damage rating wrapped in an Option, if the weapon causes damage.
+   */
+  def damage(SB: Int): Option[Int] = {
+    if(this.staticDmg.isDefined)
+      return this.staticDmg
+    if(this.additiveDmg.isDefined)
+      return Option(SB + this.additiveDmg.get)
+    else None
+  }
+  
+  /**
+   * The WeaponIO object will call this method with the damage input from the weapon source file.
+   * There are three possible kinds of weapon damage:
+   * No damage: "-"
+   * Static damage: "n" (n: any lone integer)
+   * Additive damage: "SB + n"
+   */
+  def setDamage(input: String) = {
+    if (input != "-")
+    {
+      if (input.length() <= 3)
+        this.staticDmg = Option(input.trim().toInt)
+      else
+        this.additiveDmg = Option( input.dropWhile( c => c != '+' ).trim().toInt )
+    }    
+  }
   
   
   
