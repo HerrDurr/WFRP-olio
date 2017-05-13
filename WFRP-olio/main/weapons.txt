@@ -1,1 +1,7 @@
-handweapon$1$Ordinary$0$0$$
+Weapon Data File
+
+#Hand Weapon
+Type : Melee
+Group : Ordinary
+Damage : SB
+Qualities : None

@@ -12,7 +12,7 @@ import scala.io.Source
  * 
  * Type : Melee/Ranged
  * Group : 
- * Dmg :
+ * Damage :
  * Qualities :
  * 
  * #Weapon 2 Name
@@ -30,6 +30,7 @@ class Weapon {
   
   private var additiveDmg: Option[Int] = None
   
+  private var range: Option[String] = None
   
   
   def name = this.weaponName
@@ -65,15 +66,18 @@ class Weapon {
    * There are three possible kinds of weapon damage:
    * No damage: "-"
    * Static damage: "n" (n: any lone integer)
-   * Additive damage: "SB + n"
+   * Additive damage: "SB + n" or simply "SB"
    */
   def setDamage(input: String) = {
     if (input != "-")
     {
-      if (input.length() <= 3)
+      if (!input.contains("SB"))
         this.staticDmg = Option(input.trim().toInt)
       else
-        this.additiveDmg = Option( input.dropWhile( c => c != '+' ).trim().toInt )
+        this.additiveDmg = {
+          if (input.length() == 2) Option(0)
+          else Option( input.dropWhile( c => c != '+' ).trim().toInt )
+        }
     }    
   }
   
