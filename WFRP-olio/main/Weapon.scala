@@ -6,9 +6,18 @@ import scala.io.Source
 /**
  * Weapons are stored in the weapons.txt file, which is read by the Weapon class.
  *
- *  The entries of weapons.txt will be in the form:
+ *  The entries of a weapon text file (.txt) will be in the form:
  * 
- * Name$MeleeOrNot$Group$StaticDmg$AdditiveDmg$Qualities
+ * #Weapon 1 Name
+ * 
+ * Type : Melee/Ranged
+ * Group : 
+ * Dmg :
+ * Qualities :
+ * 
+ * #Weapon 2 Name
+ * 
+ * etc.
  */
 
 class Weapon(name: String) {
