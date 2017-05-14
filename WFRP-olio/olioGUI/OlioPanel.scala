@@ -14,14 +14,19 @@ class OlioPanel(olio: Olio) extends BorderPanel {
   
   def topPanel(name: String, race: String, career: String): GridPanel = {
     
-    val tPanel = new GridPanel(1,4)
+    val tPanel = new GridPanel(1,3)
     val nameLabel = new Label(name)
     
-    val rcPanel = new GridPanel(2,1) {
+    val rcPanel = new GridPanel(1,2) {
       val raceLabel = new Label(race)
       val careerLabel = new Label(career)
       contents += raceLabel
       contents += careerLabel
+    }
+    
+    val leftPanel = new GridPanel(2,1) {
+      contents += nameLabel
+      contents += rcPanel
     }
     
     val wfPanel = new GridPanel(2,1) {
@@ -52,8 +57,7 @@ class OlioPanel(olio: Olio) extends BorderPanel {
     
     val nextDayButton = new Button("Next Day")
     
-    tPanel.contents += nameLabel
-    tPanel.contents += rcPanel
+    tPanel.contents += leftPanel
     tPanel.contents += wfPanel
     tPanel.contents += nextDayButton
     tPanel
