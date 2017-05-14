@@ -1,6 +1,6 @@
 package main
 
-class Olio(name: String, race: String) {
+class Olio(val name: String, val race: String) {
   
   
   /*
