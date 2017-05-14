@@ -10,10 +10,10 @@ import scala.io.Source
  * 
  * #Weapon 1 Name
  * 
- * Type : Melee/Ranged
  * Group : 
  * Damage :
- * Qualities :
+ * Range : ("-" or "n/N")
+ * Qualities : a, b, c, d, ...
  * 
  * #Weapon 2 Name
  * 
@@ -30,7 +30,7 @@ class Weapon {
   
   private var additiveDmg: Option[Int] = None
   
-  private var range: Option[String] = None
+  private var weaponRange: Option[String] = None
   
   
   def name = this.weaponName
@@ -61,6 +61,7 @@ class Weapon {
     else None
   }
   
+  
   /**
    * The WeaponIO object will call this method with the damage input from the weapon source file.
    * There are three possible kinds of weapon damage:
@@ -80,6 +81,24 @@ class Weapon {
         }
     }    
   }
+  
+  
+  
+  def isRanged = this.weaponRange.isDefined
+  
+  
+  def range = this.weaponRange.getOrElse("-")
+  
+  
+  
+  def setRange(input: String): Unit = {
+    val x = input.trim()
+    if (x.head != '-') 
+      this.weaponRange = Option(x)
+  }
+  
+  
+  
   
   
   

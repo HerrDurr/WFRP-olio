@@ -1,7 +1,7 @@
 Weapon Data File
 
 #Hand Weapon
-Type : Melee
 Group : Ordinary
 Damage : SB
-Qualities : None
+Range : -
+Qualities : -
