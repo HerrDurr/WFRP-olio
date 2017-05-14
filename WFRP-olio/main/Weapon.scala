@@ -32,6 +32,8 @@ class Weapon {
   
   private var weaponRange: Option[String] = None
   
+  private var weaponQualities: Option[Vector[String]] = None
+  
   
   def name = this.weaponName
   
@@ -99,7 +101,15 @@ class Weapon {
   
   
   
+  def qualities = this.weaponQualities.getOrElse(Vector("-"))
   
+  
+  
+  def setQualities(input: String): Unit = {
+    val x = input.trim()
+    if (x.head != '-')
+      this.weaponQualities = Option(x.split(",").toVector)
+  }
   
   
   /*
