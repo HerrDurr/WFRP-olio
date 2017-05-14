@@ -1,12 +1,14 @@
-package main
+package olioGUI
 
 import scala.swing._
 import scala.swing.event._
 import scala.swing.BorderPanel.Position._
+import main._
 
 object Sheet extends SimpleSwingApplication {
   
   def top = new MainFrame {
+    
     
     this.visible = true
     
@@ -37,7 +39,7 @@ object Sheet extends SimpleSwingApplication {
           
           reactions += {
             case ButtonClicked(woundButton) =>
-              val w = Dialog.showInput(contents.head, "Enter current wounds", initial = "0")
+              val w = Dialog.showInput(contents.head, "Enter current wounds", initial = "")
               w match {
                 case Some(n) => woundButton.text = n
                 case None =>
