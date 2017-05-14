@@ -1,6 +1,7 @@
 package main
 
 import scala.swing._
+import scala.swing.event._
 import scala.swing.BorderPanel.Position._
 
 object Sheet extends SimpleSwingApplication {
@@ -23,12 +24,25 @@ object Sheet extends SimpleSwingApplication {
       
       val wfPanel = new GridPanel(2,1) {
         val woundPanel = new FlowPanel() {
-          val woundField = new TextField("0", 2)
+          val woundButton = new Button("0")
           val woundLabel = new Label("/ 0")
           
+          
+          
           contents += new Label("Wounds: ")
-          contents += woundField
+          contents += woundButton
           contents += woundLabel
+          
+          listenTo(woundButton)
+          
+          reactions += {
+            case ButtonClicked(woundButton) =>
+              val w = Dialog.showInput(contents.head, "Enter current wounds", initial = "0")
+              w match {
+                case Some(n) => woundButton.text = n
+                case None =>
+              }
+          }
         }
         
         val fortuneLabel = new Label("Fortune: 0/0")
