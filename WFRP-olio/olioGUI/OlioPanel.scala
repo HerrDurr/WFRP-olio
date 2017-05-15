@@ -4,6 +4,7 @@ import scala.swing._
 import main._
 import scala.swing.event._
 import scala.swing.BorderPanel.Position._
+import scala.math.max
 
 class OlioPanel(olio: Olio) extends BorderPanel {
   
@@ -50,9 +51,25 @@ class OlioPanel(olio: Olio) extends BorderPanel {
         }
       }
       
-      val fortuneLabel = new Label("Fortune: 0/0")
+      //val fortuneLabel = new Label("Fortune: 0/0")
+      val fortunePanel = new FlowPanel {
+        val fortuneButton = new Button( olio.attributes(15).toString() )
+        val fortuneLabel = new Label( "/ " + olio.attributes(15).toString() )
+        
+        contents += new Label("Fortune: ")
+        contents += fortuneButton
+        contents += fortuneLabel
+        
+        listenTo(fortuneButton)
+        
+        reactions += {
+          case ButtonClicked(fortuneButton) =>
+            fortuneButton.text = max(fortuneButton.text.toInt.-(1), 0).toString
+        }
+      }
+      
       contents += woundPanel
-      contents += fortuneLabel
+      contents += fortunePanel
     }
     
     val nextDayButton = new Button("Next Day")
