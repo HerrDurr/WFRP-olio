@@ -4,22 +4,23 @@ import scala.swing._
 import main._
 import scala.swing.event._
 import scala.swing.BorderPanel.Position._
+import scala.math.max
 
 class OlioPanel(olio: Olio) extends BorderPanel {
   
   
-  val tPanel = this.topPanel(olio.name, olio.race, olio.career)
+  val tPanel = this.topPanel(olio.name, olio.race, olio.myCareer)
   
   this.layout(tPanel) = North
   
-  def topPanel(name: String, race: String, career: String): GridPanel = {
+  def topPanel(name: String, race: String, career: Career): GridPanel = {
     
     val tPanel = new GridPanel(1,3)
     val nameLabel = new Label(name)
+    val raceLabel = new Label(race)
+    val careerLabel = new Label(career.current)
     
     val rcPanel = new GridPanel(1,2) {
-      val raceLabel = new Label(race)
-      val careerLabel = new Label(career)
       contents += raceLabel
       contents += careerLabel
     }
@@ -50,9 +51,25 @@ class OlioPanel(olio: Olio) extends BorderPanel {
         }
       }
       
-      val fortuneLabel = new Label("Fortune: 0/0")
+      //val fortuneLabel = new Label("Fortune: 0/0")
+      val fortunePanel = new FlowPanel {
+        val fortuneButton = new Button( olio.attributes(15).toString() )
+        val fortuneLabel = new Label( "/ " + olio.attributes(15).toString() )
+        
+        contents += new Label("Fortune: ")
+        contents += fortuneButton
+        contents += fortuneLabel
+        
+        listenTo(fortuneButton)
+        
+        reactions += {
+          case ButtonClicked(fortuneButton) =>
+            fortuneButton.text = max(fortuneButton.text.toInt.-(1), 0).toString
+        }
+      }
+      
       contents += woundPanel
-      contents += fortuneLabel
+      contents += fortunePanel
     }
     
     val nextDayButton = new Button("Next Day")
@@ -60,6 +77,26 @@ class OlioPanel(olio: Olio) extends BorderPanel {
     tPanel.contents += leftPanel
     tPanel.contents += wfPanel
     tPanel.contents += nextDayButton
+    
+    
+    tPanel.listenTo(careerLabel.mouse.clicks)
+    
+    tPanel.reactions += {
+      case clickEvent: MouseClicked =>
+        if (clickEvent.clicks > 1) {
+          val input = Dialog.showInput(tPanel, "", initial = careerLabel.text)
+          input match {
+            case Some(n) => {
+              career.change(n)
+              careerLabel.text = n
+            }
+            case None =>
+          }
+        }
+        
+    }
+    
+    
     tPanel
   }
   
