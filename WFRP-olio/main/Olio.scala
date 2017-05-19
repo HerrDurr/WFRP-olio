@@ -22,6 +22,25 @@ class Olio(val name: String, val race: String) {
    */
   def setAttribute(attr: Int, value: Int) = this.attributes(attr) = value
   
+  /**
+   * The following methods can be used to check attribute values.
+   */
+  def weaponSkill = this.attributes(0)
+  def ballisticSkill = this.attributes(1)
+  def strength = this.attributes(2)
+  def toughness = this.attributes(3)
+  def agility = this.attributes(4)
+  def intelligence = this.attributes(5)
+  def willPower = this.attributes(6)
+  def fellowship = this.attributes(7)
+  def attacks = this.attributes(8)
+  def wounds = this.attributes(9)
+  def strengthBonus = this.attributes(10)
+  def toughnessBonus = this.attributes(11)
+  def movement = this.attributes(12)
+  def magic = this.attributes(13)
+  def insanityPoints = this.attributes(14)
+  def fatePoints = this.attributes(15)
   
   /**
    * The following methods can be used to easily set a new value for a specific attribute.
@@ -60,15 +79,7 @@ class Olio(val name: String, val race: String) {
   
   def setFP(value: Int) = this.setAttribute(15, value)
   
-  /**
-   * Returns the current career.
-   */
-  def careerCurrent = this.career.current
   
-  /**
-   * Returns the previous career.
-   */
-  def careerPrevious = this.career.previous
   
   /**
    * Returns the creature's known skills and their levels.

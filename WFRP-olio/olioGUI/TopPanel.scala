@@ -89,6 +89,17 @@ class TopPanel(olio: Olio) extends GridPanel(1, 3) {
       
   }
   
-
-
+  def update() = {
+    this.nameLabel.text = olio.name
+    this.careerLabel.text = olio.career.current
+    this.raceLabel.text = olio.race
+    
+  }
+  
+  def changeCareer(c: String) = ???
+  
+  def changeRace(r: String) = ???
+  
+  def changeName(n: String) = ???
+  
 }
