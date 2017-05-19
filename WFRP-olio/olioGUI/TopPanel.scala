@@ -46,8 +46,8 @@ class TopPanel(olio: Olio) extends GridPanel(1, 3) {
     
     //val fortuneLabel = new Label("Fortune: 0/0")
     val fortunePanel = new FlowPanel {
-      val fortuneButton = new Button( olio.attributes(15).toString() )
-      val fortuneLabel = new Label( "/ " + olio.attributes(15).toString() )
+      val fortuneButton = new Button( olio.attributes.fatePoints.toString() )
+      val fortuneLabel = new Label( "/ " + olio.attributes.fatePoints.toString() )
       
       contents += new Label("Fortune: ")
       contents += fortuneButton
@@ -93,7 +93,7 @@ class TopPanel(olio: Olio) extends GridPanel(1, 3) {
     this.nameLabel.text = olio.name
     this.careerLabel.text = olio.career.current
     this.raceLabel.text = olio.race
-    this.wfPanel.woundPanel.woundLabel.text = olio.wounds.toString()
+    this.wfPanel.woundPanel.woundLabel.text = olio.attributes.wounds.toString()
     this.wfPanel.woundPanel.woundButton.text = olio.currentWounds.toString()
   }
   
