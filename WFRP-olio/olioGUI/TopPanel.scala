@@ -18,7 +18,7 @@ class TopPanel(olio: Olio) extends GridPanel(1, 3) {
     contents += careerLabel
   }
   
-  val lefthis = new GridPanel(2,1) {
+  val leftPanel = new GridPanel(2,1) {
     contents += nameLabel
     contents += rcPanel
   }
@@ -26,7 +26,7 @@ class TopPanel(olio: Olio) extends GridPanel(1, 3) {
   val wfPanel = new GridPanel(2,1) {
     val woundPanel = new FlowPanel() {
       val woundButton = new Button("0")
-      val woundLabel = new Label("/ 0")
+      val woundLabel = new Label("/ " + olio.attributes.wounds)
       
       contents += new Label("Wounds: ")
       contents += woundButton
@@ -44,7 +44,7 @@ class TopPanel(olio: Olio) extends GridPanel(1, 3) {
       }
     }
     
-    //val fortuneLabel = new Label("Fortune: 0/0")
+    
     val fortunePanel = new FlowPanel {
       val fortuneButton = new Button( olio.attributes.fatePoints.toString() )
       val fortuneLabel = new Label( "/ " + olio.attributes.fatePoints.toString() )
@@ -67,12 +67,13 @@ class TopPanel(olio: Olio) extends GridPanel(1, 3) {
   
   val nextDayButton = new Button("Next Day")
   
-  this.contents += lefthis
+  this.contents += leftPanel
   this.contents += wfPanel
   this.contents += nextDayButton
   
   
   this.listenTo(careerLabel.mouse.clicks)
+  this.listenTo(nameLabel.mouse.clicks)
   
   this.reactions += {
     case clickEvent: MouseClicked =>
@@ -81,7 +82,7 @@ class TopPanel(olio: Olio) extends GridPanel(1, 3) {
         input match {
           case Some(n) => {
             career.change(n)
-            careerLabel.text = n
+            this.update()
           }
           case None =>
         }
@@ -93,9 +94,10 @@ class TopPanel(olio: Olio) extends GridPanel(1, 3) {
     this.nameLabel.text = olio.name
     this.careerLabel.text = olio.career.current
     this.raceLabel.text = olio.race
-    this.wfPanel.woundPanel.woundLabel.text = olio.attributes.wounds.toString()
+    this.wfPanel.woundPanel.woundLabel.text = "/ " + olio.attributes.wounds.toString()
     this.wfPanel.woundPanel.woundButton.text = olio.currentWounds.toString()
-    this.wfPanel.fortunePanel.fortuneLabel.text = olio.attributes.fatePoints.toString()
+    this.wfPanel.fortunePanel.fortuneLabel.text = "/ " + olio.attributes.fatePoints.toString()
+    this.wfPanel.fortunePanel.fortuneButton.text = olio.fortunePoints.toString()
   }
   
   def changeCareer(c: String) = {

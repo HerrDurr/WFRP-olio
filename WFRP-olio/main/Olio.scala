@@ -11,10 +11,14 @@ class Olio(n: String, r: String) {
   
   private var woundsLeft = 0
   
+  private var fortuneLeft = 0
+  
   val attributes = new Attributes
   
   val career = new Career
   
+  
+  def fortunePoints = this.fortuneLeft
   
   def race = this.raceChangeable
   
@@ -29,8 +33,15 @@ class Olio(n: String, r: String) {
     this.raceChangeable = rr
   }
   
+  
+  def setFortune(fp: Int) = {
+    this.fortuneLeft = max( 0, min(fp, this.attributes.fatePoints) )
+  }
+  
+  
   this.setName(n) //On setup
   this.setRace(r) //On setup
+  
   
   def currentWounds = this.woundsLeft
   

@@ -37,11 +37,51 @@ class Attributes {
    * WS=0, BS=1, S=2, T=3, Ag=4, Int=5, WP=6, Fel=7,
    * A=8, W=9, SB=10, TB=11, M=12, Mag=13, IP=14, FP=15
    */
-  private def setAttribute(attr: Int, value: Int) = this.values(attr) = value
+  //private def setAttribute(attr: Int, value: Int) = this.values(attr) = value
+  
+  def setAttribute(attr: String, value: Int) = {
+    
+    attr.trim().toLowerCase() match {
+      case "ws" =>
+        this.values(0) = value
+      case "bs" =>
+        this.values(1) = value
+      case "s" =>
+        this.values(2) = value
+        this.values(10) = value % 10
+      case "t" =>
+        this.values(3) = value
+        this.values(11) = value % 10
+      case "ag" =>
+        this.values(4) = value
+      case "int" =>
+        this.values(5) = value
+      case "wp" =>
+        this.values(6) = value
+      case "fel" =>
+        this.values(7) = value
+      case "a" =>
+        this.values(8) = value
+      case "w" =>
+        this.values(9) = value
+      case "m" =>
+        this.values(12) = value
+      case "mag" =>
+        this.values(13) = value
+      case "ip" =>
+        this.values(14) = value
+      case "fp" =>
+        this.values(15) = value
+      case other =>
+        
+    }
+    
+  }
   
   /**
    * The following methods can be used to easily set a new value for a specific attribute.
    */
+  /* NOT IN USE CURRENTLY
   def setWS(value: Int) = this.setAttribute(0, value)
   
   def setBS(value: Int) = this.setAttribute(1, value)
@@ -75,7 +115,7 @@ class Attributes {
   def setIP(value: Int) = this.setAttribute(14, value)
   
   def setFP(value: Int) = this.setAttribute(15, value)
-  
+  */
   
   
   
