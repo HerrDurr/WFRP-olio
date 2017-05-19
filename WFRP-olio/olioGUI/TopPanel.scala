@@ -93,7 +93,8 @@ class TopPanel(olio: Olio) extends GridPanel(1, 3) {
     this.nameLabel.text = olio.name
     this.careerLabel.text = olio.career.current
     this.raceLabel.text = olio.race
-    
+    this.wfPanel.woundPanel.woundLabel.text = olio.wounds.toString()
+    this.wfPanel.woundPanel.woundButton.text = olio.currentWounds.toString()
   }
   
   def changeCareer(c: String) = ???

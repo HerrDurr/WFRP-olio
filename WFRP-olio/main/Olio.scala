@@ -1,5 +1,7 @@
 package main
 
+import scala.math.min
+
 class Olio(val name: String, val race: String) {
   
   
@@ -10,10 +12,18 @@ class Olio(val name: String, val race: String) {
   }
   */
   
+  private var woundsLeft = 0
+  
   val attributes = new Array[Int](16)
   
   
   val career = new Career
+  
+  def currentWounds = this.woundsLeft
+  
+  def setCurrentWounds(w: Int) = {
+    this.woundsLeft = min(w, this.wounds)
+  }
   
   /**
    * Attribute numbering explained:
