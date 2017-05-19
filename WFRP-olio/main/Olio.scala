@@ -13,7 +13,7 @@ class Olio(val name: String, val race: String) {
   val attributes = new Array[Int](16)
   
   
-  val myCareer = new Career
+  val career = new Career
   
   /**
    * Attribute numbering explained:
@@ -63,12 +63,12 @@ class Olio(val name: String, val race: String) {
   /**
    * Returns the current career.
    */
-  def career = this.myCareer.current
+  def careerCurrent = this.career.current
   
   /**
    * Returns the previous career.
    */
-  def exCareer = this.myCareer.previous
+  def careerPrevious = this.career.previous
   
   /**
    * Returns the creature's known skills and their levels.
