@@ -1,28 +1,41 @@
 package main
 
 import scala.math.min
+import scala.math.max
 
-class Olio(val name: String, val race: String) {
+class Olio(n: String, r: String) {
   
+  private var raceChangeable = ""
   
-  /*
-  val attributes = {
-    Vector("WS","BS","S","T","Ag","Int","WP","Fel","A","W","SB","TB","M","Mag","IP","FP").map(x => (x,0))
-                                                                                         .toMap
-  }
-  */
+  private var nameChangeable = ""
   
   private var woundsLeft = 0
   
   val attributes = new Attributes
   
-  
   val career = new Career
+  
+  
+  def race = this.raceChangeable
+  
+  def name = this.nameChangeable
+  
+  def setName(nn: String) = {
+    this.nameChangeable = nn
+  }
+  
+  
+  def setRace(rr: String) = {
+    this.raceChangeable = rr
+  }
+  
+  this.setName(n) //On setup
+  this.setRace(r) //On setup
   
   def currentWounds = this.woundsLeft
   
   def setCurrentWounds(w: Int) = {
-    this.woundsLeft = min(w, this.attributes.wounds)
+    this.woundsLeft = max( 0, min( w, this.attributes.wounds ) )
   }
   
   

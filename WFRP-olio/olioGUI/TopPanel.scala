@@ -95,12 +95,22 @@ class TopPanel(olio: Olio) extends GridPanel(1, 3) {
     this.raceLabel.text = olio.race
     this.wfPanel.woundPanel.woundLabel.text = olio.attributes.wounds.toString()
     this.wfPanel.woundPanel.woundButton.text = olio.currentWounds.toString()
+    this.wfPanel.fortunePanel.fortuneLabel.text = olio.attributes.fatePoints.toString()
   }
   
-  def changeCareer(c: String) = ???
+  def changeCareer(c: String) = {
+    this.olio.career.change(c)
+    this.update()
+  }
   
-  def changeRace(r: String) = ???
+  def changeRace(r: String) = {
+    this.olio.setRace(r)
+    this.update()
+  }
   
-  def changeName(n: String) = ???
+  def changeName(n: String) = {
+    this.olio.setName(n)
+    this.update()
+  }
   
 }
