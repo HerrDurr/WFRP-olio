@@ -7,7 +7,7 @@ import scala.swing.BorderPanel.Position._
 
 class CentrePanel(olio: Olio) extends BorderPanel {
   
-  val attributePanel = new AttributePanel(olio)
+  val attributePanel = new AttributePanel(olio.attributes)
   
   this.layout(attributePanel) = North
   
