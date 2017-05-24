@@ -60,6 +60,7 @@ class TopPanel(olio: Olio) extends GridPanel(1, 3) {
     }
     
     
+    
     val fortunePanel = new FlowPanel {
       val fortuneButton = new Button( olio.attributes.fatePoints.toString() )
       val fortuneLabel = new Label( "/ " + olio.attributes.fatePoints.toString() )
@@ -90,9 +91,11 @@ class TopPanel(olio: Olio) extends GridPanel(1, 3) {
   this.listenTo(careerLabel.mouse.clicks)
   this.listenTo(nameLabel.mouse.clicks)
   this.listenTo(raceLabel.mouse.clicks)
+  this.listenTo(nextDayButton)
   
   this.reactions += {
-    case clickEvent: MouseClicked =>
+    
+    case clickEvent: MouseClicked => {
       if(clickEvent.clicks > 1)
       {
         
@@ -133,7 +136,15 @@ class TopPanel(olio: Olio) extends GridPanel(1, 3) {
         }
         
       }
-        
+    }
+      
+    case ButtonClicked(nextDayButton) => {
+      val wounds = olio.currentWounds
+      if(wounds >= 3)
+        olio.setCurrentWounds(wounds + 1)
+      olio.setFortune(olio.attributes.fatePoints)
+      update()
+    }
       
   }
   
