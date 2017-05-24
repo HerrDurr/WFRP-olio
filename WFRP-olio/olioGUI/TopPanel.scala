@@ -9,22 +9,7 @@ class TopPanel(olio: Olio) extends GridPanel(1, 3) {
   
   val career = olio.career
   
-  val nameLabel = new Label(olio.name) /*{
-    listenTo(this.mouse.clicks)
-    reactions += {
-      case clickEvent: MouseClicked =>
-        if(clickEvent.clicks > 1) {
-          val input = Dialog.showInput(this, "", initial = this.text)
-          input match {
-            case Some(n) => {
-              olio.setName(n)
-              update() /// ÄÄÄÄ how do i do
-          }
-          case None =>
-        }
-        }
-    }
-  }*/
+  val nameLabel = new Label(olio.name)
   val raceLabel = new Label(olio.race)
   val careerLabel = new Label(career.current)
   

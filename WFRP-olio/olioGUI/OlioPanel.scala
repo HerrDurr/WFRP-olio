@@ -10,9 +10,10 @@ class OlioPanel(olio: Olio) extends BorderPanel {
   
   
   val topPanel = new TopPanel(olio)
+  val centrePanel = new CentrePanel(olio)
   
   this.layout(topPanel) = North
-  
+  this.layout(centrePanel) = Center
   
   
   
