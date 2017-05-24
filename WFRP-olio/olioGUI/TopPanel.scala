@@ -9,7 +9,7 @@ class TopPanel(olio: Olio) extends GridPanel(1, 3) {
   
   val career = olio.career
   
-  val nameLabel = new Label(olio.name) {
+  val nameLabel = new Label(olio.name) /*{
     listenTo(this.mouse.clicks)
     reactions += {
       case clickEvent: MouseClicked =>
@@ -24,7 +24,7 @@ class TopPanel(olio: Olio) extends GridPanel(1, 3) {
         }
         }
     }
-  }
+  }*/
   val raceLabel = new Label(olio.race)
   val careerLabel = new Label(career.current)
   
@@ -89,19 +89,51 @@ class TopPanel(olio: Olio) extends GridPanel(1, 3) {
   
   this.listenTo(careerLabel.mouse.clicks)
   this.listenTo(nameLabel.mouse.clicks)
+  this.listenTo(raceLabel.mouse.clicks)
   
   this.reactions += {
     case clickEvent: MouseClicked =>
-      if (clickEvent.clicks > 1) {
-        val input = Dialog.showInput(this, "", initial = careerLabel.text)
-        input match {
-          case Some(n) => {
-            career.change(n)
-            this.update()
+      if(clickEvent.clicks > 1)
+      {
+        
+        if(clickEvent.source == this.careerLabel)
+        {
+          val input = Dialog.showInput(this, "", initial = careerLabel.text)
+          input match {
+            case Some(n) => {
+              career.change(n)
+              this.update()
+            }
+            case None =>
           }
-          case None =>
         }
+        
+        if(clickEvent.source == this.nameLabel) 
+        {
+          val input = Dialog.showInput(this, "", initial = nameLabel.text)
+          input match {
+            case Some(n) => {
+              olio.setName(n)
+              this.update()
+            }
+            case None =>
+          }
+        }
+        
+        if(clickEvent.source == this.raceLabel) 
+        {
+          val input = Dialog.showInput(this, "", initial = raceLabel.text)
+          input match {
+            case Some(n) => {
+              olio.setRace(n)
+              this.update()
+            }
+            case None =>
+          }
+        }
+        
       }
+        
       
   }
   
