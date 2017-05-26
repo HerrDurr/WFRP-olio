@@ -4,7 +4,8 @@ import scala.swing._
 import main._
 import scala.swing.event._
 
-class AttributePanel(attr: Attributes) extends GridPanel(8,4) {
+class AttributePanel(attr: Attributes) extends GridPanel(4,8) {
+  
   
   val wS = new Label("WS")
   val bS = new Label("BS")
@@ -62,11 +63,45 @@ class AttributePanel(attr: Attributes) extends GridPanel(8,4) {
     this.fpLabel.text = this.attr.fatePoints.toString()
   }
   
+  /* ei toimi jostain syystä
   this.contents ++ Set(wS, bS, s, t, ag, int, wP, fel,
                        wsLabel, bsLabel, sLabel, tLabel, agLabel, intLabel, wpLabel, felLabel,
                        a, w, sB, tB, m, mag, iP, fP,
                        aLabel, wLabel, sbLabel, tbLabel, mLabel, magLabel, ipLabel, fpLabel)
+  */
   
+  this.contents += wS
+  this.contents += bS
+  this.contents += s
+  this.contents += t
+  this.contents += ag
+  this.contents += int
+  this.contents += wP
+  this.contents += fel
+  this.contents += wsLabel
+  this.contents += this.bsLabel
+  this.contents += this.sLabel
+  this.contents += this.tLabel
+  this.contents += this.agLabel
+  this.contents += this.intLabel
+  this.contents += this.wpLabel
+  this.contents += this.felLabel
+  this.contents += this.a
+  this.contents += this.w
+  this.contents += this.sB
+  this.contents += this.tB
+  this.contents += this.m
+  this.contents += this.mag
+  this.contents += this.iP
+  this.contents += this.fP
+  this.contents += this.aLabel
+  this.contents += this.wLabel
+  this.contents += this.sbLabel
+  this.contents += this.tbLabel
+  this.contents += this.mLabel
+  this.contents += this.magLabel
+  this.contents += this.ipLabel
+  this.contents += this.fpLabel
   
   this.update()
   

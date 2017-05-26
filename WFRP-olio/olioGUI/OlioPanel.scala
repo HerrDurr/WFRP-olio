@@ -9,6 +9,7 @@ import scala.math.max
 class OlioPanel(olio: Olio) extends BorderPanel {
   
   
+  
   val topPanel = new TopPanel(olio)
   val centrePanel = new CentrePanel(olio)
   
