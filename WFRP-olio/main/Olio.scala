@@ -13,6 +13,8 @@ class Olio(n: String, r: String) {
   
   private var fortuneLeft = 0
   
+  private var weaponList: Array[Option[Weapon]] = Array(None, None)
+  
   val attributes = new Attributes
   
   val career = new Career
@@ -61,12 +63,12 @@ class Olio(n: String, r: String) {
    * Returns the creature's known skills and their levels.
    */
   def skills = {
-    
+    ???
   }
   
   
-  def weapons {
-    
+  def weapons = {
+    this.weaponList
   }
   
 }

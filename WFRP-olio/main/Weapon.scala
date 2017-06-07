@@ -20,7 +20,7 @@ import scala.io.Source
  * etc.
  */
 
-class Weapon {
+class Weapon(weapon: String) {
   
   private var weaponGroup = ""
   

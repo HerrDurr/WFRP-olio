@@ -8,7 +8,7 @@ object WeaponIO {
   
   def loadWeapon(input: Reader) = {
     
-    val weapon = new Weapon
+    //val weapon = new Weapon
     
     
     try {

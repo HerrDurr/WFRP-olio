@@ -57,7 +57,7 @@ class TopPanel(olio: Olio) extends FlowPanel {
   }
   
   val nextDayButton = new Button("Next Day")
-  this.nextDayButton.preferredSize = new Dimension(80, 60)
+  this.nextDayButton.preferredSize = new Dimension(100, 60)
   
   this.contents += leftPanel
   this.contents += wfPanel
