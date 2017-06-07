@@ -13,7 +13,7 @@ class Olio(n: String, r: String) {
   
   private var fortuneLeft = 0
   
-  private var weaponList: Array[Option[Weapon]] = Array(None, None)
+  private var weaponList: Option[Vector[Weapon]] = None
   
   val attributes = new Attributes
   
@@ -55,7 +55,9 @@ class Olio(n: String, r: String) {
   
   
   
-  
+  def weapons = {
+    this.weaponList.getOrElse(Vector(new Weapon("Improvised")))
+  }
   
   
   
@@ -67,8 +69,5 @@ class Olio(n: String, r: String) {
   }
   
   
-  def weapons = {
-    this.weaponList
-  }
   
 }

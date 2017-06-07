@@ -2,6 +2,7 @@ package main
 
 import scala.io.Source
 import olioIO.WeaponIO
+import data._
 
 /*KUKKUUU!*/
 
