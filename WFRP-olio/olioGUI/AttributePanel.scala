@@ -105,4 +105,204 @@ class AttributePanel(attr: Attributes) extends GridPanel(4,8) {
   
   this.update()
   
+  
+  this.listenTo(this.wsLabel.mouse.clicks, this.bsLabel.mouse.clicks, this.sLabel.mouse.clicks, this.tLabel.mouse.clicks,
+                this.agLabel.mouse.clicks, this.intLabel.mouse.clicks, this.wpLabel.mouse.clicks, this.felLabel.mouse.clicks,
+                this.aLabel.mouse.clicks, this.wLabel.mouse.clicks, this.mLabel.mouse.clicks, this.magLabel.mouse.clicks,
+                this.ipLabel.mouse.clicks, this.fpLabel.mouse.clicks)
+  
+  this.reactions += {
+    
+    case clickEvent: MouseClicked => {
+      if(clickEvent.clicks > 1)
+      {
+        
+        //WS
+        if(clickEvent.source == this.wsLabel)
+        {
+          val input = Dialog.showInput(this, "", initial = this.wsLabel.text)
+          input match {
+            case Some(n) => {
+              this.attr.setWS(n.toInt)
+              this.update()
+            }
+            case None =>
+          }
+        }
+        
+        //BS
+        if(clickEvent.source == this.bsLabel)
+        {
+          val input = Dialog.showInput(this, "", initial = this.bsLabel.text)
+          input match {
+            case Some(n) => {
+              this.attr.setBS(n.toInt)
+              this.update()
+            }
+            case None =>
+          }
+        }
+        
+        //S
+        if(clickEvent.source == this.sLabel)
+        {
+          val input = Dialog.showInput(this, "", initial = this.sLabel.text)
+          input match {
+            case Some(n) => {
+              this.attr.setS(n.toInt)
+              this.update()
+            }
+            case None =>
+          }
+        }
+        
+        //T
+        if(clickEvent.source == this.tLabel)
+        {
+          val input = Dialog.showInput(this, "", initial = this.tLabel.text)
+          input match {
+            case Some(n) => {
+              this.attr.setT(n.toInt)
+              this.update()
+            }
+            case None =>
+          }
+        }
+        
+        //Ag
+        if(clickEvent.source == this.agLabel)
+        {
+          val input = Dialog.showInput(this, "", initial = this.agLabel.text)
+          input match {
+            case Some(n) => {
+              this.attr.setAg(n.toInt)
+              this.update()
+            }
+            case None =>
+          }
+        }
+        
+        //Int
+        if(clickEvent.source == this.intLabel)
+        {
+          val input = Dialog.showInput(this, "", initial = this.intLabel.text)
+          input match {
+            case Some(n) => {
+              this.attr.setInt(n.toInt)
+              this.update()
+            }
+            case None =>
+          }
+        }
+        
+        //WP
+        if(clickEvent.source == this.wpLabel)
+        {
+          val input = Dialog.showInput(this, "", initial = this.wpLabel.text)
+          input match {
+            case Some(n) => {
+              this.attr.setWP(n.toInt)
+              this.update()
+            }
+            case None =>
+          }
+        }
+        
+        //Fel
+        if(clickEvent.source == this.felLabel)
+        {
+          val input = Dialog.showInput(this, "", initial = this.felLabel.text)
+          input match {
+            case Some(n) => {
+              this.attr.setFel(n.toInt)
+              this.update()
+            }
+            case None =>
+          }
+        }
+        
+        //A
+        if(clickEvent.source == this.aLabel)
+        {
+          val input = Dialog.showInput(this, "", initial = this.aLabel.text)
+          input match {
+            case Some(n) => {
+              this.attr.setA(n.toInt)
+              this.update()
+            }
+            case None =>
+          }
+        }
+        
+        //W
+        if(clickEvent.source == this.wLabel)
+        {
+          val input = Dialog.showInput(this, "", initial = this.wLabel.text)
+          input match {
+            case Some(n) => {
+              this.attr.setW(n.toInt)
+              this.update()
+            }
+            case None =>
+          }
+        }
+        
+        //M
+        if(clickEvent.source == this.mLabel)
+        {
+          val input = Dialog.showInput(this, "", initial = this.mLabel.text)
+          input match {
+            case Some(n) => {
+              this.attr.setM(n.toInt)
+              this.update()
+            }
+            case None =>
+          }
+        }
+        
+        //Mag
+        if(clickEvent.source == this.magLabel)
+        {
+          val input = Dialog.showInput(this, "", initial = this.magLabel.text)
+          input match {
+            case Some(n) => {
+              this.attr.setMag(n.toInt)
+              this.update()
+            }
+            case None =>
+          }
+        }
+        
+        //IP
+        if(clickEvent.source == this.ipLabel)
+        {
+          val input = Dialog.showInput(this, "", initial = this.ipLabel.text)
+          input match {
+            case Some(n) => {
+              this.attr.setIP(n.toInt)
+              this.update()
+            }
+            case None =>
+          }
+        }
+        
+        //FP
+        if(clickEvent.source == this.fpLabel)
+        {
+          val input = Dialog.showInput(this, "", initial = this.fpLabel.text)
+          input match {
+            case Some(n) => {
+              this.attr.setFP(n.toInt)
+              this.update()
+            }
+            case None =>
+          }
+        }
+        
+      }
+    }
+    
+  }
+  
+  
 }
