@@ -4,6 +4,8 @@ import main._
 import scala.swing._
 import event._
 import scala.math.max
+import java.awt.geom.Dimension2D
+import java.awt.Insets._
 
 class TopPanel(olio: Olio) extends GridPanel(1, 3) {
   
@@ -26,22 +28,14 @@ class TopPanel(olio: Olio) extends GridPanel(1, 3) {
   val wfPanel = new GridPanel(2,1) {
     val woundPanel = new FlowPanel() {
       val woundButton = new Button("0")
+      woundButton.preferredSize = new Dimension(28, 28)
+      woundButton.margin = new Insets(1,1,1,1)
       val woundLabel = new Label("/ " + olio.attributes.wounds)
       
       contents += new Label("Wounds: ")
       contents += woundButton
       contents += woundLabel
       
-      listenTo(woundButton)
-      
-      reactions += {
-        case ButtonClicked(woundButton) =>
-          val w = Dialog.showInput(contents.head, "Enter current wounds", initial = "")
-          w match {
-            case Some(n) => woundButton.text = n
-            case None =>
-          }
-      }
     }
     
     
@@ -49,17 +43,12 @@ class TopPanel(olio: Olio) extends GridPanel(1, 3) {
     val fortunePanel = new FlowPanel {
       val fortuneButton = new Button( olio.attributes.fatePoints.toString() )
       val fortuneLabel = new Label( "/ " + olio.attributes.fatePoints.toString() )
+      fortuneButton.preferredSize = new Dimension(28, 28)
+      fortuneButton.margin = new Insets(1,1,1,1)
       
       contents += new Label("Fortune: ")
       contents += fortuneButton
       contents += fortuneLabel
-      
-      listenTo(fortuneButton)
-      
-      reactions += {
-        case ButtonClicked(fortuneButton) =>
-          fortuneButton.text = max(fortuneButton.text.toInt.-(1), 0).toString
-      }
     }
     
     contents += woundPanel
@@ -77,8 +66,44 @@ class TopPanel(olio: Olio) extends GridPanel(1, 3) {
   this.listenTo(nameLabel.mouse.clicks)
   this.listenTo(raceLabel.mouse.clicks)
   this.listenTo(nextDayButton)
+  this.listenTo(wfPanel.woundPanel.woundButton)
+  this.listenTo(wfPanel.fortunePanel.fortuneButton)
+  
+  
   
   this.reactions += {
+    
+    case clickEvent: ButtonClicked => {
+      
+      if(clickEvent.source == wfPanel.fortunePanel.fortuneButton)
+      {
+        olio.setFortune(max(wfPanel.fortunePanel.fortuneButton.text.toInt.-(1), 0))
+        update()
+      }
+      
+      if(clickEvent.source == wfPanel.woundPanel.woundButton)
+      {
+        val w = Dialog.showInput(contents.head, "Enter current wounds", initial = "")
+        w match {
+          case Some(n) => {
+            olio.setCurrentWounds(n.toInt)
+            update()
+          }
+          case None =>
+        }
+      }
+      
+      if(clickEvent.source == nextDayButton)
+      {
+        val wounds = olio.currentWounds
+        if(wounds >= 3)
+          olio.setCurrentWounds(wounds + 1)
+        olio.setFortune(olio.attributes.fatePoints)
+        update()
+      }
+      
+    }
+    
     
     case clickEvent: MouseClicked => {
       if(clickEvent.clicks > 1)
@@ -123,15 +148,8 @@ class TopPanel(olio: Olio) extends GridPanel(1, 3) {
       }
     }
       
-    case ButtonClicked(nextDayButton) => {
-      val wounds = olio.currentWounds
-      if(wounds >= 3)
-        olio.setCurrentWounds(wounds + 1)
-      olio.setFortune(olio.attributes.fatePoints)
-      update()
-    }
-      
   }
+  
   
   def update() = {
     this.nameLabel.text = olio.name
