@@ -79,12 +79,13 @@ class Weapon(val name: String) {
   def setDamage(input: String) = {
     if (input != "-")
     {
-      if (!input.contains("SB"))
+      if (!input.toLowerCase().contains("sb"))
         this.staticDmg = Option(input.trim().toInt)
       else
         this.additiveDmg = {
           if (input.length() == 2) Option(0)
-          else Option( input.dropWhile( c => c != '+' ).trim().toInt )
+          else if (input.contains('+')) Option( input.dropWhile( c => c != '+' ).tail.trim().toInt )
+          else Option( 0 - input.dropWhile( c => c != '-' ).tail.trim().toInt )
         }
     }    
   }
@@ -117,7 +118,7 @@ class Weapon(val name: String) {
   }
   
   
-  val reader = Source.fromFile("weapons.txt").reader()
+  val reader = Source.fromFile("data/weapons.txt").reader()
   WeaponIO.loadWeapon(reader, this)
   
   

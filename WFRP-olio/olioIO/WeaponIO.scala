@@ -9,7 +9,7 @@ object WeaponIO {
   
   def loadWeapon(input: Reader, weapon: Weapon) = {
     
-    
+    val name = weapon.name.trim().toLowerCase()
     val lineReader = new BufferedReader(input)
     
     try {
@@ -24,9 +24,9 @@ object WeaponIO {
         val weaponName = currentLine.tail.trim().toLowerCase()
         
         //If this is the weapon you're looking for, do things
-        if (weaponName == weapon.name.trim().toLowerCase())
+        if (weaponName == name)
         {
-          
+          currentLine = lineReader.readLine()
           readWeaponData()
           done = true
         }
@@ -41,14 +41,24 @@ object WeaponIO {
       
       
       def readWeaponData() = {
-        while (!currentLine.isEmpty() && currentLine != null && currentLine.head.toChar != '#') {
+        var done = Array(false, false, false, false)
+        while (!done.forall(_ == true) && !currentLine.isEmpty() && currentLine != null && currentLine.head.toChar != '#') {
           val data = splitDataLine(1)
           splitDataLine(0).trim().toLowerCase() match {
-            case "group" => weapon.changeGroup(data.trim())
-            case "damage" => weapon.setDamage(data.trim())
-            case "range" => weapon.setRange(data.trim())
-            case "qualities" => weapon.setQualities(data.trim())
+            case "group" =>
+              weapon.changeGroup(data.trim())
+              done(0) = true
+            case "damage" =>
+              weapon.setDamage(data.trim())
+              done(1) = true
+            case "range" =>
+              weapon.setRange(data.trim())
+              done(2) = true
+            case "qualities" =>
+              weapon.setQualities(data.trim())
+              done(3) = true
           }
+          currentLine = lineReader.readLine()
         }
       }
       
