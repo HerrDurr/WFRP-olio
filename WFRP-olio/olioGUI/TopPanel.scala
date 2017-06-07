@@ -7,9 +7,10 @@ import scala.math.max
 import java.awt.geom.Dimension2D
 import java.awt.Insets._
 
-class TopPanel(olio: Olio) extends GridPanel(1, 3) {
+class TopPanel(olio: Olio) extends FlowPanel {
   
   val career = olio.career
+  
   
   val nameLabel = new Label(olio.name)
   val raceLabel = new Label(olio.race)
@@ -56,6 +57,7 @@ class TopPanel(olio: Olio) extends GridPanel(1, 3) {
   }
   
   val nextDayButton = new Button("Next Day")
+  this.nextDayButton.preferredSize = new Dimension(80, 60)
   
   this.contents += leftPanel
   this.contents += wfPanel

@@ -4,7 +4,7 @@ import scala.swing._
 import main._
 import scala.swing.event._
 
-class AttributePanel(attr: Attributes) extends GridPanel(4,8) {
+class AttributePanel(val attr: Attributes) extends GridPanel(4,8) {
   
   
   val wS = new Label("WS")
@@ -105,7 +105,7 @@ class AttributePanel(attr: Attributes) extends GridPanel(4,8) {
   
   this.update()
   
-  
+  /*
   this.listenTo(this.wsLabel.mouse.clicks, this.bsLabel.mouse.clicks, this.sLabel.mouse.clicks, this.tLabel.mouse.clicks,
                 this.agLabel.mouse.clicks, this.intLabel.mouse.clicks, this.wpLabel.mouse.clicks, this.felLabel.mouse.clicks,
                 this.aLabel.mouse.clicks, this.wLabel.mouse.clicks, this.mLabel.mouse.clicks, this.magLabel.mouse.clicks,
@@ -303,6 +303,6 @@ class AttributePanel(attr: Attributes) extends GridPanel(4,8) {
     }
     
   }
-  
+  */
   
 }
