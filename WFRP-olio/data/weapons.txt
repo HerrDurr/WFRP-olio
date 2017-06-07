@@ -1,7 +1,109 @@
 Weapon Data File
 
+#Buckler
+Group : Parrying
+Damage : SB - 4
+Range : -
+Qualities : Balanced, Defensive, Pummelling
+
+#Dagger
+Group : Ordinary
+Damage : SB-3
+Range : -
+Qualities : -
+
+#Demilance
+Group : Cavalry
+Damage : SB
+Range : -
+Qualities : Fast, Impact, Tiring
+
+#Flail
+Group : Flail
+Damage : SB+1
+Range : -
+Qualities : Impact, Tiring
+
+#Foil
+Group : Fencing
+Damage : SB-2
+Range : -
+Qualities : Fast, Precise
+
+#Gauntlet/Knuckle-duster
+Group : Ordinary
+Damage : SB-3
+Range : -
+Qualities : Pummelling
+
+#Great Weapon
+Group : Two-Handed
+Damage : SB
+Range : -
+Qualities : Impact, Slow
+
+#Halberd
+Group : Two-Handed
+Damage : SB
+Range : -
+Qualities : Special
+
 #Hand Weapon
 Group : Ordinary
 Damage : SB
 Range : -
 Qualities : -
+
+#Improvised
+Group : Ordinary
+Damage : SB - 4
+Range : -
+Qualities : -
+
+#Lance
+Group : Cavalry
+Damage : SB + 1
+Range : -
+Qualities : Fast, Impact, Tiring
+
+#Main Gauche
+Group : Parrying
+Damage : SB - 3
+Range : -
+Qualities : Balanced, Defensive
+
+#Morning Star
+Group : Flail
+Damage : SB
+Range : -
+Qualities : Impact, Tiring
+
+#Quarterstaff
+Group : Ordinary
+Damage : SB-2
+Range : -
+Qualities : Defensive, Pummeling
+
+#Rapier
+Group : Fencing
+Damage : SB-1
+Range : -
+Qualities : Fast
+
+#Shield
+Group : Ordinary
+Damage : SB-2
+Range : -
+Qualities : Defensive, Special
+
+#Spear
+Group : Ordinary
+Damage : SB
+Range : -
+Qualities : Fast
+
+#Sword-breaker
+Group : Parrying
+Damage : SB-3
+Range : -
+Qualities : Balanced, Special
