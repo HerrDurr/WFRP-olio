@@ -20,11 +20,11 @@ import scala.io.Source
  * etc.
  */
 
-class Weapon(weapon: String) {
+class Weapon(val name: String) {
   
   private var weaponGroup = ""
   
-  private var weaponName = ""
+  //private var weaponName = ""
   
   private var staticDmg: Option[Int] = None
   
@@ -35,12 +35,14 @@ class Weapon(weapon: String) {
   private var weaponQualities: Option[Vector[String]] = None
   
   
-  def name = this.weaponName
+  //def name = this.weaponName
   
-  
+  /*
   def changeName(input: String): Unit = {
     this.weaponName = input
   }
+  * 
+  */
   
   
   def group = this.weaponGroup
