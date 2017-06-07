@@ -1,5 +1,7 @@
 package main
+
 import scala.io.Source
+import olioIO.WeaponIO
 
 /*KUKKUUU!*/
 
@@ -112,6 +114,10 @@ class Weapon(val name: String) {
     if (x.head != '-')
       this.weaponQualities = Option(x.split(",").toVector)
   }
+  
+  
+  val reader = Source.fromFile("weapons.txt").reader()
+  WeaponIO.loadWeapon(reader, this)
   
   
   /*
