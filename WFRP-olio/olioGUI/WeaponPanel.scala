@@ -20,6 +20,7 @@ class WeaponPanel extends GridPanel(1, 3) {
   
   this.listenTo(dropMenu.selection)
   
+  
   reactions += {
     case SelectionChanged(dropMenu) =>
       
