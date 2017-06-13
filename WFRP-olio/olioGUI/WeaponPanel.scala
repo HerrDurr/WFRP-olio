@@ -23,6 +23,7 @@ class WeaponPanel extends GridPanel(1, 3) {
   
   reactions += {
     case SelectionChanged(dropMenu) =>
+      val choice = new Weapon(this.dropMenu.selection.item)
       
   }
   
