@@ -60,12 +60,20 @@ class Weapon(val name: String) {
    * The Olio class will call this, giving its own SB as the parameter, and the method will return
    * the damage rating wrapped in an Option, if the weapon causes damage.
    */
-  def damage(SB: Int): Option[Int] = {
+  def damage(owner: Olio): Option[Int] = {
     if(this.staticDmg.isDefined)
       return this.staticDmg
     if(this.additiveDmg.isDefined)
-      return Option(SB + this.additiveDmg.get)
+      return Option(owner.attributes.strengthBonus + this.additiveDmg.get)
     else None
+  }
+  
+  
+  /**
+   * Shows the damage output as text.
+   */
+  def damageText(owner: Olio) = {
+    this.damage(owner).getOrElse('-').toString()
   }
   
   
