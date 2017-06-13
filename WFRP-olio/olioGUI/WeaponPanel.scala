@@ -3,6 +3,8 @@ package olioGUI
 import scala.swing._
 import scala.io.Source
 import olioIO.WeaponIO
+import scala.swing.event._
+import main.Weapon
 
 class WeaponPanel extends GridPanel(1, 3) {
   
@@ -10,5 +12,17 @@ class WeaponPanel extends GridPanel(1, 3) {
   
   val weaponList = WeaponIO.loadNames(reader)
   
+  val dropMenu = new ComboBox(this.weaponList)
+  val damageLabel = new Label("-")
+  val rangeLabel = new Label("-")
+  
+  this.contents += dropMenu
+  
+  this.listenTo(dropMenu.selection)
+  
+  reactions += {
+    case SelectionChanged(dropMenu) =>
+      
+  }
   
 }
