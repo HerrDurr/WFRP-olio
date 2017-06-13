@@ -1,3 +1,13 @@
 Talent data file
 
+#Name
+Attributes : ... (- if none)
+Skills : ... (- if none)
+Other : y/n
+Description : ...
 
+#Acute Hearing
+Attributes : -
+Skills : Perception
+Other : n
+Description : 
