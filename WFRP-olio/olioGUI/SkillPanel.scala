@@ -12,9 +12,7 @@ class SkillPanel(olio: Olio) extends GridPanel(3,1) {
   
   val weapons = olio.weapons
   
-  val reader = Source.fromFile("data/weapons.txt").reader()
   
-  val weaponList = WeaponIO.loadNames(reader)
   
   
   
