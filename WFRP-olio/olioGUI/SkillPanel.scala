@@ -12,9 +12,9 @@ class SkillPanel(olio: Olio) extends GridPanel(3,1) {
   
   val weapons = olio.weapons
   
-  val weapon1 = new WeaponPanel(olio)
-  val weapon2 = new WeaponPanel(olio)
-  val weapon3 = new WeaponPanel(olio)
+  val weapon1 = new WeaponPanel(olio, 0)
+  val weapon2 = new WeaponPanel(olio, 1)
+  val weapon3 = new WeaponPanel(olio, 2)
   
   val weaponGrid = new GridPanel(4, 1) {
     val headers = new GridPanel(1,3) {

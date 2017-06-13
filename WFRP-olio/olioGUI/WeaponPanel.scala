@@ -6,7 +6,9 @@ import olioIO.WeaponIO
 import scala.swing.event._
 import main._
 
-class WeaponPanel(olio: Olio) extends GridPanel(1, 3) {
+class WeaponPanel(olio: Olio, index: Int) extends GridPanel(1, 3) {
+  
+  val weapons = olio.weapons
   
   val reader = Source.fromFile("data/weapons.txt").reader()
   

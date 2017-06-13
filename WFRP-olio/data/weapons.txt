@@ -1,5 +1,11 @@
 Weapon Data File
 
+#None
+Group : -
+Damage : -
+Range : -
+Qualities : -
+
 #Buckler
 Group : Parrying
 Damage : SB - 4
