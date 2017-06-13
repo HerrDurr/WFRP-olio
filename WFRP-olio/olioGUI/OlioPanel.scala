@@ -66,6 +66,7 @@ class OlioPanel(olio: Olio) extends BorderPanel {
             case Some(n) => {
               this.olio.attributes.setS(n.toInt)
               this.attrPanel.update()
+              this.centrePanel.skillPanel.weaponGrid.contents.tail.foreach { panel => panel.asInstanceOf[WeaponPanel].update() }
             }
             case None =>
           }
