@@ -56,6 +56,7 @@ object WeaponIO {
     
   }
   
+  
   def loadWeapon(input: Reader, weapon: Weapon) = {
     
     val name = weapon.name.trim().toLowerCase()
