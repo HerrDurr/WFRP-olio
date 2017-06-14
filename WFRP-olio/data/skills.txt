@@ -1,11 +1,5 @@
 Skill data file
 
-#Name (* if extra parameters)
-Attribute : ...
-Basic : y/n
-Talents : ...
-Description : ...
-
 #Academic Knowledge*
 Attribute : Int
 Basic : n

@@ -35,19 +35,19 @@ object WeaponIO {
     } catch {
       
       case e: IOException =>
-        val weaponsExc = new CorruptedWeaponsFileException("Reading the weapons data failed.")
+        val weaponsExc = new CorruptedDataFileException("Reading the weapons data failed.")
         weaponsExc.initCause(e)
         throw weaponsExc
       case e: NoSuchElementException =>
-        val weaponsExc = new CorruptedWeaponsFileException("A piece of data is missing.")
+        val weaponsExc = new CorruptedDataFileException("A piece of data is missing.")
         weaponsExc.initCause(e)
         throw weaponsExc
       case e: IndexOutOfBoundsException =>
-        val weaponsExc = new CorruptedWeaponsFileException("Reading the weapons data failed (index out of bounds).")
+        val weaponsExc = new CorruptedDataFileException("Reading the weapons data failed (index out of bounds).")
         weaponsExc.initCause(e)
         throw weaponsExc
       case e: IllegalArgumentException =>
-        val weaponsExc = new CorruptedWeaponsFileException("Illegal argument.")
+        val weaponsExc = new CorruptedDataFileException("Illegal argument.")
         weaponsExc.initCause(e)
         throw weaponsExc
     }
@@ -87,7 +87,7 @@ object WeaponIO {
       }
       
       if (!done)
-        throw new CorruptedWeaponsFileException("Corrupted weapons.txt file.")
+        throw new CorruptedDataFileException("Corrupted weapons.txt file.")
       
       
       def readWeaponData() = {
@@ -127,19 +127,19 @@ object WeaponIO {
     } catch {
       
       case e: IOException =>
-        val weaponsExc = new CorruptedWeaponsFileException("Reading the weapons data failed.")
+        val weaponsExc = new CorruptedDataFileException("Reading the weapons data failed.")
         weaponsExc.initCause(e)
         throw weaponsExc
       case e: NoSuchElementException =>
-        val weaponsExc = new CorruptedWeaponsFileException("A piece of data is missing.")
+        val weaponsExc = new CorruptedDataFileException("A piece of data is missing.")
         weaponsExc.initCause(e)
         throw weaponsExc
       case e: IndexOutOfBoundsException =>
-        val weaponsExc = new CorruptedWeaponsFileException("Reading the weapons data failed (index out of bounds).")
+        val weaponsExc = new CorruptedDataFileException("Reading the weapons data failed (index out of bounds).")
         weaponsExc.initCause(e)
         throw weaponsExc
       case e: IllegalArgumentException =>
-        val weaponsExc = new CorruptedWeaponsFileException("Illegal argument.")
+        val weaponsExc = new CorruptedDataFileException("Illegal argument.")
         weaponsExc.initCause(e)
         throw weaponsExc
     }
