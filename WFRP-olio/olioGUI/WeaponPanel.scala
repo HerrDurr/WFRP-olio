@@ -2,7 +2,7 @@ package olioGUI
 
 import scala.swing._
 import scala.io.Source
-import olioIO.WeaponIO
+import olioIO.DataIO
 import scala.swing.event._
 import main._
 
@@ -12,7 +12,7 @@ class WeaponPanel(olio: Olio, index: Int) extends GridPanel(1, 3) {
   
   val reader = Source.fromFile("data/weapons.txt").reader()
   
-  val weaponList = WeaponIO.loadNames(reader)
+  val weaponList = DataIO.loadNames(reader)
   
   val dropMenu = new ComboBox(this.weaponList)
   val damageLabel = new Label("")

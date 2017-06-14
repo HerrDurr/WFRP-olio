@@ -1,7 +1,7 @@
 package main
 
 import scala.io.Source
-import olioIO.WeaponIO
+import olioIO.DataIO
 import data._
 
 /*KUKKUUU!*/
@@ -23,7 +23,7 @@ import data._
  * etc.
  */
 
-class Weapon(val name: String) {
+class Weapon(name: String) extends Loadable(name) {
   
   private var weaponGroup = ""
   
@@ -127,7 +127,7 @@ class Weapon(val name: String) {
   
   
   val reader = Source.fromFile("data/weapons.txt").reader()
-  WeaponIO.loadWeapon(reader, this)
+  DataIO.loadItem(reader, this)
   
   
   /*

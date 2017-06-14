@@ -1,5 +1,5 @@
 package main
 
-class Talent {
+class Talent(name: String) extends Loadable(name) {
   
 }

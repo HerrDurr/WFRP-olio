@@ -1,6 +1,6 @@
 package main
 
-class Skill (n: String){
+class Skill (name: String) extends Loadable(name) {
   
   //Skills can either be Basic skills or Advanced skills
   private var isBasic = true
@@ -11,10 +11,10 @@ class Skill (n: String){
   //Each skill has a governing attribute. This attribute also has a level
   private var attribute = ("",0)
   //Name of the Skill
-  private var name = ""
+  private var n = ""
   
   //The skill's name is given when the skill is created
-  this.name = n
+  this.n = name
   
   /**
    * Returns true, if the skill is a Basic skill, false if the skill is an Advanced Skill
@@ -29,7 +29,7 @@ class Skill (n: String){
   /**
    * Returns skill's name.
    */
-  def skillName = this.name
+  def skillName = this.n
   
   /**
    * Returns the skill's governing attribute's name (a String) and level (an Int).
