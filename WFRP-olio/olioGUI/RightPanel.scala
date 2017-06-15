@@ -6,7 +6,7 @@ import data._
 //import javax.swing.table.DefaultTableModel
 //import collection.mutable.ArrayBuffer
 
-class SkillPanel(olio: Olio) extends GridPanel(3,1) {
+class RightPanel(olio: Olio) extends GridPanel(3,1) {
   
   
   val weapon1 = new WeaponPanel(olio, 0)
@@ -20,9 +20,26 @@ class SkillPanel(olio: Olio) extends GridPanel(3,1) {
     contents += (headers, weapon1, weapon2, weapon3)
   }
   
-  this.contents += weaponGrid
   
+  val skill1 = new Label("-")
+  val skill2 = new Label("-")
+  val skill3 = new Label("-")
+  val skill4 = new Label("-")
+  val skillLabels = Vector(skill1, skill2, skill3, skill4)
+  val skillGrid = new GridPanel(4,1) {
+    skillLabels.foreach(contents += _)
+  }
   
+  this.contents += (weaponGrid, skillGrid)
+  
+  /**
+   * Updates all fields in this Panel.
+   */
+  def update() = {
+    this.weaponGrid.contents.tail.foreach(_.asInstanceOf[WeaponPanel].update())
+    val topSkills = olio.skills.sortBy(_.skillLevel).take(4)
+    skillLabels.foreach( x => x.text = topSkills(skillLabels.indexOf(x)).name )
+  }
   
   
   
