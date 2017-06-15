@@ -2,6 +2,7 @@ package main
 
 import scala.math.min
 import scala.math.max
+import scala.collection.mutable.Buffer
 
 class Olio(n: String, r: String) {
   
@@ -12,6 +13,8 @@ class Olio(n: String, r: String) {
   private var woundsLeft = 0
   
   private var fortuneLeft = 0
+  
+  private val skillBuffer: Buffer[Skill] = Buffer()
   
   val weapons: Array[Weapon] = Array(new Weapon("None"), new Weapon("None"), new Weapon("None"))
   
@@ -62,12 +65,27 @@ class Olio(n: String, r: String) {
   */
   
   
+  /**
+   * Adds a skill to the olio. If the olio already has the skill, sets the skill to trained (+10%).
+   */
+  def addSkill(skill: Skill) = {
+    this.skillBuffer += skill
+  }
+  
   
   /**
-   * Returns the creature's known skills and their levels.
+   * Removes a skill from the olio.
+   */
+  def removeSkill(skill: Skill) = {
+    this.skillBuffer -= skill
+  }
+  
+  
+  /**
+   * Returns the creature's known skills.
    */
   def skills = {
-    ???
+    this.skillBuffer.toVector
   }
   
   

@@ -1,5 +1,7 @@
 package main
 
+import math.min
+
 class Skill (name: String) extends Loadable(name) {
   
   //Skills can either be Basic skills or Advanced skills
@@ -14,9 +16,18 @@ class Skill (name: String) extends Loadable(name) {
   private var n = ""
   //The description of the Skill
   private var descr = ""
+  //Skills can be taken twice for the +10% trained bonus.
+  private var isTrained = false
   
   //The skill's name is given when the skill is created
   this.n = name
+  
+  
+  /**
+   * Returns the name of the skill when calling the object.
+   */
+  override def toString() = this.name
+  
   
   /**
    * Returns true, if the skill is a Basic skill, false if the skill is an Advanced Skill
@@ -48,6 +59,13 @@ class Skill (name: String) extends Loadable(name) {
    */
   def description = this.descr
   
+  
+  /**
+   * Returns true if the skill has been trained (= taken twice).
+   */
+  def trained = this.isTrained
+  
+  
   /**
    * Sets the skill to basic or advanced.
    * @param basic true => basic; false => advanced
@@ -58,10 +76,11 @@ class Skill (name: String) extends Loadable(name) {
   
   
   /**
-   * Set the skill's level to what you want.
+   * Set the skill's level to what you want. This method automatically adds +10 to the level if the skill is trained.
    */
   def setLevel (newLevel: Int) = {
-    this.lvl = newLevel
+    if (this.trained) this.lvl = min(100, newLevel + 10)
+    else this.lvl = newLevel
   }
   
   /**
@@ -72,7 +91,17 @@ class Skill (name: String) extends Loadable(name) {
     newName match {
       case "BS" => id = 1
       case "S" => id = 2
-      //TODO
+      case "T" => id = 3
+      case "Ag" => id = 4
+      case "Int" => id = 5
+      case "WP" => id = 6
+      case "Fel" => id = 7
+      case "A" => id = 8
+      case "W" => id = 9
+      case "M" => id = 12
+      case "Mag" => id = 13
+      case "IP" => id = 14
+      case "FP" => id = 15
     }
     this.attribute = (newName, id)
   }
@@ -81,7 +110,7 @@ class Skill (name: String) extends Loadable(name) {
    * Sets the related talents of the skill.
    */
   def setTalents(talentList: Traversable[String]) = {
-    
+      //TODO: Tee metodi, jonka avulla voi paivittaa skilliin liittyvia talentteja
   }
   
   /**
@@ -89,6 +118,16 @@ class Skill (name: String) extends Loadable(name) {
    */
   def setDescription(input: String) = {
     this.descr = input
+  }
+  
+  /**
+   * Sets the skill to trained or untrained. Also adds 10 to the skill's level if the skill was not already trained.
+   */
+  def setTrained(train: Boolean) = {
+    var alreadyTrained = false
+    if (this.trained) alreadyTrained = true
+    this.isTrained = train
+    this.setLevel(this.skillLevel)
   }
   
   /* Kyseessa Attributen id-numero, jolla sen loytaa
@@ -102,6 +141,6 @@ class Skill (name: String) extends Loadable(name) {
   */
   
   
-  //TODO: Tee metodi, jonka avulla voi paivittaa skilliin liittyvia talentteja
+
   
 }
