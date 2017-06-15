@@ -8,7 +8,9 @@ import data._
 class Skill (name: String) extends Loadable(name) {
   
   //Skills can either be Basic skills or Advanced skills
-  private var isBasic = true
+  private var isBasic = false
+  //Since everyone has basic skills at half level by default, we have to keep track which basic skills have been chosen.
+  private var isTaken = false
   //Talents contains the list of talents which affect the Skill
   private var talents: Option[Vector[Talent]] = None
   //Skill level
@@ -38,6 +40,11 @@ class Skill (name: String) extends Loadable(name) {
    * Returns true, if the skill is a Basic skill, false if the skill is an Advanced Skill
    */
   def skillBasic = this.isBasic
+  
+  /**
+   * Returns true if the Olio has chosen this skill.
+   */
+  def skillTaken = this.isTaken
   
   /**
    * Returns skill's level
@@ -79,6 +86,12 @@ class Skill (name: String) extends Loadable(name) {
     this.isBasic = basic
   }
   
+  /**
+   * Sets a skill as taken or not (required to keep track for basic skills).
+   */
+  def setTaken(taken: Boolean) = {
+    this.isTaken = taken
+  }
   
   /**
    * Set the skill's level to what you want. This method automatically adds +10 to the level if the skill is trained.

@@ -33,7 +33,7 @@ class RightPanel(olio: Olio) extends GridPanel(3,1) {
   this.contents += (weaponGrid, skillGrid)
   
   /**
-   * Updates all fields in this Panel.
+   * Updates all fields in this Panel. Be sure to give the Olio its Skills before using this!
    */
   def update() = {
     this.weaponGrid.contents.tail.foreach(_.asInstanceOf[WeaponPanel].update())
