@@ -21,10 +21,10 @@ class RightPanel(olio: Olio) extends GridPanel(3,1) {
   }
   
   
-  val skill1 = new Label("-")
-  val skill2 = new Label("-")
-  val skill3 = new Label("-")
-  val skill4 = new Label("-")
+  val skill1 = new Label("")
+  val skill2 = new Label("")
+  val skill3 = new Label("")
+  val skill4 = new Label("")
   val skillLabels = Vector(skill1, skill2, skill3, skill4)
   val skillGrid = new GridPanel(4,1) {
     skillLabels.foreach(contents += _)
@@ -38,10 +38,10 @@ class RightPanel(olio: Olio) extends GridPanel(3,1) {
    */
   def update() = {
     this.weaponGrid.contents.tail.foreach(_.asInstanceOf[WeaponPanel].update())
-    val topSkills = olio.skills.sortBy(_.skillLevel).take(4)
+    val topSkills = olio.skills.sortBy(_.skillLevel).takeRight(4)
     skillLabels.foreach {
       x => {
-        val xSkill = topSkills(skillLabels.indexOf(x))
+        val xSkill = topSkills(3 - skillLabels.indexOf(x))
         x.text = ( xSkill.name + " (" + xSkill.skillLevel + ")" )
       }
     }
