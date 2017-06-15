@@ -8,10 +8,12 @@ class Skill (name: String) extends Loadable(name) {
   private var talents: Option[Vector[Talent]] = None
   //Skill level
   private var lvl = 0
-  //Each skill has a governing attribute. This attribute also has a level
+  //Each skill has a governing attribute. This attribute also has an id number
   private var attribute = ("",0)
   //Name of the Skill
   private var n = ""
+  //The description of the Skill
+  private var descr = ""
   
   //The skill's name is given when the skill is created
   this.n = name
@@ -42,6 +44,20 @@ class Skill (name: String) extends Loadable(name) {
   def skillTalents = this.talents
   
   /**
+   * Returns the description of the Skill.
+   */
+  def description = this.descr
+  
+  /**
+   * Sets the skill to basic or advanced.
+   * @param basic true => basic; false => advanced
+   */
+  def setBasic(basic: Boolean) = {
+    this.isBasic = basic
+  }
+  
+  
+  /**
    * Set the skill's level to what you want.
    */
   def setLevel (newLevel: Int) = {
@@ -51,16 +67,39 @@ class Skill (name: String) extends Loadable(name) {
   /**
    * Change the skill's attribute's name and level to new ones.
    */
-  def setAttribute (newName: String, newLevel: Int) = {
-    this.attribute = (newName, newLevel)
+  def setAttribute (newName: String) = {
+    var id = 0
+    newName match {
+      case "BS" => id = 1
+      case "S" => id = 2
+      //TODO
+    }
+    this.attribute = (newName, id)
   }
   
+  /**
+   * Sets the related talents of the skill.
+   */
+  def setTalents(talentList: Traversable[String]) = {
+    
+  }
+  
+  /**
+   * Sets the description of the skill.
+   */
+  def setDescription(input: String) = {
+    this.descr = input
+  }
+  
+  /* Kyseessä Attributen id-numero, jolla sen löytää
   /**
    * Change the skill's attribute's level to a new one.
    */
   def setAttribute (newLevel: Int) = {
     this.attribute = (this.attribute._1, newLevel)
   }
+  * 
+  */
   
   
   //TODO: Tee metodi, jonka avulla voi paivittaa skilliin liittyvia talentteja
