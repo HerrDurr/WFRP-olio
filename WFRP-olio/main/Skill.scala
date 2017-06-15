@@ -94,11 +94,16 @@ class Skill (name: String) extends Loadable(name) {
   }
   
   /**
-   * Set the skill's level to what you want. This method automatically adds +10 to the level if the skill is trained.
+   * Set the skill's level to what you want. This method automatically adds +10 to the level if the skill is trained,
+   * and halves the level of a non-chosen basic skill.
+   * @param newLevel Basically the level of the skill's corresponding Attribute.
    */
-  def setLevel (newLevel: Int) = {
-    if (this.trained) this.lvl = min(100, newLevel + 10)
-    else this.lvl = newLevel
+  def setLevel(newLevel: Int) = {
+    if (isBasic && !isTaken) this.lvl = newLevel / 2
+    else {
+      if (this.trained) this.lvl = min(100, newLevel + 10)
+      else this.lvl = newLevel
+    }
   }
   
   /**
@@ -107,19 +112,12 @@ class Skill (name: String) extends Loadable(name) {
   def setAttribute (newName: String) = {
     var id = 0
     newName match {
-      case "BS" => id = 1
       case "S" => id = 2
       case "T" => id = 3
       case "Ag" => id = 4
       case "Int" => id = 5
       case "WP" => id = 6
       case "Fel" => id = 7
-      case "A" => id = 8
-      case "W" => id = 9
-      case "M" => id = 12
-      case "Mag" => id = 13
-      case "IP" => id = 14
-      case "FP" => id = 15
     }
     this.attribute = (newName, id)
   }
@@ -139,7 +137,8 @@ class Skill (name: String) extends Loadable(name) {
   }
   
   /**
-   * Sets the skill to trained or untrained. Also adds 10 to the skill's level if the skill was not already trained, and vice versa if the training is taken away.
+   * Sets the skill to trained or untrained. Also adds 10 to the skill's level if the skill was not already trained,
+   * and vice versa if the training is taken away.
    */
   def setTrained(train: Boolean) = {
     if (train) {

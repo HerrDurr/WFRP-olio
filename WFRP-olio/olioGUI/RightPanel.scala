@@ -31,6 +31,7 @@ class RightPanel(olio: Olio) extends GridPanel(3,1) {
   }
   
   this.contents += (weaponGrid, skillGrid)
+  this.update()
   
   /**
    * Updates all fields in this Panel. Be sure to give the Olio its Skills before using this!
@@ -38,7 +39,12 @@ class RightPanel(olio: Olio) extends GridPanel(3,1) {
   def update() = {
     this.weaponGrid.contents.tail.foreach(_.asInstanceOf[WeaponPanel].update())
     val topSkills = olio.skills.sortBy(_.skillLevel).take(4)
-    skillLabels.foreach( x => x.text = topSkills(skillLabels.indexOf(x)).name )
+    skillLabels.foreach {
+      x => {
+        val xSkill = topSkills(skillLabels.indexOf(x))
+        x.text = ( xSkill.name + " (" + xSkill.skillLevel + ")" )
+      }
+    }
   }
   
   

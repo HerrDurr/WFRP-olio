@@ -3,6 +3,9 @@ package main
 import scala.math.min
 import scala.math.max
 import scala.collection.mutable.Buffer
+import scala.io.Source
+import olioIO.DataIO
+import data._
 
 class Olio(n: String, r: String) {
   
@@ -22,6 +25,8 @@ class Olio(n: String, r: String) {
   
   val career = new Career
   
+  //Gives the Olio all Basic Skills on creation.
+  DataIO.loadBasicSkills(Source.fromFile("data/skills.txt").reader()).foreach(skillBuffer += _)
   
   def fortunePoints = this.fortuneLeft
   

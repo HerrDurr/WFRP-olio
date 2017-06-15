@@ -12,6 +12,11 @@ class Attributes {
   
   
   /**
+   * Can be used to access the value of a particular Attribute using the id number.
+   */
+  def listValues = values.toVector
+  
+  /**
    * The following methods can be used to check attribute values.
    */
   def weaponSkill = this.values(0)

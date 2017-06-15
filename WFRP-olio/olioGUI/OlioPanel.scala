@@ -65,7 +65,7 @@ class OlioPanel(olio: Olio) extends BorderPanel {
           input match {
             case Some(n) => {
               this.olio.attributes.setS(n.toInt)
-              this.attrPanel.update()
+              this.update()
               this.centrePanel.rightPanel.weaponGrid.contents.tail.foreach { panel => panel.asInstanceOf[WeaponPanel].update() }
             }
             case None =>
@@ -79,7 +79,7 @@ class OlioPanel(olio: Olio) extends BorderPanel {
           input match {
             case Some(n) => {
               this.olio.attributes.setT(n.toInt)
-              this.attrPanel.update()
+              this.update()
             }
             case None =>
           }
@@ -92,7 +92,7 @@ class OlioPanel(olio: Olio) extends BorderPanel {
           input match {
             case Some(n) => {
               this.olio.attributes.setAg(n.toInt)
-              this.attrPanel.update()
+              this.update()
             }
             case None =>
           }
@@ -105,7 +105,7 @@ class OlioPanel(olio: Olio) extends BorderPanel {
           input match {
             case Some(n) => {
               this.olio.attributes.setInt(n.toInt)
-              this.attrPanel.update()
+              this.update()
             }
             case None =>
           }
@@ -118,7 +118,7 @@ class OlioPanel(olio: Olio) extends BorderPanel {
           input match {
             case Some(n) => {
               this.olio.attributes.setWP(n.toInt)
-              this.attrPanel.update()
+              this.update()
             }
             case None =>
           }
@@ -131,7 +131,7 @@ class OlioPanel(olio: Olio) extends BorderPanel {
           input match {
             case Some(n) => {
               this.olio.attributes.setFel(n.toInt)
-              this.attrPanel.update()
+              this.update()
             }
             case None =>
           }
@@ -219,6 +219,20 @@ class OlioPanel(olio: Olio) extends BorderPanel {
         
       }
     }
+  } //End of reactions.
+  
+  
+  /**
+   * Updates the attrPanel and olio's Skills.
+   */
+  def update() = {
+    this.attrPanel.update()
+    this.updateSkills()
+    this.centrePanel.rightPanel.update()
+  }
+  
+  def updateSkills() = {
+    this.olio.skills.foreach { x => x.setLevel(olio.attributes.listValues(x.skillAttribute._2)) }
   }
                 
 }

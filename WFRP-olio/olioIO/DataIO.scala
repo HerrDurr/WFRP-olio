@@ -5,11 +5,13 @@ import java.io.IOException
 import java.io.Reader
 import main._
 import scala.collection.mutable.Buffer
-import scala.io.Source
 
 object DataIO {
   
   
+  /**
+   * Loads all basic skills in the input reader file. Returns the skills in a Vector.
+   */
   def loadBasicSkills(input: Reader) = {
     
     val lineReader = new BufferedReader(input)
@@ -213,19 +215,19 @@ object DataIO {
         var done = Array(false, false, false, false)
         val skill = item.asInstanceOf[Skill]
         while (!done.forall(_ == true) && !currentLine.isEmpty() && currentLine != null && currentLine.head.toChar != '#') {
-          val data = splitDataLine(1)
-          splitDataLine(0).trim().toLowerCase() match {
+          val splitLine = splitDataLine
+          splitLine(0).trim().toLowerCase() match {
             case "attribute" =>
-              skill.setAttribute(data.trim())
+              skill.setAttribute(splitLine(1).trim())
               done(0) = true
             case "basic" =>
-              skill.setBasic("y" == data.trim())
+              skill.setBasic("y" == splitLine(1).trim())
               done(1) = true
             case "talents" =>
-              skill.setTalents( data.split(",").map( _.trim() ) )
+              skill.setTalents( splitLine(1).split(",").map( _.trim() ) )
               done(2) = true
             case "description" =>
-              skill.setDescription(readDescription(data))
+              skill.setDescription(readDescription)
               done(3) = true
           }
           currentLine = lineReader.readLine()
@@ -245,9 +247,9 @@ object DataIO {
        * Reads the description of a .txt file. Give the current line (the beginning) as the parameter.
        * Returns the entire description once the block of text is finished.
        */
-      def readDescription(current: String) = {
+      def readDescription = {
         currentLine = lineReader.readLine()
-        var result = current
+        var result = ""
         var done = false
         while (!done && currentLine != null) {
           result += currentLine
