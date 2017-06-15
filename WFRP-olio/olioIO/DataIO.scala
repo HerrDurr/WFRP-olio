@@ -5,8 +5,76 @@ import java.io.IOException
 import java.io.Reader
 import main._
 import scala.collection.mutable.Buffer
+import scala.io.Source
 
 object DataIO {
+  
+  
+  def loadBasicSkills(input: Reader) = {
+    
+    val lineReader = new BufferedReader(input)
+    val basics: Buffer[Skill] = Buffer()
+    
+    try {
+      
+      var currentLine = lineReader.readLine()
+      
+      findBlock()
+      
+      while (currentLine != null) {
+        
+        val name = currentLine.tail
+        var isBasic = false
+        
+        currentLine = lineReader.readLine()
+        
+        while (!isBasic && currentLine != null && !currentLine.isEmpty() && currentLine.head != '#') {
+          val split = currentLine.split(":")
+          if (split(0).trim().toLowerCase() == "basic" && split(1).trim().toLowerCase() == "y")
+            isBasic = true
+          currentLine = lineReader.readLine()
+        }
+        
+        if (isBasic) basics += new Skill(name)
+        
+        findBlock()
+      }
+      
+      /**
+      * Finds the next block of data that starts with a #.
+      */
+      def findBlock() = {
+        var done = false
+        while (!done && currentLine != null) {
+          currentLine = lineReader.readLine()
+          if (currentLine != null && !currentLine.isEmpty() && currentLine.head.toChar == '#') done = true
+        }
+      }
+      
+    } catch {
+      
+      case e: IOException =>
+        val dataException = new CorruptedDataFileException("Reading the data failed.")
+        dataException.initCause(e)
+        throw dataException
+      case e: NoSuchElementException =>
+        val dataException = new CorruptedDataFileException("A piece of data is missing.")
+        dataException.initCause(e)
+        throw dataException
+      case e: IndexOutOfBoundsException =>
+        val dataException = new CorruptedDataFileException("Reading the data failed (index out of bounds).")
+        dataException.initCause(e)
+        throw dataException
+      case e: IllegalArgumentException =>
+        val dataException = new CorruptedDataFileException("Illegal argument.")
+        dataException.initCause(e)
+        throw dataException
+    }
+    
+    basics.toVector
+    
+  }
+  
   
   /**
    * Used to load the names of all items in a .txt file. A name is recognized as what comes after a '#' -character.
