@@ -1,6 +1,9 @@
 package main
 
 import math.min
+import scala.io.Source
+import olioIO.DataIO
+import data._
 
 class Skill (name: String) extends Loadable(name) {
   
@@ -21,7 +24,9 @@ class Skill (name: String) extends Loadable(name) {
   
   //The skill's name is given when the skill is created
   this.n = name
-  
+  //The skills stats are loaded from data.
+  val reader = Source.fromFile("data/skills.txt").reader()
+  DataIO.loadItem(reader, this)
   
   /**
    * Returns the name of the skill when calling the object.
@@ -121,14 +126,25 @@ class Skill (name: String) extends Loadable(name) {
   }
   
   /**
-   * Sets the skill to trained or untrained. Also adds 10 to the skill's level if the skill was not already trained.
+   * Sets the skill to trained or untrained. Also adds 10 to the skill's level if the skill was not already trained, and vice versa if the training is taken away.
    */
   def setTrained(train: Boolean) = {
-    var alreadyTrained = false
-    if (this.trained) alreadyTrained = true
-    this.isTrained = train
-    this.setLevel(this.skillLevel)
+    if (train) {
+      if (!this.trained) {
+        this.isTrained = train
+        this.setLevel(this.skillLevel)
+      }
+    } else {
+      if (this.trained) {
+        this.isTrained = train
+        this.setLevel(this.skillLevel - 10)
+      }
+    }
   }
+  
+  
+  
+  
   
   /* Kyseessa Attributen id-numero, jolla sen loytaa
   /**
