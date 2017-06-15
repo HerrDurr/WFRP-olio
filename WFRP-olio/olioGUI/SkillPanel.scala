@@ -3,8 +3,6 @@ package olioGUI
 import main._
 import scala.swing._
 import data._
-import scala.io.Source
-import olioIO.WeaponIO
 //import javax.swing.table.DefaultTableModel
 //import collection.mutable.ArrayBuffer
 

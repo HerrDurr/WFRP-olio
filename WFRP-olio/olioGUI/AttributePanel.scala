@@ -63,13 +63,13 @@ class AttributePanel(val attr: Attributes) extends GridPanel(4,8) {
     this.fpLabel.text = this.attr.fatePoints.toString()
   }
   
-  /* ei toimi jostain syystä
-  this.contents ++ Set(wS, bS, s, t, ag, int, wP, fel,
+  
+  this.contents += (wS, bS, s, t, ag, int, wP, fel,
                        wsLabel, bsLabel, sLabel, tLabel, agLabel, intLabel, wpLabel, felLabel,
                        a, w, sB, tB, m, mag, iP, fP,
                        aLabel, wLabel, sbLabel, tbLabel, mLabel, magLabel, ipLabel, fpLabel)
-  */
   
+  /*
   this.contents += wS
   this.contents += bS
   this.contents += s
@@ -102,6 +102,8 @@ class AttributePanel(val attr: Attributes) extends GridPanel(4,8) {
   this.contents += this.magLabel
   this.contents += this.ipLabel
   this.contents += this.fpLabel
+  * 
+  */
   
   this.update()
   

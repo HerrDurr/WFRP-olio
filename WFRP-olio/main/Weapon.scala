@@ -24,6 +24,7 @@ import data._
  */
 
 class Weapon(name: String) extends Loadable(name) {
+
   
   private var weaponGroup = ""
   

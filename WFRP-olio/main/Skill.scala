@@ -91,7 +91,7 @@ class Skill (name: String) extends Loadable(name) {
     this.descr = input
   }
   
-  /* Kyseessä Attributen id-numero, jolla sen löytää
+  /* Kyseessa Attributen id-numero, jolla sen loytaa
   /**
    * Change the skill's attribute's level to a new one.
    */

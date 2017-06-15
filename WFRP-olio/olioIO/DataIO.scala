@@ -157,8 +157,7 @@ object DataIO {
               skill.setTalents( data.split(",").map( _.trim() ) )
               done(2) = true
             case "description" =>
-              
-              skill.setDescription(data)
+              skill.setDescription(readDescription(data))
               done(3) = true
           }
           currentLine = lineReader.readLine()
@@ -174,9 +173,20 @@ object DataIO {
       }
       
       
+      /**
+       * Reads the description of a .txt file. Give the current line (the beginning) as the parameter.
+       * Returns the entire description once the block of text is finished.
+       */
       def readDescription(current: String) = {
         currentLine = lineReader.readLine()
-        
+        var result = current
+        var done = false
+        while (!done && currentLine != null) {
+          result += currentLine
+          currentLine = lineReader.readLine()
+          if (currentLine.trim().isEmpty() || currentLine.head == '#') done = true
+        }
+        result
       }
       
       
