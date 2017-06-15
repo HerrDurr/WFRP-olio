@@ -3,6 +3,7 @@ package olioGUI
 import main._
 import scala.swing._
 import data._
+import event._
 //import javax.swing.table.DefaultTableModel
 //import collection.mutable.ArrayBuffer
 
@@ -26,12 +27,25 @@ class RightPanel(olio: Olio) extends GridPanel(3,1) {
   val skill3 = new Label("")
   val skill4 = new Label("")
   val skillLabels = Vector(skill1, skill2, skill3, skill4)
-  val skillGrid = new GridPanel(4,1) {
+  
+  //Pressing this button shows all skills, which have tickboxes next to them so they can be picked and trained in.
+  val skillsButton = new Button("Skills")
+  
+  val skillGrid = new GridPanel(5,1) {
     skillLabels.foreach(contents += _)
+    contents += skillsButton
   }
   
   this.contents += (weaponGrid, skillGrid)
   this.update()
+  
+  this.listenTo(skillsButton)
+  
+  this.reactions += {
+    case clickEvent: ButtonClicked => {
+      
+    }
+  }
   
   /**
    * Updates all fields in this Panel. Be sure to give the Olio its Skills before using this!
