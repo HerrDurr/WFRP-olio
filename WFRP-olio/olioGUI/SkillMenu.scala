@@ -27,6 +27,6 @@ class SkillMenu(olio: Olio) extends BoxPanel(Orientation.Vertical) {
   
   //contents += knownSkills
   
-  olio.skills.foreach( s => contents += new SkillSelector(olio, s) )
+  olio.allSkills.foreach( s => contents += new SkillSelector(olio, s) )
   
 }

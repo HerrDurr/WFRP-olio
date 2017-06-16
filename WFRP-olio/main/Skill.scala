@@ -90,17 +90,17 @@ class Skill (name: String) extends Loadable(name) {
   }
   
   /**
-   * Set the skill's level to what you want. This method automatically adds skill mastery,
+   * Set the skill's level to what you want. This method automatically adds skill mastery, sets a non-chosen advanced skill at 0,
    * and halves the level of a non-chosen basic skill.
    * @param newLevel Basically the level of the skill's corresponding Attribute.
    */
   def setLevel(newLevel: Int) = {
     if (isBasic && gainedCount == 0) this.lvl = newLevel / 2
-    else {
+    else if (gainedCount > 0) {
       if (this.gainedCount == 2) this.lvl = min(100, newLevel + 10)
       else if (this.gainedCount == 3) this.lvl = min(100, newLevel + 20)
       else this.lvl = newLevel
-    }
+    } else this.lvl = 0
   }
   
   /**

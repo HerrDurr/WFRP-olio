@@ -115,6 +115,16 @@ class Olio(n: String, r: String) {
     this.skillBuffer.toVector
   }
   
+  /*
+  /**
+   * Checks if the Olio knows the Skill given as parameter
+   */
+  def hasSkill(skill: Skill) = {
+    this.skills.contains(skill)
+  }
+  * 
+  */
+  
   
   
 }

@@ -6,11 +6,11 @@ import main.Skill
 import javax.swing.SpinnerListModel
 import javax.swing.JSpinner
 
-class SkillSelector (olio: Olio, skill: Skill) extends /*GridPanel(1, 3)*/ BoxPanel(Orientation.Horizontal) {
+class SkillSelector (olio: Olio, skill: Skill) extends GridPanel(1, 3) {
   
-  this.contents += new Label("MOI TESTI123")
+  //this.contents += new Label("MOI TESTI123")
   
-  /*
+  
   val nameLabel = new Label(skill.name + " (" + skill.skillAttribute._1 + ")")
   
   val skillOptions: Array[Object]  = Array("-", "X", "+10", "+20")
@@ -25,7 +25,6 @@ class SkillSelector (olio: Olio, skill: Skill) extends /*GridPanel(1, 3)*/ BoxPa
   
   this.contents += (nameLabel, spinner, levelLabel)
   //this.contents += (nameLabel, selector, levelLabel)
-   * 
-   */
+  
   
 }
