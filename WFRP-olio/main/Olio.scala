@@ -27,9 +27,21 @@ class Olio(n: String, r: String) {
   
   val career = new Career
   
+ 
+  
+  /**
+   * A Vector containing all possible Skills.
+   */
+  val allSkills = {
+    val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
+    DataIO.loadNames(Source.fromFile("data/skills.txt")(decoder).reader()).map( new Skill(_) )
+  }
+  
+  //OLD IMPLEMENTATION   DataIO.loadBasicSkills(Source.fromFile("data/skills.txt")(decoder).reader()).foreach(skillBuffer += _)
+  
   //Gives the Olio all Basic Skills on creation.
-  val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
-  DataIO.loadBasicSkills(Source.fromFile("data/skills.txt")(decoder).reader()).foreach(skillBuffer += _)
+  this.allSkills.filter(_.skillBasic).foreach(this.skillBuffer += _)
+  
   
   def fortunePoints = this.fortuneLeft
   

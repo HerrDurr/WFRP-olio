@@ -8,7 +8,7 @@ import scala.collection.mutable.Buffer
 
 object DataIO {
   
-  
+  /*
   /**
    * Loads all basic skills in the input reader file. Returns the skills in a Vector.
    */
@@ -76,6 +76,7 @@ object DataIO {
     basics.toVector
     
   }
+  */
   
   
   /**

@@ -2,16 +2,18 @@ package olioGUI
 
 import scala.swing._
 import main.Olio
-import scala.io.Source
+/*import scala.io.Source
 import scala.io.Codec
 import java.nio.charset.CodingErrorAction
 import olioIO.DataIO
+* 
+*/
 
-class SkillMenu(olio: Olio) extends PopupMenu {
+class SkillMenu(olio: Olio) extends BoxPanel(Orientation.Vertical) {
   
-  val knownSkills = new ListView[Component]
+  //val knownSkills = new ListView[Component]
   //olio.skills.foreach( x => contents += new Label(x.name + " (" + x.skillLevel + ")") )
-  knownSkills.listData = olio.skills.map( s => new SkillSelector(olio, s) )
+  //knownSkills.listData = olio.skills.map( s => new SkillSelector(olio, s) )
   
   
   /*
@@ -23,6 +25,8 @@ class SkillMenu(olio: Olio) extends PopupMenu {
   * 
   */
   
-  contents += knownSkills
+  //contents += knownSkills
+  
+  olio.skills.foreach( s => contents += new SkillSelector(olio, s) )
   
 }

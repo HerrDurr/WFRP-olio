@@ -4,6 +4,7 @@ import main._
 import scala.swing._
 import data._
 import event._
+import javax.swing.JFrame
 
 //import javax.swing.table.DefaultTableModel
 //import collection.mutable.ArrayBuffer
@@ -55,7 +56,18 @@ class RightPanel(olio: Olio) extends GridPanel(3,1) {
   this.reactions += {
     case clickEvent: ButtonClicked => {
       val skillMenu = new SkillMenu(olio)
-      skillMenu.visible = true
+      
+      val frame = new Frame
+      frame.title = olio.name + "'s Skills"
+      frame.contents = skillMenu
+      frame.visible = true
+      /*
+      val frame = new JFrame("Skills")
+      frame add skillMenu.peer
+      frame setSize (200, 100)
+      frame setVisible true
+      * 
+      */
       //val skillFrame = new swing.PopupMenu {
         //visible = true
         //contents += skillPopup
