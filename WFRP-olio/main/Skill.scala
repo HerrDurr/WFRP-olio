@@ -1,6 +1,7 @@
 package main
 
 import math.min
+import math.max
 import scala.io.Source
 import scala.io.Codec
 import java.nio.charset.CodingErrorAction
@@ -11,8 +12,8 @@ class Skill (name: String) extends Loadable(name) {
   
   //Skills can either be Basic skills or Advanced skills
   private var isBasic = false
-  //Since everyone has basic skills at half level by default, we have to keep track which basic skills have been chosen.
-  private var isTaken = false
+  //Due to basic skills and skill mastery (+10 and +20 at subsequent picks), a counter for the times the skill has been chosen is needed.
+  private var gainedCount = 0
   //Talents contains the list of talents which affect the Skill
   private var talents: Option[Vector[Talent]] = None
   //Skill level
@@ -23,8 +24,6 @@ class Skill (name: String) extends Loadable(name) {
   private var n = ""
   //The description of the Skill
   private var descr = ""
-  //Skills can be taken twice for the +10% trained bonus.
-  private var isTrained = false
   
   //The skill's name is given when the skill is created
   this.n = name
@@ -47,7 +46,7 @@ class Skill (name: String) extends Loadable(name) {
   /**
    * Returns true if the Olio has chosen this skill.
    */
-  def skillTaken = this.isTaken
+  def timesGained = this.gainedCount
   
   /**
    * Returns skill's level
@@ -76,12 +75,6 @@ class Skill (name: String) extends Loadable(name) {
   
   
   /**
-   * Returns true if the skill has been trained (= taken twice).
-   */
-  def trained = this.isTrained
-  
-  
-  /**
    * Sets the skill to basic or advanced.
    * @param basic true => basic; false => advanced
    */
@@ -92,19 +85,20 @@ class Skill (name: String) extends Loadable(name) {
   /**
    * Sets a skill as taken or not (required to keep track for basic skills).
    */
-  def setTaken(taken: Boolean) = {
-    this.isTaken = taken
+  def setGained(times: Int) = {
+    this.gainedCount = min(3, max(0, times))
   }
   
   /**
-   * Set the skill's level to what you want. This method automatically adds +10 to the level if the skill is trained,
+   * Set the skill's level to what you want. This method automatically adds skill mastery,
    * and halves the level of a non-chosen basic skill.
    * @param newLevel Basically the level of the skill's corresponding Attribute.
    */
   def setLevel(newLevel: Int) = {
-    if (isBasic && !isTaken) this.lvl = newLevel / 2
+    if (isBasic && gainedCount == 0) this.lvl = newLevel / 2
     else {
-      if (this.trained) this.lvl = min(100, newLevel + 10)
+      if (this.gainedCount == 2) this.lvl = min(100, newLevel + 10)
+      else if (this.gainedCount == 3) this.lvl = min(100, newLevel + 20)
       else this.lvl = newLevel
     }
   }
@@ -140,21 +134,33 @@ class Skill (name: String) extends Loadable(name) {
   }
   
   /**
-   * Sets the skill to trained or untrained. Also adds 10 to the skill's level if the skill was not already trained,
-   * and vice versa if the training is taken away.
+   * Trains or untrains the the skill (timesGained 0 - 3). Also uses setLevel to keep track of the effect.
+   * @param train Set to true if you are increasing the training level, false if you are decreasing it.
    */
-  def setTrained(train: Boolean) = {
-    if (train) {
-      if (!this.trained) {
-        this.isTrained = train
-        this.setLevel(this.skillLevel)
+  def train(train: Boolean) = {
+    
+    if (train) { //If the skill is taken/mastered
+      
+      if (this.timesGained < 1) {
+        this.setGained(1)
+      } else if (this.timesGained == 1) {
+        this.setGained(2)
+      } else if (this.timesGained == 2) {
+        this.setGained(3)
       }
-    } else {
-      if (this.trained) {
-        this.isTrained = train
-        this.setLevel(this.skillLevel - 10)
+      
+      this.setLevel(this.skillLevel)
+      
+    } else { //If the skill is taken away or its mastery weakened (for UX purposes)
+      
+      if (this.timesGained > 0) {
+        this.setGained(this.timesGained - 1)
+        if (this.timesGained == 0) this.setLevel(this.skillLevel)
+        else this.setLevel(this.skillLevel - 10)
       }
+      
     }
+    
   }
   
   
