@@ -61,6 +61,7 @@ class RightPanel(olio: Olio) extends GridPanel(3,1) {
       frame.title = olio.name + "'s Skills"
       frame.contents = skillMenu
       frame.visible = true
+      frame.setLocationRelativeTo(this)
       /*
       val frame = new JFrame("Skills")
       frame add skillMenu.peer
