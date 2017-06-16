@@ -9,7 +9,7 @@ import olioIO.DataIO
 * 
 */
 
-class SkillMenu(olio: Olio) extends BoxPanel(Orientation.Vertical) {
+class SkillMenu(olio: Olio) extends BoxPanel(Orientation.Horizontal) {
   
   //val knownSkills = new ListView[Component]
   //olio.skills.foreach( x => contents += new Label(x.name + " (" + x.skillLevel + ")") )
@@ -26,7 +26,21 @@ class SkillMenu(olio: Olio) extends BoxPanel(Orientation.Vertical) {
   */
   
   //contents += knownSkills
+  val skillN = olio.allSkills.length
+  val lPanel = new BoxPanel(Orientation.Vertical)
+  val cPanel = new BoxPanel(Orientation.Vertical)
+  val rPanel = new BoxPanel(Orientation.Vertical)
   
-  olio.allSkills.foreach( s => contents += new SkillSelector(olio, s) )
+  val lSkills = olio.allSkills.take(skillN / 3 + 1)
+  val cSkills = olio.allSkills.drop(skillN / 3 + 1).take(skillN / 3 + 1)
+  val rSkills = olio.allSkills.drop(skillN / 3 * 2 + 2)
+  
+  lSkills.foreach( s => lPanel.contents += new SkillSelector(olio, s) )
+  cSkills.foreach( s => cPanel.contents += new SkillSelector(olio, s) )
+  rSkills.foreach( s => rPanel.contents += new SkillSelector(olio, s) )
+  
+  this.contents += (lPanel, cPanel, rPanel)
+  
+  //olio.allSkills.foreach( s => contents += new SkillSelector(olio, s) )
   
 }
