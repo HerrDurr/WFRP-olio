@@ -41,14 +41,6 @@ class Weapon(name: String) extends Loadable(name) {
   private var weaponQualities: Option[Vector[String]] = None
   
   
-  //def name = this.weaponName
-  
-  /*
-  def changeName(input: String): Unit = {
-    this.weaponName = input
-  }
-  * 
-  */
   
   
   def group = this.weaponGroup
