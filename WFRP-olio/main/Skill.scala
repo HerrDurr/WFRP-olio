@@ -2,6 +2,8 @@ package main
 
 import math.min
 import scala.io.Source
+import scala.io.Codec
+import java.nio.charset.CodingErrorAction
 import olioIO.DataIO
 import data._
 
@@ -27,7 +29,8 @@ class Skill (name: String) extends Loadable(name) {
   //The skill's name is given when the skill is created
   this.n = name
   //The skills stats are loaded from data.
-  val reader = Source.fromFile("data/skills.txt").reader()
+  val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
+  val reader = Source.fromFile("data/skills.txt")(decoder).reader()
   DataIO.loadItem(reader, this)
   
   /**

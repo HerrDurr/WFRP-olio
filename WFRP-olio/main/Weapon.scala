@@ -1,6 +1,8 @@
 package main
 
 import scala.io.Source
+import scala.io.Codec
+import java.nio.charset.CodingErrorAction
 import olioIO.DataIO
 import data._
 
@@ -127,7 +129,8 @@ class Weapon(name: String) extends Loadable(name) {
   }
   
   
-  val reader = Source.fromFile("data/weapons.txt").reader()
+  val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
+  val reader = Source.fromFile("data/weapons.txt")(decoder).reader()
   DataIO.loadItem(reader, this)
   
   
