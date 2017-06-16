@@ -255,7 +255,7 @@ object DataIO {
         while (!done && currentLine != null) {
           result += currentLine
           currentLine = lineReader.readLine()
-          if (currentLine.trim().isEmpty() || currentLine.head == '#') done = true
+          if (currentLine == null || currentLine.trim().isEmpty() || currentLine.head == '#') done = true
         }
         result
       }
