@@ -9,9 +9,9 @@ import olioIO.DataIO
 
 class SkillMenu(olio: Olio) extends PopupMenu {
   
-  val knownSkills = new ListView[String]
+  val knownSkills = new ListView[Component]
   //olio.skills.foreach( x => contents += new Label(x.name + " (" + x.skillLevel + ")") )
-  knownSkills.listData = olio.skills.map( x => x.name + " (" + x.skillLevel + ")" )
+  knownSkills.listData = olio.skills.map( s => new SkillSelector(olio, s) )
   
   
   /*
