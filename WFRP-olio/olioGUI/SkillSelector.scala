@@ -13,17 +13,19 @@ class SkillSelector (olio: Olio, skill: Skill) extends FlowPanel {
   
   
   val nameLabel = new Label(skill.name + " (" + skill.skillAttribute._1 + ")")
-  nameLabel.preferredSize = new Dimension(180, 14)
+  nameLabel.preferredSize = new Dimension(170, 14)
   
   val skillOptions: Array[Object]  = Array("-", "X", "+10", "+20")
   
   val skillModel = new SpinnerListModel(skillOptions)
   
   val spinner = Component.wrap(new JSpinner(skillModel))
+  spinner.preferredSize = new Dimension(40, 18)
   
   //val selector = new ComboBox(skillOptions)
   
   val levelLabel = new Label(skill.skillLevel.toString())
+  levelLabel.preferredSize = new Dimension(40, 18)
   
   this.contents += (nameLabel, spinner, levelLabel)
   //this.contents += (nameLabel, selector, levelLabel)
