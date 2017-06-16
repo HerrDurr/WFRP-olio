@@ -54,7 +54,7 @@ class RightPanel(olio: Olio) extends GridPanel(3,1) {
   
   this.reactions += {
     case clickEvent: ButtonClicked => {
-      val skillMenu = new SkillMenu
+      val skillMenu = new SkillMenu(olio)
       skillMenu.visible = true
       //val skillFrame = new swing.PopupMenu {
         //visible = true
