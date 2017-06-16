@@ -4,6 +4,7 @@ import main._
 import scala.swing._
 import data._
 import event._
+
 //import javax.swing.table.DefaultTableModel
 //import collection.mutable.ArrayBuffer
 
@@ -36,6 +37,16 @@ class RightPanel(olio: Olio) extends GridPanel(3,1) {
     contents += skillsButton
   }
   
+  /*
+  val skillPopup = new ListView {
+    val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
+    val reader = Source.fromFile("data/skills.txt")(decoder).reader()
+    DataIO.loadNames(reader).foreach(contents += new Label(_))
+  }
+  * 
+  */
+  
+  
   this.contents += (weaponGrid, skillGrid)
   this.update()
   
@@ -43,7 +54,12 @@ class RightPanel(olio: Olio) extends GridPanel(3,1) {
   
   this.reactions += {
     case clickEvent: ButtonClicked => {
-      
+      val skillMenu = new SkillMenu
+      skillMenu.visible = true
+      //val skillFrame = new swing.PopupMenu {
+        //visible = true
+        //contents += skillPopup
+      //}
     }
   }
   
