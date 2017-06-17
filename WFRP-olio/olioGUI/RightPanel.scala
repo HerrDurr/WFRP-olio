@@ -29,7 +29,7 @@ class RightPanel(olioPanel: OlioPanel) extends GridPanel(3,1) {
   val skillLabels = Vector(skill1, skill2, skill3, skill4)
   
   //Pressing this button shows all skills, which have tickboxes next to them so they can be picked and trained in.
-  val skillsButton = new Button("Skills")
+  val skillsButton = new Button("All Skills")
   
   val skillGrid = new GridPanel(5,1) {
     skillLabels.foreach(contents += _)
