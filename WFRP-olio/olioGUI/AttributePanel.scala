@@ -4,8 +4,9 @@ import scala.swing._
 import main._
 import scala.swing.event._
 
-class AttributePanel(val attr: Attributes) extends GridPanel(4,8) {
+class AttributePanel(olioPanel: OlioPanel) extends GridPanel(4,8) {
   
+  val attr = olioPanel.olio.attributes
   
   val wS = new Label("WS")
   val bS = new Label("BS")
@@ -69,49 +70,11 @@ class AttributePanel(val attr: Attributes) extends GridPanel(4,8) {
                        a, w, sB, tB, m, mag, iP, fP,
                        aLabel, wLabel, sbLabel, tbLabel, mLabel, magLabel, ipLabel, fpLabel)
   
-  /*
-  this.contents += wS
-  this.contents += bS
-  this.contents += s
-  this.contents += t
-  this.contents += ag
-  this.contents += int
-  this.contents += wP
-  this.contents += fel
-  this.contents += wsLabel
-  this.contents += this.bsLabel
-  this.contents += this.sLabel
-  this.contents += this.tLabel
-  this.contents += this.agLabel
-  this.contents += this.intLabel
-  this.contents += this.wpLabel
-  this.contents += this.felLabel
-  this.contents += this.a
-  this.contents += this.w
-  this.contents += this.sB
-  this.contents += this.tB
-  this.contents += this.m
-  this.contents += this.mag
-  this.contents += this.iP
-  this.contents += this.fP
-  this.contents += this.aLabel
-  this.contents += this.wLabel
-  this.contents += this.sbLabel
-  this.contents += this.tbLabel
-  this.contents += this.mLabel
-  this.contents += this.magLabel
-  this.contents += this.ipLabel
-  this.contents += this.fpLabel
-  * 
-  */
   
   this.update()
   
-  /*
-  this.listenTo(this.wsLabel.mouse.clicks, this.bsLabel.mouse.clicks, this.sLabel.mouse.clicks, this.tLabel.mouse.clicks,
-                this.agLabel.mouse.clicks, this.intLabel.mouse.clicks, this.wpLabel.mouse.clicks, this.felLabel.mouse.clicks,
-                this.aLabel.mouse.clicks, this.wLabel.mouse.clicks, this.mLabel.mouse.clicks, this.magLabel.mouse.clicks,
-                this.ipLabel.mouse.clicks, this.fpLabel.mouse.clicks)
+  this.contents.foreach( lbl => this.listenTo(lbl.mouse.clicks) )
+  
   
   this.reactions += {
     
@@ -126,7 +89,7 @@ class AttributePanel(val attr: Attributes) extends GridPanel(4,8) {
           input match {
             case Some(n) => {
               this.attr.setWS(n.toInt)
-              this.update()
+              olioPanel.update()
             }
             case None =>
           }
@@ -139,7 +102,7 @@ class AttributePanel(val attr: Attributes) extends GridPanel(4,8) {
           input match {
             case Some(n) => {
               this.attr.setBS(n.toInt)
-              this.update()
+              olioPanel.update()
             }
             case None =>
           }
@@ -152,7 +115,8 @@ class AttributePanel(val attr: Attributes) extends GridPanel(4,8) {
           input match {
             case Some(n) => {
               this.attr.setS(n.toInt)
-              this.update()
+              olioPanel.update()
+              olioPanel.centrePanel.rightPanel.weaponGrid.contents.tail.foreach { panel => panel.asInstanceOf[WeaponPanel].update() }
             }
             case None =>
           }
@@ -165,7 +129,7 @@ class AttributePanel(val attr: Attributes) extends GridPanel(4,8) {
           input match {
             case Some(n) => {
               this.attr.setT(n.toInt)
-              this.update()
+              olioPanel.update()
             }
             case None =>
           }
@@ -178,7 +142,7 @@ class AttributePanel(val attr: Attributes) extends GridPanel(4,8) {
           input match {
             case Some(n) => {
               this.attr.setAg(n.toInt)
-              this.update()
+              olioPanel.update()
             }
             case None =>
           }
@@ -191,7 +155,7 @@ class AttributePanel(val attr: Attributes) extends GridPanel(4,8) {
           input match {
             case Some(n) => {
               this.attr.setInt(n.toInt)
-              this.update()
+              olioPanel.update()
             }
             case None =>
           }
@@ -204,7 +168,7 @@ class AttributePanel(val attr: Attributes) extends GridPanel(4,8) {
           input match {
             case Some(n) => {
               this.attr.setWP(n.toInt)
-              this.update()
+              olioPanel.update()
             }
             case None =>
           }
@@ -217,7 +181,7 @@ class AttributePanel(val attr: Attributes) extends GridPanel(4,8) {
           input match {
             case Some(n) => {
               this.attr.setFel(n.toInt)
-              this.update()
+              olioPanel.update()
             }
             case None =>
           }
@@ -230,7 +194,7 @@ class AttributePanel(val attr: Attributes) extends GridPanel(4,8) {
           input match {
             case Some(n) => {
               this.attr.setA(n.toInt)
-              this.update()
+              olioPanel.update()
             }
             case None =>
           }
@@ -243,7 +207,8 @@ class AttributePanel(val attr: Attributes) extends GridPanel(4,8) {
           input match {
             case Some(n) => {
               this.attr.setW(n.toInt)
-              this.update()
+              olioPanel.update()
+              olioPanel.topPanel.update()
             }
             case None =>
           }
@@ -256,7 +221,7 @@ class AttributePanel(val attr: Attributes) extends GridPanel(4,8) {
           input match {
             case Some(n) => {
               this.attr.setM(n.toInt)
-              this.update()
+              olioPanel.update()
             }
             case None =>
           }
@@ -269,7 +234,7 @@ class AttributePanel(val attr: Attributes) extends GridPanel(4,8) {
           input match {
             case Some(n) => {
               this.attr.setMag(n.toInt)
-              this.update()
+              olioPanel.update()
             }
             case None =>
           }
@@ -282,7 +247,7 @@ class AttributePanel(val attr: Attributes) extends GridPanel(4,8) {
           input match {
             case Some(n) => {
               this.attr.setIP(n.toInt)
-              this.update()
+              olioPanel.update()
             }
             case None =>
           }
@@ -295,7 +260,8 @@ class AttributePanel(val attr: Attributes) extends GridPanel(4,8) {
           input match {
             case Some(n) => {
               this.attr.setFP(n.toInt)
-              this.update()
+              olioPanel.update()
+              olioPanel.topPanel.update()
             }
             case None =>
           }
@@ -305,6 +271,6 @@ class AttributePanel(val attr: Attributes) extends GridPanel(4,8) {
     }
     
   }
-  */
+  
   
 }
