@@ -12,6 +12,9 @@ class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
   //this.contents += new Label("MOI TESTI123")
   val olio = olioPanel.olio
   
+  val nonSelFont = new Font("Arial", 0, 12)
+  val selFont = new Font("Arial", java.awt.Font.BOLD, 12)
+  
   val nameLabel = new Label(skill.name + " (" + skill.skillAttribute._1 + ")")
   nameLabel.preferredSize = new Dimension(170, 14)
   
@@ -24,7 +27,7 @@ class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
   
   //val selector = new ComboBox(skillOptions)
   
-  val levelLabel = new Label(skill.skillLevel.toString())
+  val levelLabel = new Label("")
   levelLabel.preferredSize = new Dimension(40, 18)
   
   this.contents += (nameLabel, spinner, levelLabel)
@@ -37,6 +40,13 @@ class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
   
   def update() = {
     this.levelLabel.text = skill.skillLevel.toString()
+    if (olio.hasSkill(skill)) {
+      this.nameLabel.font = selFont
+      this.levelLabel.font = selFont
+    } else {
+      this.nameLabel.font = nonSelFont
+      this.levelLabel.font = nonSelFont
+    }
   }
   
   
@@ -62,5 +72,8 @@ class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
     }
     
   }
+  
+  
+  this.update()
   
 }

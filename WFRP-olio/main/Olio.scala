@@ -103,16 +103,9 @@ class Olio(n: String, r: String) {
     if (alreadyHere.isDefined)
     {
       val existingSkill = alreadyHere.get
-      val isBasic = existingSkill.skillBasic
-      val timesGained = existingSkill.timesGained
       
-      if (!isBasic)
-      {
-        existingSkill.train(false)
-        if (timesGained == 0) this.skillBuffer -= existingSkill
-      } else {
-        existingSkill.train(false)
-      }
+      existingSkill.train(false)
+      if (!existingSkill.skillBasic && existingSkill.timesGained == 0) this.skillBuffer -= existingSkill
       
     }
   }
@@ -125,15 +118,13 @@ class Olio(n: String, r: String) {
     this.skillBuffer.toVector
   }
   
-  /*
+  
   /**
    * Checks if the Olio knows the Skill given as parameter
    */
   def hasSkill(skill: Skill) = {
     this.skills.contains(skill)
   }
-  * 
-  */
   
   
   
