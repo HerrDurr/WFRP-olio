@@ -37,5 +37,10 @@ class SkillMenu(olioPanel: OlioPanel) extends BoxPanel(Orientation.Horizontal) {
   
   this.contents += (lPanel, cPanel, rPanel)
   
+  def update() = {
+    lPanel.contents.foreach(_.asInstanceOf[SkillSelector].update())
+    cPanel.contents.foreach(_.asInstanceOf[SkillSelector].update())
+    rPanel.contents.foreach(_.asInstanceOf[SkillSelector].update())
+  }
   
 }

@@ -96,7 +96,8 @@ class Skill (name: String) extends Loadable(name) {
    */
   def setLevel(newLevel: Int) = {
     if (isBasic && gainedCount == 0) this.lvl = newLevel / 2
-    else if (gainedCount > 0) {
+    else if (gainedCount > 0)
+    {
       if (this.gainedCount == 2) this.lvl = min(100, newLevel + 10)
       else if (this.gainedCount == 3) this.lvl = min(100, newLevel + 20)
       else this.lvl = newLevel
@@ -141,6 +142,7 @@ class Skill (name: String) extends Loadable(name) {
     
     if (train) { //If the skill is taken/mastered
       
+      /*
       if (this.timesGained < 1) {
         this.setGained(1)
       } else if (this.timesGained == 1) {
@@ -148,16 +150,19 @@ class Skill (name: String) extends Loadable(name) {
       } else if (this.timesGained == 2) {
         this.setGained(3)
       }
+      * 
+      */
+      this.setGained(this.timesGained + 1)
       
       this.setLevel(this.skillLevel)
       
     } else { //If the skill is taken away or its mastery weakened (for UX purposes)
       
-      if (this.timesGained > 0) {
-        this.setGained(this.timesGained - 1)
-        if (this.timesGained == 0) this.setLevel(this.skillLevel)
-        else this.setLevel(this.skillLevel - 10)
-      }
+      this.setGained(this.timesGained - 1)
+      
+      if (this.timesGained == 2) this.setLevel(this.skillLevel - 20)
+      else if (this.timesGained == 1) this.setLevel(this.skillLevel - 10)
+      else this.setLevel(this.skillLevel)
       
     }
     

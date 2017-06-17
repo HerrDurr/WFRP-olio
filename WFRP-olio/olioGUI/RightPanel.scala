@@ -50,13 +50,13 @@ class RightPanel(olioPanel: OlioPanel) extends GridPanel(3,1) {
   
   
   this.contents += (weaponGrid, skillGrid)
-  this.update()
   
   this.listenTo(skillsButton)
   
+  val skillMenu = new SkillMenu(olioPanel)
+  
   this.reactions += {
     case clickEvent: ButtonClicked => {
-      val skillMenu = new SkillMenu(olioPanel)
       
       val frame = new Frame
       frame.title = olio.name + "'s Skills"
@@ -71,6 +71,7 @@ class RightPanel(olioPanel: OlioPanel) extends GridPanel(3,1) {
    */
   def update() = {
     this.weaponGrid.contents.tail.foreach(_.asInstanceOf[WeaponPanel].update())
+    this.skillMenu.update()
     val topSkills = olio.skills.sortBy(_.skillLevel).takeRight(4)
     skillLabels.foreach {
       x => {
@@ -81,5 +82,6 @@ class RightPanel(olioPanel: OlioPanel) extends GridPanel(3,1) {
   }
   
   
+  this.update()
   
 }
