@@ -7,10 +7,10 @@ import javax.swing.SpinnerListModel
 import java.awt.geom.Dimension2D
 import scala.swing.event.ValueChanged
 
-class SkillSelector (olio: Olio, skill: Skill) extends FlowPanel {
+class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
   
   //this.contents += new Label("MOI TESTI123")
-  
+  val olio = olioPanel.olio
   
   val nameLabel = new Label(skill.name + " (" + skill.skillAttribute._1 + ")")
   nameLabel.preferredSize = new Dimension(170, 14)

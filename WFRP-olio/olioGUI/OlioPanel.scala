@@ -6,12 +6,12 @@ import scala.swing.event._
 import scala.swing.BorderPanel.Position._
 import scala.math.max
 
-class OlioPanel(olio: Olio) extends BorderPanel {
+class OlioPanel(val olio: Olio) extends BorderPanel {
   
   
   
   val topPanel = new TopPanel(olio)
-  val centrePanel = new CentrePanel(olio, this)
+  val centrePanel = new CentrePanel(this)
   val attrPanel = this.centrePanel.attributePanel
   
   this.layout(topPanel) = North

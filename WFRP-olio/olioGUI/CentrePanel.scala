@@ -5,11 +5,12 @@ import main._
 import scala.swing.event._
 import scala.swing.BorderPanel.Position._
 
-class CentrePanel(olio: Olio, olioPanel: OlioPanel) extends BorderPanel {
+class CentrePanel(olioPanel: OlioPanel) extends BorderPanel {
   
   
-  val attributePanel = new AttributePanel(olio.attributes)
-  val rightPanel = new RightPanel(olio, olioPanel)
+  
+  val attributePanel = new AttributePanel(olioPanel.olio.attributes)
+  val rightPanel = new RightPanel(olioPanel)
   
   this.layout(attributePanel) = North
   this.layout(rightPanel) = East
