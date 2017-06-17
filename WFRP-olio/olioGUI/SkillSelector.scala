@@ -4,7 +4,6 @@ import scala.swing._
 import main.Olio
 import main.Skill
 import javax.swing.SpinnerListModel
-import javax.swing.JSpinner
 import java.awt.geom.Dimension2D
 
 class SkillSelector (olio: Olio, skill: Skill) extends FlowPanel {
@@ -19,7 +18,7 @@ class SkillSelector (olio: Olio, skill: Skill) extends FlowPanel {
   
   val skillModel = new SpinnerListModel(skillOptions)
   
-  val spinner = Component.wrap(new JSpinner(skillModel))
+  val spinner = new Spinner(skillModel)
   spinner.preferredSize = new Dimension(40, 18)
   
   //val selector = new ComboBox(skillOptions)
