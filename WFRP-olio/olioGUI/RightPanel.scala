@@ -17,11 +17,8 @@ class RightPanel(olioPanel: OlioPanel) extends GridPanel(3,1) {
   val weapon2 = new WeaponPanel(olio, 1)
   val weapon3 = new WeaponPanel(olio, 2)
   
-  val weaponGrid = new GridPanel(4, 1) {
-    val headers = new GridPanel(1,3) {
-      contents += (new Label("Weapon"), new Label("Damage"), new Label("Range"))
-    }
-    contents += (headers, weapon1, weapon2, weapon3)
+  val weaponGrid = new GridPanel(3, 1) {
+    contents += (weapon1, weapon2, weapon3)
   }
   
   

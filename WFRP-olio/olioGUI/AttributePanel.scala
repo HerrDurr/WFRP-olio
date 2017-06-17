@@ -116,7 +116,7 @@ class AttributePanel(olioPanel: OlioPanel) extends GridPanel(4,8) {
             case Some(n) => {
               this.attr.setS(n.toInt)
               olioPanel.update()
-              olioPanel.centrePanel.rightPanel.weaponGrid.contents.tail.foreach { panel => panel.asInstanceOf[WeaponPanel].update() }
+              olioPanel.centrePanel.rightPanel.weaponGrid.contents.foreach { panel => panel.asInstanceOf[WeaponPanel].update() }
             }
             case None =>
           }

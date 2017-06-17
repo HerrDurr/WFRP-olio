@@ -8,7 +8,7 @@ import olioIO.DataIO
 import scala.swing.event._
 import main._
 
-class WeaponPanel(olio: Olio, index: Int) extends GridPanel(1, 3) {
+class WeaponPanel(olio: Olio, index: Int) extends BoxPanel(Orientation.Horizontal) {
   
   private var weapon = olio.weapons(index)
   
@@ -17,8 +17,10 @@ class WeaponPanel(olio: Olio, index: Int) extends GridPanel(1, 3) {
   val weaponList = DataIO.loadNames(reader)
   
   val dropMenu = new ComboBox(this.weaponList)
-  val damageLabel = new Label("")
-  val rangeLabel = new Label("")
+  val damageLabel = new Label("Dmg: ")
+  damageLabel.preferredSize = new Dimension(50, 28)
+  val rangeLabel = new Label("Rng: ")
+  rangeLabel.preferredSize = new Dimension(50, 28)
   this.update()
   this.dropMenu.selection.item = weapon.name
   
@@ -34,8 +36,8 @@ class WeaponPanel(olio: Olio, index: Int) extends GridPanel(1, 3) {
   }
   
   def update() = {
-    damageLabel.text = weapon.damageText(olio)
-    rangeLabel.text = weapon.range
+    damageLabel.text = "Dmg: " + weapon.damageText(olio)
+    rangeLabel.text = "Rng: " + weapon.range
   }
   
 }
