@@ -34,7 +34,7 @@ class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
   this.contents += (nameLabel, levelLabel, spinner)
   //this.contents += (nameLabel, selector, levelLabel)
   
-  this.listenTo(spinner, this.mouse.moves)
+  this.listenTo(spinner, this.mouse.moves, nameLabel.mouse.clicks)
   
   private var previousValue = spinner.value.toString()
   
@@ -70,6 +70,17 @@ class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
           olioPanel.attrPanel.contents.find(c => c.isInstanceOf[Label] && c.asInstanceOf[Label].text == skill.skillAttribute._1).get,
           false
           )
+    }
+    
+    case clickEvent: MouseClicked => {
+      if (clickEvent.clicks > 1) {
+        var message = skill.name + " (" + skill.skillAttribute._1 + "): " + skill.skillLevel +
+                      "\n\nRelated Talents: "
+        val talents = skill.skillTalents.getOrElse(Vector("-")).map(_ + ", ")
+        talents.dropRight(1)foreach(message += _)
+        message += talents.last.dropRight(2) + "\n\nDescription:\n" + skill.description
+        Dialog.showMessage(this, message, skill.name, Dialog.Message.Info)
+      }
     }
     
     case componentEvent: ValueChanged => {

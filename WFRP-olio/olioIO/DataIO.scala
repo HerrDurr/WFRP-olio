@@ -275,7 +275,7 @@ object DataIO {
         var result = ""
         var done = false
         while (!done && currentLine != null) {
-          result += currentLine
+          result += currentLine + "\n"
           currentLine = lineReader.readLine()
           if (currentLine == null || currentLine.trim().isEmpty() || currentLine.head == '#') done = true
         }
