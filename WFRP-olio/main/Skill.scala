@@ -7,8 +7,9 @@ import scala.io.Codec
 import java.nio.charset.CodingErrorAction
 import olioIO.DataIO
 import data._
+import scala.collection.mutable.Buffer
 
-class Skill (name: String) extends Loadable(name) {
+class Skill (name: String, olio: Olio) extends Loadable(name) {
   
   //Skills can either be Basic skills or Advanced skills
   private var isBasic = false
@@ -123,8 +124,11 @@ class Skill (name: String) extends Loadable(name) {
   /**
    * Sets the related talents of the skill.
    */
-  def setTalents(talentList: Traversable[String]) = {
-      //TODO: Tee metodi, jonka avulla voi paivittaa skilliin liittyvia talentteja
+  def setTalents(talentNames: Traversable[String]) = {
+    //TODO: Tee metodi, jonka avulla voi paivittaa skilliin liittyvia talentteja
+    val talentBuffer: Buffer[Talent] = Buffer()
+    talentNames.foreach(n => talentBuffer += olio.allTalents.find(n == _.name).get)
+    this.talents = Option(talentBuffer.toVector)
   }
   
   /**

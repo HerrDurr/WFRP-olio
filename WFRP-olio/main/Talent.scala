@@ -1,6 +1,8 @@
 package main
 
-class Talent(name: String) extends Loadable(name) {
+import scala.collection.mutable.Buffer
+
+class Talent(name: String, olio: Olio) extends Loadable(name) {
   
   private var attributeOption: Option[String] = None
   
@@ -28,7 +30,11 @@ class Talent(name: String) extends Loadable(name) {
   def setDescription(input: String) = this.descr = input
   
   
-  def setSkills(skills: Vector[String]) = ???//this.skillsOption = Option(skills)
+  def setSkills(skillNames: Vector[String]) = {
+    val skillBuffer: Buffer[Skill] = Buffer()
+    skillNames.foreach(n => skillBuffer += olio.allSkills.find(n == _.name).get)
+    this.skillsOption = Option(skillBuffer.toVector)
+  }
   
   
   //def setShortDescr(input: String) = this.shortDescr = input

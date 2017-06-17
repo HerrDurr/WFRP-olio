@@ -27,14 +27,20 @@ class Olio(n: String, r: String) {
   
   val career = new Career
   
- 
+  /**
+   * A Vector containing all possible Talents.
+   */
+  val allTalents = {
+    val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
+    DataIO.loadNames(Source.fromFile("data/talents.txt")(decoder).reader()).map( new Talent(_, this) )
+  }
   
   /**
    * A Vector containing all possible Skills.
    */
   val allSkills = {
     val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
-    DataIO.loadNames(Source.fromFile("data/skills.txt")(decoder).reader()).map( new Skill(_) )
+    DataIO.loadNames(Source.fromFile("data/skills.txt")(decoder).reader()).map( new Skill(_, this) )
   }
   
   //OLD IMPLEMENTATION   DataIO.loadBasicSkills(Source.fromFile("data/skills.txt")(decoder).reader()).foreach(skillBuffer += _)
