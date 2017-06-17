@@ -32,12 +32,16 @@ class SkillSelector (olio: Olio, skill: Skill) extends FlowPanel {
   
   this.listenTo(spinner)
   
-  private var previousValue = spinner.value
+  private var previousSpinnerValue = spinner.value.toString()
+  
+  def previousValue = previousSpinnerValue
+  
+  def setPreviousValue(v: String) = previousSpinnerValue = v
   
   reactions += {
     
     case componentEvent: ValueChanged => {
-      val value = spinner.value
+      val value = spinner.value.toString()
       
       if (previousValue == "-")
       {
@@ -50,7 +54,7 @@ class SkillSelector (olio: Olio, skill: Skill) extends FlowPanel {
         if (value == "X") olio.untrainSkill(skill) else olio.addSkill(skill)
       } else if (value == "+10") olio.untrainSkill(skill)
       
-      previousValue = value
+      setPreviousValue(value)
     }
     
   }

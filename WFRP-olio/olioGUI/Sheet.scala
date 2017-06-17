@@ -15,11 +15,16 @@ object Sheet extends SimpleSwingApplication {
     
     val olio = new Olio("Seppo", "Dwarf")
     
-    this.contents = new OlioPanel(olio)
+    val olioPanel = new OlioPanel(olio)
+    
+    this.contents = olioPanel
     
     this.title = olio.name
     
   }
+  
+  
+  
   
   
 }
