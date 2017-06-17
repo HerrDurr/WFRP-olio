@@ -89,9 +89,9 @@ class Olio(n: String, r: String) {
    * Adds a skill to the olio. If the olio already has the skill, sets the skill to trained (+10%).
    */
   def addSkill(skill: Skill) = {
-    val alreadyHere = this.skillBuffer.find(_.name == skill.name)
-    if (alreadyHere.isDefined) alreadyHere.get.train(true)
-    else this.skillBuffer += skill
+    val alreadyHere = this.skillBuffer.find(_ == skill)
+    if (!alreadyHere.isDefined) this.skillBuffer += skill
+    skill.train(true)
   }
   
   
@@ -100,10 +100,20 @@ class Olio(n: String, r: String) {
    */
   def untrainSkill(skill: Skill) = {
     val alreadyHere = this.skillBuffer.find(_ == skill)
-    if (alreadyHere.isDefined) {
+    if (alreadyHere.isDefined)
+    {
       val existingSkill = alreadyHere.get
-      if (existingSkill.skillBasic || existingSkill.timesGained > 1) existingSkill.train(false)
-      else this.skillBuffer -= existingSkill
+      val isBasic = existingSkill.skillBasic
+      val timesGained = existingSkill.timesGained
+      
+      if (!isBasic)
+      {
+        existingSkill.train(false)
+        if (timesGained == 0) this.skillBuffer -= existingSkill
+      } else {
+        existingSkill.train(false)
+      }
+      
     }
   }
   
