@@ -48,19 +48,29 @@ class RightPanel(olioPanel: OlioPanel) extends GridPanel(3,1) {
   * 
   */
   
+  val talentsButton = new Button("Talents")
   
-  this.contents += (weaponGrid, skillGrid)
+  this.contents += (weaponGrid, skillGrid, talentsButton)
   
-  this.listenTo(skillsButton)
+  this.listenTo(skillsButton, talentsButton)
   
   val skillMenu = new SkillMenu(olioPanel)
+  val talentMenu = new TalentMenu(olioPanel)
   
   this.reactions += {
     case clickEvent: ButtonClicked => {
       
       val frame = new Frame
-      frame.title = olio.name + "'s Skills"
-      frame.contents = skillMenu
+      if (clickEvent.source == skillsButton)
+      {
+        frame.title = olio.name + "'s Skills"
+        frame.contents = skillMenu
+      }
+      if (clickEvent.source == talentsButton)
+      {
+        frame.title = olio.name + "'s Talents"
+        frame.contents = talentMenu
+      }
       frame.visible = true
       frame.setLocationRelativeTo(this)
     }
