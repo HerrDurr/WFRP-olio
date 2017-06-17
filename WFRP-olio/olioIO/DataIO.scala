@@ -240,7 +240,29 @@ object DataIO {
        * Reads the .txt file data on the talent and sets its values accordingly.
        */
       def readTalentData() = {
+        var done = Array(false, false, false, false)
+        val talent = item.asInstanceOf[Talent]
         
+        while (!done.forall(_ == true) && !currentLine.isEmpty() && currentLine != null && currentLine.head.toChar != '#') {
+          val splitLine = splitDataLine
+          splitLine(0).trim().toLowerCase() match {
+            case "attributes" =>
+              val data = splitLine(1).trim()
+              if (data != "-") talent.setAttribute(data)
+              done(0) = true
+            case "skills" =>
+              val data = splitLine(1).trim()
+              if (data != "-") talent.setSkills(data.split(",").map( _.trim() ).toVector)
+              done(1) = true
+            case "other" =>
+              // TODO: Tee jotain
+              done(2) = true
+            case "description" =>
+              talent.setDescription(readDescription)
+              done(3) = true
+          }
+          currentLine = lineReader.readLine()
+        }
       }
       
       
