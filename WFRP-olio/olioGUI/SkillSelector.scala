@@ -5,7 +5,8 @@ import main.Olio
 import main.Skill
 import javax.swing.SpinnerListModel
 import java.awt.geom.Dimension2D
-import scala.swing.event.ValueChanged
+import scala.swing.event._
+import java.awt.Color
 
 class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
   
@@ -33,7 +34,7 @@ class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
   this.contents += (nameLabel, spinner, levelLabel)
   //this.contents += (nameLabel, selector, levelLabel)
   
-  this.listenTo(spinner)
+  this.listenTo(spinner, this.mouse.moves)
   
   private var previousValue = spinner.value.toString()
   
@@ -49,8 +50,26 @@ class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
     }
   }
   
+  def highLight(c: Component, hLight: Boolean) = {
+      if (hLight) c.foreground = Color.MAGENTA
+      else c.foreground = Color.black
+    }
   
   reactions += {
+    
+    case mouseEvent: MouseEntered => {
+      highLight (
+          olioPanel.attrPanel.contents.find(c => c.isInstanceOf[Label] && c.asInstanceOf[Label].text == skill.skillAttribute._1).get,
+          true
+          )
+    }
+    
+    case mouseEvent: MouseExited => {
+      highLight (
+          olioPanel.attrPanel.contents.find(c => c.isInstanceOf[Label] && c.asInstanceOf[Label].text == skill.skillAttribute._1).get,
+          false
+          )
+    }
     
     case componentEvent: ValueChanged => {
       val value = spinner.value.toString()
@@ -70,6 +89,9 @@ class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
       olioPanel.update()
       this.update()
     }
+    
+    
+    
     
   }
   
