@@ -21,10 +21,8 @@ object Sheet extends SimpleSwingApplication {
     
     this.title = olio.name
     
+    
   }
-  
-  
-  
   
   
 }

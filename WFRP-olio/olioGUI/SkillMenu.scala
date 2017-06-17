@@ -9,7 +9,7 @@ import olioIO.DataIO
 * 
 */
 
-class SkillMenu(olio: Olio) extends BoxPanel(Orientation.Horizontal) {
+class SkillMenu(olio: Olio, olioPanel: OlioPanel) extends BoxPanel(Orientation.Horizontal) {
   
   //val knownSkills = new ListView[Component]
   //olio.skills.foreach( x => contents += new Label(x.name + " (" + x.skillLevel + ")") )

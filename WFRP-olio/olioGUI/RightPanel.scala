@@ -9,7 +9,7 @@ import javax.swing.JFrame
 //import javax.swing.table.DefaultTableModel
 //import collection.mutable.ArrayBuffer
 
-class RightPanel(olio: Olio) extends GridPanel(3,1) {
+class RightPanel(olio: Olio, olioPanel: OlioPanel) extends GridPanel(3,1) {
   
   
   val weapon1 = new WeaponPanel(olio, 0)
@@ -55,7 +55,7 @@ class RightPanel(olio: Olio) extends GridPanel(3,1) {
   
   this.reactions += {
     case clickEvent: ButtonClicked => {
-      val skillMenu = new SkillMenu(olio)
+      val skillMenu = new SkillMenu(olio, olioPanel)
       
       val frame = new Frame
       frame.title = olio.name + "'s Skills"
