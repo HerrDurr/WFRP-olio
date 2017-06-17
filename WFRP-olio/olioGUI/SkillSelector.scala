@@ -35,6 +35,11 @@ class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
   private var previousValue = spinner.value.toString()
   
   
+  def update() = {
+    this.levelLabel.text = skill.skillLevel.toString()
+  }
+  
+  
   reactions += {
     
     case componentEvent: ValueChanged => {
@@ -53,6 +58,7 @@ class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
       
       previousValue = value
       olioPanel.update()
+      this.update()
     }
     
   }
