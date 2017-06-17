@@ -96,10 +96,10 @@ class Olio(n: String, r: String) {
   
   
   /**
-   * Removes or unmasters a skill from the olio. Takes a String as a parameter to avoid creating a new Skill object for nothing.
+   * Removes or unmasters a skill from the olio.
    */
-  def untrainSkill(skillName: String) = {
-    val alreadyHere = this.skillBuffer.find(_.name == skillName)
+  def untrainSkill(skill: Skill) = {
+    val alreadyHere = this.skillBuffer.find(_ == skill)
     if (alreadyHere.isDefined) {
       val existingSkill = alreadyHere.get
       if (existingSkill.skillBasic || existingSkill.timesGained > 1) existingSkill.train(false)

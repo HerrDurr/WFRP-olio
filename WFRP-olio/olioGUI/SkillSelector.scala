@@ -5,6 +5,7 @@ import main.Olio
 import main.Skill
 import javax.swing.SpinnerListModel
 import java.awt.geom.Dimension2D
+import scala.swing.event.ValueChanged
 
 class SkillSelector (olio: Olio, skill: Skill) extends FlowPanel {
   
@@ -29,5 +30,29 @@ class SkillSelector (olio: Olio, skill: Skill) extends FlowPanel {
   this.contents += (nameLabel, spinner, levelLabel)
   //this.contents += (nameLabel, selector, levelLabel)
   
+  this.listenTo(spinner)
+  
+  private var previousValue = spinner.value
+  
+  reactions += {
+    
+    case componentEvent: ValueChanged => {
+      val value = spinner.value
+      
+      if (previousValue == "-")
+      {
+        olio.addSkill(skill)
+      } else if (previousValue == "X")
+      {
+        if (value == "-") olio.untrainSkill(skill) else olio.addSkill(skill)
+      } else if (previousValue == "+10")
+      {
+        if (value == "X") olio.untrainSkill(skill) else olio.addSkill(skill)
+      } else if (value == "+10") olio.untrainSkill(skill)
+      
+      previousValue = value
+    }
+    
+  }
   
 }
