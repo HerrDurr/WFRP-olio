@@ -11,7 +11,9 @@ class CentrePanel(olioPanel: OlioPanel) extends BorderPanel {
   
   val attributePanel = new AttributePanel(olioPanel)
   val rightPanel = new RightPanel(olioPanel)
+  val leftPanel = new LeftPanel(olioPanel)
   
   this.layout(attributePanel) = North
   this.layout(rightPanel) = East
+  this.layout(leftPanel) = West
 }
