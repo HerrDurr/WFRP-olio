@@ -2,6 +2,8 @@ package olioGUI
 
 import scala.swing._
 import main.Olio
+import javax.swing.border.Border
+
 /*import scala.io.Source
 import scala.io.Codec
 import java.nio.charset.CodingErrorAction
@@ -23,9 +25,18 @@ class SkillMenu(olioPanel: OlioPanel) extends BoxPanel(Orientation.Horizontal) {
   
   val allSkills = olioPanel.olio.allSkills
   val skillN = allSkills.length
-  val lPanel = new BoxPanel(Orientation.Vertical)
+  val lPanel = new BoxPanel(Orientation.Vertical) {
+    
+    override def paintBorder(g: Graphics2D) = {
+      val dim = this.bounds
+      g.setColor(java.awt.Color.black)
+      g.drawRect(dim.getWidth.toInt, dim.getHeight.toInt, 1, 1)
+    }
+    repaint()
+  }
   val cPanel = new BoxPanel(Orientation.Vertical)
   val rPanel = new BoxPanel(Orientation.Vertical)
+  
   
   val lSkills = allSkills.take(skillN / 3 + 1)
   val cSkills = allSkills.drop(skillN / 3 + 1).take(skillN / 3 + 1)
@@ -41,6 +52,9 @@ class SkillMenu(olioPanel: OlioPanel) extends BoxPanel(Orientation.Horizontal) {
     lPanel.contents.foreach(_.asInstanceOf[SkillSelector].update())
     cPanel.contents.foreach(_.asInstanceOf[SkillSelector].update())
     rPanel.contents.foreach(_.asInstanceOf[SkillSelector].update())
+    lPanel.repaint(lPanel.bounds)
+    cPanel.repaint(cPanel.bounds)
+    rPanel.repaint(rPanel.bounds)
   }
   
 }
