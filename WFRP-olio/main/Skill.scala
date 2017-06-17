@@ -9,14 +9,14 @@ import olioIO.DataIO
 import data._
 import scala.collection.mutable.Buffer
 
-class Skill (name: String, olio: Olio) extends Loadable(name) {
+class Skill (name: String) extends Loadable(name) {
   
   //Skills can either be Basic skills or Advanced skills
   private var isBasic = false
   //Due to basic skills and skill mastery (+10 and +20 at subsequent picks), a counter for the times the skill has been chosen is needed.
   private var gainedCount = 0
   //Talents contains the list of talents which affect the Skill
-  private var talents: Option[Vector[Talent]] = None
+  private var talents: Option[Vector[String]] = None
   //Skill level
   private var lvl = 0
   //Each skill has a governing attribute. This attribute also has an id number
@@ -65,7 +65,7 @@ class Skill (name: String, olio: Olio) extends Loadable(name) {
   def skillAttribute = this.attribute
   
   /**
-   * Returns the talents which affect the skill.
+   * Returns the names of the talents which affect the skill.
    */
   def skillTalents = this.talents
   
@@ -124,12 +124,7 @@ class Skill (name: String, olio: Olio) extends Loadable(name) {
   /**
    * Sets the related talents of the skill.
    */
-  def setTalents(talentNames: Traversable[String]) = {
-    //TODO: Tee metodi, jonka avulla voi paivittaa skilliin liittyvia talentteja
-    val talentBuffer: Buffer[Talent] = Buffer()
-    talentNames.foreach(n => talentBuffer += olio.allTalents.find(n == _.name).get)
-    this.talents = Option(talentBuffer.toVector)
-  }
+  def setTalents(talentNames: Traversable[String]) = this.talents = Option(talentNames.toVector)
   
   /**
    * Sets the description of the skill.
