@@ -31,7 +31,7 @@ class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
   val levelLabel = new Label("")
   levelLabel.preferredSize = new Dimension(40, 18)
   
-  this.contents += (spinner, nameLabel, levelLabel)
+  this.contents += (nameLabel, levelLabel, spinner)
   //this.contents += (nameLabel, selector, levelLabel)
   
   this.listenTo(spinner, this.mouse.moves)

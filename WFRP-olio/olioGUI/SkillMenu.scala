@@ -25,15 +25,7 @@ class SkillMenu(olioPanel: OlioPanel) extends BoxPanel(Orientation.Horizontal) {
   
   val allSkills = olioPanel.olio.allSkills
   val skillN = allSkills.length
-  val lPanel = new BoxPanel(Orientation.Vertical) {
-    
-    override def paintBorder(g: Graphics2D) = {
-      val dim = this.bounds
-      g.setColor(java.awt.Color.black)
-      g.drawRect(dim.getWidth.toInt, dim.getHeight.toInt, 1, 1)
-    }
-    repaint()
-  }
+  val lPanel = new BoxPanel(Orientation.Vertical)
   val cPanel = new BoxPanel(Orientation.Vertical)
   val rPanel = new BoxPanel(Orientation.Vertical)
   
@@ -46,15 +38,12 @@ class SkillMenu(olioPanel: OlioPanel) extends BoxPanel(Orientation.Horizontal) {
   cSkills.foreach( s => cPanel.contents += new SkillSelector(olioPanel, s) )
   rSkills.foreach( s => rPanel.contents += new SkillSelector(olioPanel, s) )
   
-  this.contents += (lPanel, cPanel, rPanel)
+  this.contents += (lPanel, new Separator(Orientation.Vertical), cPanel, new Separator(Orientation.Vertical), rPanel)
   
   def update() = {
     lPanel.contents.foreach(_.asInstanceOf[SkillSelector].update())
     cPanel.contents.foreach(_.asInstanceOf[SkillSelector].update())
     rPanel.contents.foreach(_.asInstanceOf[SkillSelector].update())
-    lPanel.repaint(lPanel.bounds)
-    cPanel.repaint(cPanel.bounds)
-    rPanel.repaint(rPanel.bounds)
   }
   
 }
