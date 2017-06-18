@@ -9,7 +9,7 @@ import javax.swing.JFrame
 //import javax.swing.table.DefaultTableModel
 //import collection.mutable.ArrayBuffer
 
-class RightPanel(olioPanel: OlioPanel) extends GridPanel(3,1) {
+class RightPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
   
   val olio = olioPanel.olio
   
