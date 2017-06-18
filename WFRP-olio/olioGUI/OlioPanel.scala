@@ -18,6 +18,7 @@ class OlioPanel(val olio: Olio) extends BorderPanel {
   this.layout(centrePanel) = Center
   
   
+  
   /**
    * Updates the attrPanel and olio's Skills.
    */
