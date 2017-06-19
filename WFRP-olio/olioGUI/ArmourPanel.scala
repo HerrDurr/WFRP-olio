@@ -7,7 +7,7 @@ class ArmourPanel(hitMin: Int, hitMax: Int) extends BoxPanel(Orientation.Vertica
   
   val spinModel = new SpinnerNumberModel(0, 0, 7, 1)
   val armourSpinner = new Spinner(spinModel)
-  //armourSpinner.preferredSize = new Dimension(30, 28)
+  armourSpinner.preferredSize = new Dimension(30, 28)
   armourSpinner.maximumSize = new Dimension(30, 28)
   val hitLabel = new Label(hitMin + "-" + hitMax)
   val upperPanel = new BoxPanel(Orientation. Horizontal)

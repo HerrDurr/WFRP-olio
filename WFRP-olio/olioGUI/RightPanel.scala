@@ -47,7 +47,7 @@ class RightPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
   
   val talentsButton = new Button("Talents")
   
-  this.contents += (weaponGrid, skillGrid, talentsButton)
+  this.contents += (weaponGrid, skillGrid, /*Swing.VGlue, */talentsButton)
   
   this.listenTo(skillsButton, talentsButton)
   
