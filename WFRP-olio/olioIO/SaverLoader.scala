@@ -24,11 +24,17 @@ object SaverLoader {
     
   }
   
-  def loadChunkSize(chunkHeader: Array[Char]) = {
+  
+  def getChunkName(chunkHeader: Array[Char]) = {
+    chunkHeader.take(3).toString()
+  }
+  
+  
+  def getChunkSize(chunkHeader: Array[Char]) = {
     10 * (chunkHeader(3) - '0') + (chunkHeader(4) - '0')
   }
   
-  def loadHeader(loadTo: Array[Char], input: Source) = {
+  def getHeader(loadTo: Array[Char], input: Source) = {
     
     val size = loadTo.size
     
