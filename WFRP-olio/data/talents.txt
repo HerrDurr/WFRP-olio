@@ -1,19 +1,731 @@
 Talent data file
 
-#Name
-Attributes : ... (- if none)
-Skills : ... (- if none)
-Weapons : ... (- if none)
-Description : ...
-
 #Acute Hearing
 Attributes : -
 Skills : Perception
 Weapons : -
 Description : 
+Gain a +20% bonus on Perception Skill Tests 
+that involve listening.
 
 #Aethyric Attunement
 Attributes : -
 Skills : Channeling, Magical Sense
 Weapons : -
-Description :
+Description : 
+Gain +10% bonus on Channelling and Magical Sense 
+Skill Tests.
+
+#Alley Cat
+Attributes : -
+Skills : Concealment, Silent Move
+Weapons : -
+Description : 
+Gain a +10% bonus on Concealment and Silent Move 
+Skill Tests when in urban locations.
+
+#Ambidextrous
+Attributes : WS, BS
+Skills : -
+Weapons : -
+Description : 
+Do not suffer the normal -20% WS or BS penalty 
+when using a weapon in your secondary hand.
+
+#Arcane Lore*
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+Arcane Lore is unusual in that it is not one talent, 
+but many. Such is the study and focus required that you can
+ only ever know one. Each Arcane Lore talent is a separate 
+magical proficiency, with the specialty noted in parenthesis. 
+For example, Arcane Lore (Beasts) is a different talent than 
+Arcane Lore (Fire). The most common Arcane Lores, known as 
+the Eight Orders of Magic, are Beasts, Death, Fire, the Heavens, 
+Life, Light, Metal, and Shadow. If you know an Arcane Lore, 
+you can attempt to cast any spell from that lore.
+
+#Armoured Casting
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+Casting Roll penalty while wearing armour is reduced by 3 
+when you cast chaos and divine spells. Normally, you�d suffer 
+a �3 penalty for wearing a mail shirt, for example, but with 
+Armoured Casting this penalty would be reduced to 0.
+
+#Artistic
+Attributes : -
+Skills : Trade (Artist), Evaluate
+Weapons : -
+Description : 
+Gain a +20% bonus on Trade (Artist) Tests and +10% 
+on tests to Evaluate objects d�art.
+
+#Contortionist
+Attributes : Ag
+Skills : Performer
+Weapons : -
+Description : 
+Gain a +10% bonus on relevant Performer Skill Tests 
+and a +20% bonus on Agility Tests to escape from bonds, 
+squeeze through narrow openings, and so on.
+
+#Coolheaded
+Attributes : WP
+Skills : -
+Weapons : -
+Description : 
+Gain a permanent +5% bonus to your Will Power Characteristic.
+
+#Dark Lore*
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+Dark Lore is unusual in that it is not one talent, but many. 
+Such is the study and focus required that you can only ever 
+know one. Each Dark Lore talent is a separate magical proficiency, 
+with the specialty noted in parenthesis. For example, Dark Lore (Chaos) 
+is a different talent than Dark Lore (Necromancy). 
+The most common Dark Lores are Chaos and Necromancy. 
+Future supplements will detail additional Dark Lores, 
+including those of the Chaos powers Nurgle, Slaanesh, 
+and Tzeentch. If you know a Dark Lore, you can attempt 
+to cast any spell from that lore.
+
+#Dark Magic
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+You know how to manipulate Dhar (black magic) to fuel your spells. 
+Using Dark Magic gives you more power, but is much more dangerous. 
+When you cast a spell, you can opt to use the energy of Dhar to 
+fuel it. When making a Casting Roll for a Dark Magic spell, you 
+roll an extra d10 and drop the die with the lowest result. However, 
+all dice count for the purposes of Tzeentch's Curse. For example, 
+a wizard with Magic 2 who casts a dark magic spell rolls 3d10 
+and uses the highest two dice for his Casting Roll. All three dice 
+are used to determine Tzeentch's Curse. If he rolled a 6, 6, and 6, 
+the Casting Roll would be 12 (6+6), but the spell would trigger 
+a Major Chaos Manifestation. You must use Dark Magic when casting 
+a Dark Lore spell.
+
+#Dealmaker
+Attributes : -
+Skills : Evaluate, Haggle
+Weapons : -
+Description : 
+Gain a +10% bonus on Evaluate and Haggle Skill Tests.
+
+#Disarm
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+If you hit with a melee attack, you may attempt to disarm 
+your opponent instead of inflicting damage. Make an Opposed 
+Agility Test. If you win, your opponent is disarmed and 
+the weapon drops to the ground. It can be picked up with 
+the ready action. If your opponent wins, he retains his weapon. 
+Natural weapons (teeth, claws, etc.) cannot be disarmed.
+
+#Divine Lore*
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+Divine Lore is unusual in that it is not one talent, but many different ones. 
+Such is the devotion required that you can only ever know one Divine Lore. 
+Each Divine Lore talent is	a separate magical proficiency, with 
+the specialty noted in parenthesis. For example, Divine Lore (Sigmar) 
+is a different talent than Divine Lore (Ulric). The most common Divine 
+Lores correspond to the major deities of the Old World: Manann, Morr, 
+Myrmidia, Ranald, Sigmar, Shallya, Taal/Rhya, Ulric, Verena. If you know 
+a Divine Lore, you can attempt to cast any spell from that lore.
+
+#Dwarfcraft
+Attributes : -
+Skills : Trade
+Weapons : -
+Description : 
+Gain a +10% bonus on tests with the following Trade skills: 
+Armourer, Brewer, Gem Cutter, Gunsmith, Miner, Smith, 
+Stoneworker, and Weaponsmith.
+
+#Etiquette
+Attributes : -
+Skills : Charm, Gossip
+Weapons : -
+Description : 
+Gain a +10% bonus on Charm and Gossip Skill Tests when dealing 
+with the nobility. The bonus also applies in other situations 
+in which knowing the proper etiquette is important (impersonating 
+a noble with the Disguise skill, for instance).
+
+#Excellent Vision
+Attributes : -
+Skills : Perception, Lip Reading
+Weapons : -
+Description : 
+Gain a +10% bonus on Perception Skill Tests that involve sight, 
+and on Lip Reading Skill Tests.
+
+#Fast Hands
+Attributes : WS
+Skills : -
+Weapons : -
+Description : 
+Gain a +20% Weapon Skill bonus when casting touch spells.
+
+#Fearless
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+You are immune to fear and treat terror as fear. You are also 
+immune to the effects of the Intimidate skill and the Unsettling talent.
+
+#Flee!
+Attributes : M
+Skills : -
+Weapons : -
+Description : 
+When running away from combat or another dire threat, you gain a +1 
+bonus to your Movement Characteristic for 1d10 rounds.
+
+#Fleet Footed
+Attributes : M
+Skills : -
+Weapons : -
+Description : 
+Gain a permanent +1 bonus to your Movement Characteristic.
+
+#Flier
+Attributes : -
+Skills : -
+Weapons : -
+Description :  
+You can fly.
+
+#Frenzy
+Attributes : S, WP, WS, Int
+Skills : -
+Weapons : -
+Description : 
+You must spend 1 round psyching yourself up (howling, biting your 
+shield, etc.). The next round you lose control and go berserk, 
+gaining a +10% bonus to Strength and Will Power but a 
+-10% penalty to Weapon Skill and Intelligence. You must 
+attack the nearest enemy in melee combat, all attacks must be 
+all out attacks, charge attacks, or swift attacks, and you may 
+not flee or retreat. You remain in this frenzied state until the 
+combat is over.
+
+#Frightening
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+You have a frightening appearance. You cause Fear.
+
+#Grudge-born Fury
+Attributes : WS
+Skills : -
+Weapons : -
+Description :  
+Your people have a long list of grudges against the 
+various Goblinoid races. Their depredations fill you with such 
+fury that you gain a +5% bonus to WS when attacking Orcs, 
+Goblins, and Hobgoblins. 
+
+#Hardy
+Attributes : W
+Skills : -
+Weapons : -
+Description : 
+Gain a permanent +1 bonus to your Wounds Characteristic. 
+
+#Hedge Magic
+Attributes : -
+Skills : -
+Weapons : -
+Description :  
+You are a self-taught spellcaster who has figured out 
+how to work magic by trial and error. You can cast Petty 
+Magic (Hedge) spells only without having the Speak Arcane 
+Language skill; the Petty Magic (Hedge) talent is still required. 
+You must roll an extra d10 when casting a spell. This does not 
+add into your Casting Roll, but does count for the purposes of 
+Tzeentch's Curse. Once you learn an Arcane Language, you no 
+longer have to roll the extra die. 
+
+#Hoverer
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+You can fly low to the ground. 
+
+#Keen Senses
+Attributes : -
+Skills : Perception
+Weapons : -
+Description : 
+Gain a +20% bonus on Perception Tests. 
+
+#Lesser Magic*
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+Lesser Magic is unusual in that it is not one talent, 
+but many, and each must be acquired individually. 
+Each Lesser Magic talent is a separate spell, 
+with the spell name noted in parenthesis. For example, Lesser 
+Magic (Dispel) is a different talent than Lesser Magic (Skywalk). 
+The most common Lesser Magic spells are Aethyric Armour, 
+Blessed Weapon, Dispel, Magic Alarm, Magic Lock, Move, Silence,
+and Skywalk. You must have a Petty Magic talent before you 
+can learn a Lesser Magic talent. 
+
+#Lightning Parry
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+When you make a swift attack, you can forego 
+one of your attacks to gain a free parry. 
+If you had Attacks 3, for example, you could 
+make two attacks and gain one parry with your swift attack
+action. The limit of one parry per round remains in effect.
+
+#Lightning Reflexes
+Attributes : Ag
+Skills : -
+Weapons : -
+Description : 
+Gain a permanent +5% bonus to your Agility Characteristic. 
+
+#Linguistics
+Attributes : -
+Skills : Read/Write, Speak Language
+Weapons : -
+Description : 
+Gain a +10% bonus on all Read/Write and Speak Language Skill Tests. 
+
+#Luck
+Attributes : -
+Skills : -
+Weapons : -
+Description :  
+Gain an extra Fortune Point each day. 
+
+#Marksman
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+Gain a permanent +5% bonus to your Ballistic Skill Characteristic. 
+
+#Master Gunner
+Attributes : -
+Skills : -
+Weapons : Black powder
+Description : 
+Reduce the reload time of all black powder weapons 
+by a half action. If you also have Rapid Reload, you gain the 
+benefits of both talents (thus reducing the reload time of black 
+powder weapons by a full action). 
+
+#Master Orator
+Attributes : -
+Skills : Charm
+Weapons : -
+Description : 
+You can affect 100 times the normal number 
+of people when using the Charm skill. You must have 
+Public Speaking before you can gain this talent. 
+
+#Menacing
+Attributes : -
+Skills : Intimidate, Torture
+Weapons : -
+Description :  
+Gain a +10% bonus on Intimidate and Torture Skill Tests. 
+
+#Mighty Missile
+Attributes : -
+Skills : -
+Weapons : -
+Description :  
+Gain a +1 bonus on damage rolls with magic missile spells. 
+
+#Mighty shot
+Attributes : -
+Skills : -
+Weapons : Ranged
+Description : 
+Gain a +1 bonus on damage rolls with missile weapons. 
+
+#Mimic
+Attributes : -
+Skills : Performer, Disguise, Speak Language
+Weapons : -
+Description : 
+Gain a +10% bonus on Performer (Actor, 
+Clown, Comedian, Jester and Storyteller) Skill Tests, Disguise 
+Skill Tests if the disguise has a verbal component, and Speak 
+Language Skill Test when trying to pass as a native. 
+
+#Natural Weapons
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+When attacking without a weapon, you count 
+as being armed with a hand weapon. You cannot parry 
+with your natural weapons. You cannot be disarmed.
+
+#Night Vision
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+You can see extremely well in natural darkness at
+distances up to 30 yards. This talent doesn't work in total
+darkness, requiring illumination equivalent to starlight to
+function.
+
+#Orientation
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+You rarely get lost and always know the direction of north. 
+You gain a +10% bonus on Navigation Skill Tests.
+
+#Petty Magic*
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+You know the most basic of magical techniques. Like 
+Arcane Lore, it is not one talent but many. Each Petty Magic 
+talent is a separate magical proficiency, with the specialty 
+noted in parenthesis. For example, Petty Magic (Arcane) 
+is a different talent than Petty Magic (Divine). The most 
+common Petty Magic talents are Arcane, Divine, and Hedge. 
+If you know a Petty Magic talent and you have a Magic 
+Characteristic of at least 1, you can attempt to cast any spell 
+from that talent. 
+
+#Public Speaking
+Attributes : -
+Skills : Charm
+Weapons : -
+Description : 
+You can affect 10 times the normal number of people 
+when using the Charm skill.
+
+#Quick Draw
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+Once per round, you can use the ready action as	a free action.
+
+#Rapid Reload
+Attributes : -
+Skills : -
+Weapons : Ranged
+Description : 
+You reduce the reload times of all missile weapons by a half 
+action. You could reload a crossbow in a half action, for 
+example, whereas it is normally	a full action. If the weapon 
+already had a reload time of a half action, it becomes a free 
+action. It takes you virtually no time to reload such weapons,
+which allows you to make swift attacks with them.
+
+#Resistance to Chaos
+Attributes : WP
+Skills : -
+Weapons : -
+Description : 
+Gain a +10% bonus on Will Power Tests to resist magic and 
+other Chaos effects, and you are immune to Chaos mutation. 
+However, you can never become a spellcaster of any type.
+
+#Resistance to Disease
+Attributes : T
+Skills : -
+Weapons : -
+Description : 
+Gain a +10% bonus on Toughness Tests to resist disease. 
+
+#Resistance to Magic
+Attributes : WP
+Skills : -
+Weapons : -
+Description : 
+Gain a +10% bonus on Will Power Tests to resist magic. 
+
+#Resistance to Poison
+Attributes : T
+Skills : -
+Weapons : -
+Description :  
+Gain a +10% bonus on Toughness Tests to resist poison.
+
+#Rover
+Attributes : -
+Skills : Concealment, Silent Move
+Weapons : -
+Description : 
+Gain a +10% bonus on Concealment and Silent Move Skill 
+Tests when in rural locations. 
+
+#Savvy
+Attributes : Int
+Skills : -
+Weapons : -
+Description : 
+Gain a permanent +5% bonus to your Intelligence Characteristic.
+
+#Schemer
+Attributes : WP
+Skills : Charm
+Weapons : -
+Description : 
+Gain a +10% bonus on intrigue-related Charm Tests 
+and on WP Tests to resist the Charm of others. 
+
+#Seasoned Traveller
+Attributes : -
+Skills : Common Knowledge, Speak Language
+Weapons : -
+Description : 
+Gain a +10% bonus on Common Knowledge and Speak Language Skill Tests. 
+
+#Sharpshooter
+Attributes : BS
+Skills : -
+Weapons : -
+Description : 
+When you use the aim action, your next ranged attack gains a 
++20% Ballistic Skill bonus instead of the normal +10%. 
+
+#Sixth Sense
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+When danger is afoot, the GM may secretly roll a test on your 
+Will Power. If successful, the GM may tell you that you have a 
+bad feeling about your situation or that you feel like you're being 
+watched. This talent may enable to you to avoid being surprised 
+when the rest of your allies succumb.
+
+#Specialist Weapon Group*
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+Specialist Weapon Group is unusual in that it is 
+not one talent, but many and each must be acquired individually.
+Each Specialist Weapon Group talent is a separate proficiency,
+with the specialty noted in parenthesis. For example, Specialist
+Weapon Group (Two-handed) is a different talent than Specialist
+Weapon Group (Throwing). The most common Specialist
+Weapon Group talents are: Cavalry, Crossbow, Engineer,
+Entangling, Fencing, Flail, Gunpowder, Longbow, Parrying,
+Sling, Throwing, and Two-handed.
+
+#Stout-hearted
+Attributes : WP
+Skills : -
+Weapons : -
+Description : 
+Gain a +10% bonus on Fear and Terror Tests, and on Will Power Tests to resist 
+Intimidate attempts. 
+
+#Streetwise
+Attributes : -
+Skills : Charm, Gossip
+Weapons : -
+Description : 
+Gain a +10% bonus on Charm and Gossip Skill Tests 
+when dealing with the criminal underworld. 
+
+#Strike Mighty Blow
+Attributes : -
+Skills : -
+Weapons : Melee
+Description : 
+Gain a +1 bonus on damage rolls with melee weapons. 
+
+#Strike to Injure
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+The Critical Value of any Critical Hits you inflict is increased by 1.
+
+#Strike to Stun
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+If you hit with a melee attack, you may attempt to stun 
+your opponent instead of inflicting damage. First, you must 
+make a Strength Test. If that is successful, your opponent must 
+make a Toughness Test, with a +10% bonus for each AP on his 
+head. If he fails, your opponent is stunned for 1d10 rounds. 
+Stunned characters cannot take any actions and cannot dodge. 
+
+#Strong-minded
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+You don�t have to check for insanity until you have 8 Insanity Points. 
+
+#Sturdy
+Attributes : M
+Skills : -
+Weapons : -
+Description : 
+You do not suffer any Movement penalties while wearing 
+heavy/plate armour. If you are using Encumbrance values 
+with a character who has the sturdy talent ignore the 
+Encumbrance values of the armour worn, though the -10% 
+Agility modifier still applies. 
+
+#Suave
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+Gain a permanent +5% bonus to your Fellowship Characteristic.
+ 
+#Sure Shot
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+When you hit with a ranged attack, you can ignore 1 Armour Point. 
+If your target has no armour, this talent has no effect.
+
+#Surgery
+Attributes : -
+Skills : Heal
+Weapons : -
+Description : 
+Gain a +10% on Heal Skill Tests. If you are treating a heavily 
+wounded patient, a successful test heals 2 Wounds instead of 
+the normal 1. If this character is in danger of losing a limb 
+from a Critical Hit, you also provide the patient with a +20% 
+Toughness bonus on the test to resist limb loss. 
+
+#Super Numerate
+Attributes : -
+Skills : Gamble, Navigation, Perception
+Weapons : -
+Description : 
+Gain a +10% bonus on Gamble and Navigation Skill Tests, and a 
++20% bonus on Perception Skill Tests that involve estimation.	
+
+#Swashbuckler
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+You can use the Jump/Leap action as a half action and 
+you increase the distance of all leaps by 1 yard. 
+
+#Terrifying
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+You cause terror.
+
+#Trapfinder
+Attributes : -
+Skills : Perception, Pick Locks
+Weapons : -
+Description : 
+Gain a +10% bonus to Perception and Pick Lock Tests 
+that deal with locating and disarming traps. 
+
+#Trick Riding
+Attributes : -
+Skills : Ride
+Weapons : -
+Description : 
+You can do handstands on a galloping mount, 
+leap from horse to horse, and the like. You only 
+need to take Ride Skill Tests under the most extreme
+circumstances, and even then you gain a +10% bonus. 
+
+#Tunnel Rat
+Attributes : -
+Skills : Concealment, Silent Move
+Weapons : -
+Description : 
+Gain a +10% bonus on Concealment and Silent Move 
+Skill Tests when in underground locations. 
+
+#Undead
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+You are	a creature of undeath, hideously reanimated 
+by necromantic magic. You are immune to Fear, Terror, 
+stunning, poison, disease, and all spells, skills, and 
+effects that involve the manipulation of emotions and the mind.
+
+#Unsettling
+Attributes : -
+Skills : -
+Weapons : -
+Description : 
+Enemies must make a successful Will Power Test on seeing you or suffer a 
+-10% penalty to their Weapon Skill and Ballistic Skill. They may 
+test to overcome the effects this talent each round until they either 
+make it or are out of sight of you.
+
+#Very Resilient
+Attributes : T
+Skills : -
+Weapons : -
+Description : 
+Gain a permanent +5% bonus to your Toughness Characteristic. 
+
+#Very Strong
+Attributes : S
+Skills : -
+Weapons : -
+Description : 
+Gain a permanent +5% bonus to your Strength Characteristic. 
+
+#Warrior Born
+Attributes : WS
+Skills : -
+Weapons : -
+Description : 
+Gain a permanent +5% bonus to your Weapon Skill Characteristic.
+
+#Wrestling
+Attributes : WS, S
+Skills : -
+Weapons : -
+Description : 
+You can make unarmed attacks with a +10% bonus to 
+Weapon Skill when attempting to grapple. Furthermore, 
+you gain a +10% bonus on grappling Strength Tests. 
