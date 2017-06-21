@@ -23,10 +23,11 @@ class LeftPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
   hitPanel.layout(pictureLabel) = Center
   * 
   */
-  val hitPanel = new HitPanel
+  val hitPanel = new HitPanel(olioPanel)
   
   
   val critButton = new Button("Critical Hit Tables")
   this.contents += (hitPanel, critButton)
   hitPanel.repaint()
+  
 }

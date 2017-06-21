@@ -27,9 +27,8 @@ class OlioPanel(val olio: Olio) extends BorderPanel {
    * Updates the attrPanel and olio's Skills.
    */
   def update() = {
-    this.attrPanel.update()
     this.updateSkills()
-    this.centrePanel.rightPanel.update()
+    this.centrePanel.update()
     this.topPanel.update()
   }
   
