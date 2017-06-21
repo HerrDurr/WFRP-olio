@@ -11,7 +11,7 @@ object SaverLoader {
   
   def loadOlio(input: Source, olio: Olio) = {
     
-    val chunkHeader: Array[Char] = Array(5)
+    val chunkHeader: Array[Char] = new Array(5)
     var chunkName = ""
     var chunkSize = 0
     
@@ -24,31 +24,33 @@ object SaverLoader {
       while (chunkName != "END") {
         val dataArray: Array[Char] = new Array(chunkSize)
         getData(dataArray, input)
+        var dataString = ""
+        dataArray.foreach(dataString += _)
         
         if (chunkName == "NAM")
         {
-          olio.setName(dataArray.toString())
+          olio.setName(dataString)
         }
            
         if (chunkName == "RAC")
         {
-          olio.setRace(dataArray.toString())
+          olio.setRace(dataString)
         }
              
         if (chunkName == "CAR")
         {
-          olio.career.change(dataArray.toString())
+          olio.career.change(dataString)
         }
             
         if (chunkName == "COL")
         {
-          val split = dataArray.toString().split(",").map(_.toInt)
+          val split = dataString.split(",").map(_.toInt)
           olio.setColour(new Color(split(0), split(1), split(2)))
         }
           
         if (chunkName == "ATR")
         {
-          val split = dataArray.toString().split(",").map(_.toInt)
+          val split = dataString.split(",").map(_.toInt)
           for (x <- 0 to split.length - 1)
           {
             var i = x
@@ -59,17 +61,17 @@ object SaverLoader {
           
         if (chunkName == "CRW")
         {
-          olio.setCurrentWounds(dataArray.toString().toInt)
+          olio.setCurrentWounds(dataString.toInt)
         }
        
         if (chunkName == "FOR")
         {
-          olio.setFortune(dataArray.toString().toInt)
+          olio.setFortune(dataString.toInt)
         }
           
         if (chunkName == "WPN")
         {
-          val names = dataArray.toString().split(",")
+          val names = dataString.split(",")
           val n = names.length
           for (i <- 0 to n - 1)
           {
@@ -79,13 +81,13 @@ object SaverLoader {
           
         if (chunkName == "SKL")
         {
-          val skills = dataArray.toString().split(",")
+          val skills = dataString.split(",")
           val names = skills.map(_.tail)
           val lvls = skills.map(_.head - '0')
           val n = skills.length
           for (i <- 0 to n - 1)
           {
-            val skill = olio.allSkills.find(_ == names(i)).get
+            val skill = olio.allSkills.find(_.name == names(i)).get
             for (lvl <- 0 to lvls(i) - 1)
             {
               olio.addSkill(skill)
@@ -95,7 +97,7 @@ object SaverLoader {
           
         if (chunkName == "TAL")
         {
-          val names = dataArray.toString().split(",")
+          val names = dataString.split(",")
           val n = names.length
           for (i <- 0 to n - 1)
           {
@@ -106,8 +108,8 @@ object SaverLoader {
          
         if (chunkName == "APO")
         {
-          val split = dataArray.toString().split(",").map(_.toInt)
-          for (i <- 0 to split.length)
+          val split = dataString.split(",").map(_.toInt)
+          for (i <- 0 to split.length - 1)
           {
             olio.armourPoints(i) = split(i)
           }
@@ -115,7 +117,7 @@ object SaverLoader {
           
         if (chunkName == "CMT")
         {
-          olio.comments = dataArray.toString()
+          olio.comments = dataString
         }
           
         getData(chunkHeader, input)
@@ -152,7 +154,9 @@ object SaverLoader {
   
   
   def getChunkName(chunkHeader: Array[Char]) = {
-    chunkHeader.take(3).toString()
+    var name = ""
+    chunkHeader.take(3).foreach(name += _)
+    name
   }
   
   
@@ -163,10 +167,21 @@ object SaverLoader {
   def getData(loadTo: Array[Char], input: Source) = {
     
     val size = loadTo.size
+    var cursor = 0
     
-    for (i <- 0 to size - 1) {
-      loadTo(i) = input.next()
+    while (cursor < size)
+    {
+      if (input.hasNext) loadTo(cursor) = input.next()
+      cursor += 1
     }
+    
+    /*
+    for (i <- 0 to size - 1)
+    {
+      if (input.hasNext) loadTo(i) = input.next()
+    }
+    * 
+    */
     
   }
   
