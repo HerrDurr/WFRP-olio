@@ -13,7 +13,7 @@ object Sheet extends SimpleSwingApplication {
     this.visible = true
     this.centerOnScreen()
     
-    val olio = new Olio("Seppo", "Dwarf")
+    val olio = new Olio
     
     val olioPanel = new OlioPanel(olio)
     

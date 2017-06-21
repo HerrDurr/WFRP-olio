@@ -9,7 +9,7 @@ import java.nio.charset.CodingErrorAction
 import olioIO.DataIO
 import data._
 
-class Olio(n: String, r: String) {
+class Olio {
   
   private var raceChangeable = ""
   
@@ -81,10 +81,6 @@ class Olio(n: String, r: String) {
   def setFortune(fp: Int) = {
     this.fortuneLeft = max( 0, min(fp, this.attributes.fatePoints) )
   }
-  
-  
-  this.setName(n) //On setup
-  this.setRace(r) //On setup
   
   
   def currentWounds = this.woundsLeft
