@@ -14,7 +14,11 @@ class TalentMenu(olioPanel: OlioPanel) extends BoxPanel(Orientation.Horizontal) 
   val lTalents = allTalents.take(talentN / 3 + 1)
   val cTalents = allTalents.drop(talentN / 3 + 1).take(talentN / 3 + 1)
   val rTalents = allTalents.drop(talentN / 3 * 2 + 2)
-  olioPanel.olio.allTalents.foreach(t => lPanel.contents += new Label(t.name))
   
-  this.contents += lPanel
+  lTalents.foreach(t => lPanel.contents += new TalentSelector(olioPanel, t))
+  cTalents.foreach(t => cPanel.contents += new TalentSelector(olioPanel, t))
+  rTalents.foreach(t => rPanel.contents += new TalentSelector(olioPanel, t))
+  
+  
+  this.contents += (lPanel, new Separator(Orientation.Vertical), cPanel, new Separator(Orientation.Vertical), rPanel)
 }
