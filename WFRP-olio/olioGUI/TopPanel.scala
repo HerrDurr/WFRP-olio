@@ -2,6 +2,7 @@ package olioGUI
 
 import main._
 import scala.swing._
+import scala.swing.Orientation._
 import event._
 import scala.math.max
 import java.awt.geom.Dimension2D
@@ -16,13 +17,12 @@ class TopPanel(olio: Olio) extends FlowPanel {
   val raceLabel = new Label(olio.race)
   val careerLabel = new Label(career.current)
   
-  val rcPanel = new GridPanel(1,2) {
-    contents += raceLabel
-    contents += careerLabel
-  }
+  val rcPanel = new BoxPanel(Horizontal)
+  this.rcPanel.contents += (raceLabel, new Label(" "), careerLabel)
   
-  val leftPanel = new GridPanel(2,1) {
+  val leftPanel = new BoxPanel(Vertical) {
     contents += nameLabel
+    //contents += new Separator(Horizontal)
     contents += rcPanel
   }
   
@@ -154,6 +154,7 @@ class TopPanel(olio: Olio) extends FlowPanel {
   
   
   def update() = {
+    val colour = olio.colour
     this.nameLabel.text = olio.name
     this.careerLabel.text = olio.career.current
     this.raceLabel.text = olio.race
@@ -161,6 +162,11 @@ class TopPanel(olio: Olio) extends FlowPanel {
     this.wfPanel.woundPanel.woundButton.text = olio.currentWounds.toString()
     this.wfPanel.fortunePanel.fortuneLabel.text = "/ " + olio.attributes.fatePoints.toString()
     this.wfPanel.fortunePanel.fortuneButton.text = olio.fortunePoints.toString()
+    this.background = colour
+    this.contents.foreach(_.background = colour)
+    //this.rcPanel.contents.foreach(_.background = colour)
+    this.rcPanel.background = colour
+    this.wfPanel.contents.foreach(_.background = colour)
   }
   
   def changeCareer(c: String) = {
