@@ -3,6 +3,7 @@ package olioGUI
 import scala.swing._
 import main.Olio
 import main.Skill
+import main.Talent
 import javax.swing.SpinnerListModel
 import java.awt.geom.Dimension2D
 import scala.swing.event._
@@ -18,6 +19,23 @@ class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
   
   val nameLabel = new Label(skill.name + " (" + skill.skillAttribute._1 + ")")
   nameLabel.preferredSize = new Dimension(170, 14)
+  nameLabel.tooltip = {
+      var tooltip = "Related Talents: "
+      /*
+      val talentsOption = skill.skillTalents
+      if (talentsOption.isDefined) {
+        var takenTalentNames = ""
+        talentsOption.get.foreach( t => if ( olio.hasTalent(olio.allTalents.find(_.name == t).getOrElse(new Talent("Name"))) ) takenTalentNames += t + ", " )
+        if (!takenTalentNames.isEmpty()) tooltip += takenTalentNames.dropRight(2) else tooltip = ""
+      } else tooltip = ""
+      * 
+      */
+      val talents = skill.skillTalents.getOrElse(Vector("-")).map(_ + ", ")
+      talents.dropRight(1)foreach(tooltip += _)
+      tooltip += talents.last.dropRight(2)
+      tooltip
+  }
+  
   
   val skillOptions: Array[Object]  = Array("-", "X", "+10", "+20")
   
