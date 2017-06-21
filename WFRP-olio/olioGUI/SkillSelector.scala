@@ -10,11 +10,11 @@ import java.awt.Color
 
 class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
   
-  //this.contents += new Label("MOI TESTI123")
+  
   val olio = olioPanel.olio
   
-  val nonSelFont = new Font("Arial", 0, 12)
-  val selFont = new Font("Arial", java.awt.Font.BOLD, 12)
+  val nonSelFont = olioPanel.whFont.deriveFont(14f)
+  val selFont = olioPanel.whFontBold.deriveFont(14f)
   
   val nameLabel = new Label(skill.name + " (" + skill.skillAttribute._1 + ")")
   nameLabel.preferredSize = new Dimension(170, 14)
@@ -80,6 +80,7 @@ class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
         talents.dropRight(1)foreach(message += _)
         message += talents.last.dropRight(2) + "\n\nDescription:\n" + skill.description
         Dialog.showMessage(this, message, skill.name, Dialog.Message.Info)
+        
       }
     }
     

@@ -7,8 +7,8 @@ import main._
 
 object Sheet extends SimpleSwingApplication {
   
+  
   def top = new MainFrame {
-    
     
     this.visible = true
     this.centerOnScreen()
@@ -20,6 +20,8 @@ object Sheet extends SimpleSwingApplication {
     this.contents = olioPanel
     
     this.title = olio.name
+    
+    
     
     
   }

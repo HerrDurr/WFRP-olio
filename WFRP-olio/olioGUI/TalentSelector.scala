@@ -8,9 +8,27 @@ class TalentSelector(olioPanel: OlioPanel, talent: Talent) extends BoxPanel(Orie
   
   val olio = olioPanel.olio
   
-  val nonSelFont = new Font("Arial", 0, 12)
-  val selFont = new Font("Arial", java.awt.Font.BOLD, 12)
+  val nonSelFont = olioPanel.whFont.deriveFont(14f)
+  val selFont = olioPanel.whFontBold.deriveFont(14f)
   
+  val nameLabel = new Label(talent.name + " ")
+  
+  val checkBox = new CheckBox
+  
+  this.contents += (nameLabel, checkBox)
+  
+  
+  def update() = {
+    if (olio.hasTalent(talent)) {
+      this.levelLabel.text = skill.skillLevel.toString()
+      this.nameLabel.font = selFont
+      this.levelLabel.font = selFont
+    } else {
+      this.levelLabel.text = ""
+      this.nameLabel.font = nonSelFont
+      this.levelLabel.font = nonSelFont
+    }
+  }
   
   
 }

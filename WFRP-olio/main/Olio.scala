@@ -21,11 +21,14 @@ class Olio(n: String, r: String) {
   
   private val skillBuffer: Buffer[Skill] = Buffer()
   
+  private val talentBuffer: Buffer[Talent] = Buffer()
+  
   val weapons: Array[Weapon] = Array(new Weapon("None"), new Weapon("None"), new Weapon("None"))
   
   val attributes = new Attributes
   
   val career = new Career
+  
   
   /**
    * A Vector containing all possible Talents.
@@ -132,6 +135,34 @@ class Olio(n: String, r: String) {
     this.skills.contains(skill)
   }
   
+  
+  /**
+   * Returns the creature's known talents.
+   */
+  def talents = {
+    this.talentBuffer.toVector
+  }
+  
+  
+  /**
+   * Checks if the Olio knows the Talent given as parameter
+   */
+  def hasTalent(talent: Talent) = {
+    this.talents.contains(talent)
+  }
+  
+  
+  
+  def addTalent(talent: Talent) = {
+    if (!this.hasTalent(talent))
+      this.talentBuffer += talent
+  }
+  
+  
+  def removeTalent(talent: Talent) = {
+    if (this.hasTalent(talent))
+      this.talentBuffer -= talent
+  }
   
   
 }
