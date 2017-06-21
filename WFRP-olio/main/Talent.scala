@@ -4,7 +4,7 @@ import scala.collection.mutable.Buffer
 
 class Talent(name: String) extends Loadable(name) {
   
-  private var attributeOption: Option[String] = None
+  private var attributesOption: Option[Vector[String]] = None
   
   private var skillsOption: Option[Vector[String]] = None
   
@@ -14,7 +14,7 @@ class Talent(name: String) extends Loadable(name) {
   
   //private var shortDescr = ""
   
-  def affectedAttribute = this.attributeOption
+  def affectedAttributes = this.attributesOption
   
   
   def affectedSkill = this.skillsOption
@@ -29,7 +29,7 @@ class Talent(name: String) extends Loadable(name) {
   //def shortDescription = this.shortDescr
   
   
-  def setAttribute(a: String/*, id: Int*/) = this.attributeOption = Option(a)
+  def setAttributes(attributeNames: Vector[String]) = this.attributesOption = Option(attributeNames)
   
   
   def setDescription(input: String) = this.descr = input

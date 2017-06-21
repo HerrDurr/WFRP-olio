@@ -32,9 +32,30 @@ class TalentSelector(olioPanel: OlioPanel, talent: Talent) extends BoxPanel(Orie
     }
   }
   
-  this.listenTo(checkBox)
+  this.listenTo(checkBox, nameLabel.mouse.moves)
+  
+  def highLight(c: Component, hLight: Boolean) = {
+      if (hLight) c.foreground = Color.MAGENTA
+      else c.foreground = Color.black
+    }
   
   reactions += {
+    
+    case mouseEvent: MouseEntered => {
+      if (talent.affectedAttributes.isDefined)
+        talent.affectedAttributes.get.foreach( a => highLight (
+          olioPanel.attrPanel.contents.find(c => c.isInstanceOf[Label] && c.asInstanceOf[Label].text == a).get,
+          true
+          ) )
+    }
+    
+    case mouseEvent: MouseExited => {
+      if (talent.affectedAttributes.isDefined)
+      talent.affectedAttributes.get.foreach( a => highLight (
+          olioPanel.attrPanel.contents.find(c => c.isInstanceOf[Label] && c.asInstanceOf[Label].text == a).get,
+          false
+          ) )
+    }
     
     case ButtonClicked(checkBox) => {
       if (checkBox.selected) olio.addTalent(talent)

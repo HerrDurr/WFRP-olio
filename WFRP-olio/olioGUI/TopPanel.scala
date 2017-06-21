@@ -40,7 +40,7 @@ class TopPanel(olio: Olio) extends FlowPanel {
     }
     
     
-    
+    //TODO: iffi liittyen Luck-talentiin
     val fortunePanel = new FlowPanel {
       val fortuneButton = new Button( olio.attributes.fatePoints.toString() )
       val fortuneLabel = new Label( "/ " + olio.attributes.fatePoints.toString() )

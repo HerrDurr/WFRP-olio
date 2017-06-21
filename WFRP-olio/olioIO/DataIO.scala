@@ -248,7 +248,7 @@ object DataIO {
           splitLine(0).trim().toLowerCase() match {
             case "attributes" =>
               val data = splitLine(1).trim()
-              if (data != "-") talent.setAttribute(data)
+              if (data != "-") talent.setAttributes(data.split(",").map( _.trim() ).toVector)
               done(0) = true
             case "skills" =>
               val data = splitLine(1).trim()
