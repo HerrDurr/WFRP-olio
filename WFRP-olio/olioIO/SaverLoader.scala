@@ -5,6 +5,7 @@ import java.io.PrintWriter
 import main.{Olio, Weapon}
 import scala.io.Source
 import java.awt.Color
+import scala.swing.Dialog
 
 object SaverLoader {
   
@@ -155,6 +156,22 @@ object SaverLoader {
   
   def saveOlio(olio: Olio) = {
     //TODO: Tee tama
+    
+    val fileName = "data/saves/" + olio.name.trim() + ".txt"
+    val file = new PrintWriter(fileName)
+    
+    var saveData = ""
+    
+    try {
+      
+      
+      
+      file.print(saveData)
+      
+    } finally {
+      file.close()
+    }
+    
   }
   
   
