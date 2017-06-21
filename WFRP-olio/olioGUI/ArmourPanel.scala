@@ -9,10 +9,18 @@ class ArmourPanel(hitMin: Int, hitMax: Int) extends BoxPanel(Orientation.Vertica
   val armourSpinner = new Spinner(spinModel)
   armourSpinner.preferredSize = new Dimension(30, 28)
   armourSpinner.maximumSize = new Dimension(30, 28)
+  val apLabel = new Label("AP: ")
   val hitLabel = new Label(hitMin + "-" + hitMax)
   val upperPanel = new BoxPanel(Orientation. Horizontal)
-  upperPanel.contents += (new Label("AP: "), armourSpinner)
+  val transpCol = new Color(255, 255, 255, 0)
+  upperPanel.background = transpCol
+  //apLabel.background = transpCol
+  upperPanel.contents += (apLabel, armourSpinner)
   
   this.contents += (upperPanel, hitLabel)
+  
+  //this.preferredSize = new Dimension(50, 60)
+  this.background = transpCol
+  
   
 }
