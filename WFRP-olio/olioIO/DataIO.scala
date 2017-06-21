@@ -254,8 +254,9 @@ object DataIO {
               val data = splitLine(1).trim()
               if (data != "-") talent.setSkills(data.split(",").map( _.trim() ).toVector)
               done(1) = true
-            case "other" =>
-              // TODO: Tee jotain
+            case "weapons" =>
+              val data = splitLine(1).trim()
+              if (data != "-") talent.setWeapons(data)
               done(2) = true
             case "description" =>
               talent.setDescription(readDescription)
