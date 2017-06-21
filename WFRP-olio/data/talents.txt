@@ -3,11 +3,17 @@ Talent data file
 #Name
 Attributes : ... (- if none)
 Skills : ... (- if none)
-Other : y/n
+Weapons : ... (- if none)
 Description : ...
 
 #Acute Hearing
 Attributes : -
 Skills : Perception
-Other : n
+Weapons : -
 Description : 
+
+#Aethyric Attunement
+Attributes : -
+Skills : Channeling, Magical Sense
+Weapons : -
+Description :
