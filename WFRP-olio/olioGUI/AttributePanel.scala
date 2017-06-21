@@ -70,7 +70,8 @@ class AttributePanel(olioPanel: OlioPanel) extends GridPanel(4,8) {
                        a, w, sB, tB, m, mag, iP, fP,
                        aLabel, wLabel, sbLabel, tbLabel, mLabel, magLabel, ipLabel, fpLabel)
   
-  
+  this.contents.foreach(_.font = olioPanel.whFont.deriveFont(14f))
+                       
   this.update()
   
   this.contents.foreach( lbl => this.listenTo(lbl.mouse.clicks) )

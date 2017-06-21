@@ -31,9 +31,9 @@ class RightPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
   //Pressing this button shows all skills, which have tickboxes next to them so they can be picked and trained in.
   val skillsButton = new Button("All Skills")
   
-  val skillGrid = new GridPanel(5,1) {
+  val skillGrid = new GridPanel(4,1) {
     skillLabels.foreach(contents += _)
-    contents += skillsButton
+    //contents += skillsButton
   }
   
   /*
@@ -47,9 +47,15 @@ class RightPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
   
   val talentsButton = new Button("Talents")
   
-  this.contents += (weaponGrid, skillGrid, /*Swing.VGlue, */talentsButton)
+  val colourButton = new Button("Colour")
   
-  this.listenTo(skillsButton, talentsButton)
+  val toolBar = new BoxPanel(Orientation.Horizontal)
+  
+  this.toolBar.contents += (skillsButton, talentsButton, colourButton)
+  
+  this.contents += (weaponGrid, skillGrid, /*Swing.VGlue, */toolBar)
+  
+  this.listenTo(skillsButton, talentsButton, colourButton)
   
   val skillMenu = new SkillMenu(olioPanel)
   val talentMenu = new TalentMenu(olioPanel)
@@ -57,19 +63,30 @@ class RightPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
   this.reactions += {
     case clickEvent: ButtonClicked => {
       
-      val frame = new Frame
-      if (clickEvent.source == skillsButton)
+      
+      
+      if (clickEvent.source == colourButton)
       {
-        frame.title = olio.name + "'s Skills"
-        frame.contents = skillMenu
+        val newCol = ColorChooser.showDialog(this, "Choose a colour", olio.colour).getOrElse(olio.colour)
+        olio.setColour(newCol)
+        olioPanel.update()
       }
-      if (clickEvent.source == talentsButton)
+      else
       {
-        frame.title = olio.name + "'s Talents"
-        frame.contents = talentMenu
+        val frame = new Frame
+        if (clickEvent.source == skillsButton)
+        {
+          frame.title = olio.name + "'s Skills"
+          frame.contents = skillMenu
+        }
+        if (clickEvent.source == talentsButton)
+        {
+          frame.title = olio.name + "'s Talents"
+          frame.contents = talentMenu
+        }
+        frame.visible = true
+        frame.setLocationRelativeTo(this)
       }
-      frame.visible = true
-      frame.setLocationRelativeTo(this)
     }
   }
   
