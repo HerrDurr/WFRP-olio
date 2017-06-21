@@ -13,9 +13,9 @@ class RightPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
   
   val olio = olioPanel.olio
   
-  val weapon1 = new WeaponPanel(olio, 0)
-  val weapon2 = new WeaponPanel(olio, 1)
-  val weapon3 = new WeaponPanel(olio, 2)
+  val weapon1 = new WeaponPanel(olioPanel, 0)
+  val weapon2 = new WeaponPanel(olioPanel, 1)
+  val weapon3 = new WeaponPanel(olioPanel, 2)
   
   val weaponGrid = new GridPanel(3, 1) {
     contents += (weapon1, weapon2, weapon3)
@@ -35,6 +35,7 @@ class RightPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
     skillLabels.foreach(contents += _)
     //contents += skillsButton
   }
+  this.skillGrid.contents.foreach(_.font = olioPanel.whFont.deriveFont(16f))
   
   /*
   val skillPopup = new ListView {
@@ -52,6 +53,7 @@ class RightPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
   val toolBar = new BoxPanel(Orientation.Horizontal)
   
   this.toolBar.contents += (skillsButton, talentsButton, colourButton)
+  this.toolBar.contents.foreach(_.font = olioPanel.whFont.deriveFont(16f))
   
   this.contents += (weaponGrid, skillGrid, /*Swing.VGlue, */toolBar)
   
