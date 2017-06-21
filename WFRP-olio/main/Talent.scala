@@ -1,6 +1,11 @@
 package main
 
 import scala.collection.mutable.Buffer
+import scala.io.Source
+import scala.io.Codec
+import java.nio.charset.CodingErrorAction
+import olioIO.DataIO
+import data._
 
 class Talent(name: String) extends Loadable(name) {
   
@@ -11,6 +16,16 @@ class Talent(name: String) extends Loadable(name) {
   private var weaponsOption: Option[String] = None
   
   private var descr = ""
+  
+  
+  val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
+  val file = Source.fromFile("data/talents.txt")(decoder)
+  try {
+    DataIO.loadItem(file.reader(), this)
+  } finally {
+    file.close()
+  }
+  
   
   //private var shortDescr = ""
   

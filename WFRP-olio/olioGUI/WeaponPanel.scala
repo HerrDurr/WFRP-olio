@@ -13,8 +13,15 @@ class WeaponPanel(olio: Olio, index: Int) extends BoxPanel(Orientation.Horizonta
   private var weapon = olio.weapons(index)
   
   private val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
-  private val reader = Source.fromFile("data/weapons.txt")(decoder).reader()
-  val weaponList = DataIO.loadNames(reader)
+  private val file = Source.fromFile("data/weapons.txt")(decoder)
+  private var weaponList: Vector[String] = Vector()
+  try {
+   weaponList = DataIO.loadNames(file.reader())
+  } finally {
+    file.close()
+  }
+  
+  
   
   val dropMenu = new ComboBox(this.weaponList)
   val damageLabel = new Label("Dmg: ")

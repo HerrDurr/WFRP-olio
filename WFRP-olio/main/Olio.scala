@@ -35,7 +35,12 @@ class Olio(n: String, r: String) {
    */
   val allTalents = {
     val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
-    DataIO.loadNames(Source.fromFile("data/talents.txt")(decoder).reader()).map( new Talent(_) )
+    val file = Source.fromFile("data/talents.txt")(decoder)
+    try {
+      DataIO.loadNames(file.reader()).map( new Talent(_) )
+    } finally {
+      file.close()
+    }
   }
   
   /**
@@ -43,7 +48,12 @@ class Olio(n: String, r: String) {
    */
   val allSkills = {
     val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
-    DataIO.loadNames(Source.fromFile("data/skills.txt")(decoder).reader()).map( new Skill(_) )
+    val file = Source.fromFile("data/skills.txt")(decoder)
+    try {
+      DataIO.loadNames(file.reader()).map( new Skill(_) )
+    } finally {
+      file.close()
+    }
   }
   
   //OLD IMPLEMENTATION   DataIO.loadBasicSkills(Source.fromFile("data/skills.txt")(decoder).reader()).foreach(skillBuffer += _)
