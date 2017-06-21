@@ -18,6 +18,7 @@ class TalentSelector(olioPanel: OlioPanel, talent: Talent) extends BoxPanel(Orie
   nameLabel.tooltip = talent.description
   
   val checkBox = new CheckBox
+  if (olio.hasTalent(talent))this.checkBox.doClick()
   
   this.contents += (nameLabel, checkBox)
   
