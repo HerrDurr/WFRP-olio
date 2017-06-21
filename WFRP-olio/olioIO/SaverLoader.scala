@@ -54,6 +54,11 @@ object SaverLoader {
           for (x <- 0 to split.length - 1)
           {
             var i = x
+            if (x == 2 || x == 3)
+            {
+              olio.attributes.setAttribute(i, split(i))
+              olio.attributes.setAttribute(i + 8, split(i) / 10)
+            }
             if (x > 9) i = x + 2
             olio.attributes.setAttribute(i, split(x))
           }

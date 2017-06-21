@@ -30,10 +30,12 @@ class OlioPanel(val olio: Olio) extends BorderPanel {
     this.attrPanel.update()
     this.updateSkills()
     this.centrePanel.rightPanel.update()
+    this.topPanel.update()
   }
   
   def updateSkills() = {
     this.olio.skills.foreach { x => x.setLevel(olio.attributes.listValues(x.skillAttribute._2)) }
   }
-                
+  
+  update()
 }

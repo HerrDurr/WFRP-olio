@@ -44,10 +44,15 @@ class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
   val spinner = new Spinner(skillModel)
   spinner.preferredSize = new Dimension(40, 18)
   
+  if (skill.timesGained == 1) spinner.value =("X")
+  else if (skill.timesGained == 2) spinner.value = ("+10")
+  else if (skill.timesGained == 3) spinner.value = ("+20")
+  
   //val selector = new ComboBox(skillOptions)
   
   val levelLabel = new Label("")
   levelLabel.preferredSize = new Dimension(40, 18)
+  
   
   this.contents += (nameLabel, levelLabel, spinner)
   //this.contents += (nameLabel, selector, levelLabel)
@@ -126,7 +131,5 @@ class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
     
   }
   
-  
   this.update()
-  
 }
