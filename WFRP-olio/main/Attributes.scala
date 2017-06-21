@@ -37,12 +37,13 @@ class Attributes {
   def fatePoints = this.values(15)
   
   
+  
   /**
    * Attribute numbering explained:
    * WS=0, BS=1, S=2, T=3, Ag=4, Int=5, WP=6, Fel=7,
    * A=8, W=9, SB=10, TB=11, M=12, Mag=13, IP=14, FP=15
    */
-  private def setAttribute(attr: Int, value: Int) = this.values(attr) = value
+  def setAttribute(attr: Int, value: Int) = this.values(attr) = value
   
   /* NOT IN USE CURRENTLY
   def setAttribute(attr: String, value: Int) = {

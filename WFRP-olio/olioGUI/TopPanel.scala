@@ -2,38 +2,42 @@ package olioGUI
 
 import main._
 import scala.swing._
+import scala.swing.Orientation._
 import event._
 import scala.math.max
+import scala.math.min
 import java.awt.geom.Dimension2D
 import java.awt.Insets._
 
-class TopPanel(olio: Olio) extends FlowPanel {
+class TopPanel(olioPanel: OlioPanel) extends FlowPanel {
   
+  val olio = olioPanel.olio
   val career = olio.career
+  val whFont = olioPanel.whFontBold.deriveFont(16f)
   
   
-  val nameLabel = new Label(olio.name)
-  val raceLabel = new Label(olio.race)
-  val careerLabel = new Label(career.current)
+  val nameLabel = new Label(olio.name) { font = whFont }
+  val raceLabel = new Label(olio.race) { font = whFont }
+  val careerLabel = new Label(career.current) { font = whFont }
   
-  val rcPanel = new GridPanel(1,2) {
-    contents += raceLabel
-    contents += careerLabel
-  }
+  val rcPanel = new BoxPanel(Horizontal)
+  this.rcPanel.contents += (raceLabel, new Label(" "), careerLabel)
   
-  val leftPanel = new GridPanel(2,1) {
+  val leftPanel = new BoxPanel(Vertical) {
     contents += nameLabel
+    //contents += new Separator(Horizontal)
     contents += rcPanel
   }
   
   val wfPanel = new GridPanel(2,1) {
     val woundPanel = new FlowPanel() {
-      val woundButton = new Button("0")
+      val woundButton = new Button("0") { font = whFont }
       woundButton.preferredSize = new Dimension(28, 28)
       woundButton.margin = new Insets(1,1,1,1)
-      val woundLabel = new Label("/ " + olio.attributes.wounds)
+      val woundLabel = new Label("/ " + olio.attributes.wounds) { font = whFont }
+      val descrLabel = new Label("Wounds: ") { font = whFont }
       
-      contents += new Label("Wounds: ")
+      contents += descrLabel
       contents += woundButton
       contents += woundLabel
       
@@ -42,12 +46,13 @@ class TopPanel(olio: Olio) extends FlowPanel {
     
     //TODO: iffi liittyen Luck-talentiin
     val fortunePanel = new FlowPanel {
-      val fortuneButton = new Button( olio.attributes.fatePoints.toString() )
-      val fortuneLabel = new Label( "/ " + olio.attributes.fatePoints.toString() )
+      val fortuneButton = new Button( olio.attributes.fatePoints.toString() ) { font = whFont }
+      val fortuneLabel = new Label( "/ " + olio.attributes.fatePoints.toString() ) { font = whFont }
       fortuneButton.preferredSize = new Dimension(28, 28)
       fortuneButton.margin = new Insets(1,1,1,1)
+      val descrLabel = new Label("Fortune: ") { font = whFont }
       
-      contents += new Label("Fortune: ")
+      contents += descrLabel
       contents += fortuneButton
       contents += fortuneLabel
     }
@@ -56,7 +61,7 @@ class TopPanel(olio: Olio) extends FlowPanel {
     contents += fortunePanel
   }
   
-  val nextDayButton = new Button("Next Day")
+  val nextDayButton = new Button("Next Day") { font = whFont }
   this.nextDayButton.preferredSize = new Dimension(100, 60)
   
   this.contents += leftPanel
@@ -154,6 +159,8 @@ class TopPanel(olio: Olio) extends FlowPanel {
   
   
   def update() = {
+    val colour = olio.colour
+    val colour2 = this.contrastColour(colour).darker()
     this.nameLabel.text = olio.name
     this.careerLabel.text = olio.career.current
     this.raceLabel.text = olio.race
@@ -161,21 +168,32 @@ class TopPanel(olio: Olio) extends FlowPanel {
     this.wfPanel.woundPanel.woundButton.text = olio.currentWounds.toString()
     this.wfPanel.fortunePanel.fortuneLabel.text = "/ " + olio.attributes.fatePoints.toString()
     this.wfPanel.fortunePanel.fortuneButton.text = olio.fortunePoints.toString()
+    this.background = colour
+    this.contents.foreach(_.background = colour)
+    this.contents.foreach(_.foreground = colour2)
+    this.nameLabel.foreground = colour2
+    this.rcPanel.background = colour
+    this.rcPanel.contents.foreach(_.foreground = colour2)
+    this.wfPanel.contents.foreach(_.background = colour)
+    this.wfPanel.woundPanel.descrLabel.foreground = colour2
+    this.wfPanel.woundPanel.woundLabel.foreground = colour2
+    this.wfPanel.fortunePanel.descrLabel.foreground = colour2
+    this.wfPanel.fortunePanel.fortuneLabel.foreground = colour2
   }
   
-  def changeCareer(c: String) = {
-    this.olio.career.change(c)
-    this.update()
+  
+  def contrastColour(col: Color) = {
+    val r = col.getRed
+    val g = col.getGreen
+    val b = col.getBlue
+    /*
+    val high = max(r, max(g, b))
+    val low = min(r, min(g, b))
+    val sum = high + low
+    new Color(sum - r, sum - g, sum - b)
+     */
+    new Color(255 - r, 255 - g, 255 - b)
   }
   
-  def changeRace(r: String) = {
-    this.olio.setRace(r)
-    this.update()
-  }
-  
-  def changeName(n: String) = {
-    this.olio.setName(n)
-    this.update()
-  }
   
 }

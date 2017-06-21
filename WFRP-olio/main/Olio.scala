@@ -8,6 +8,7 @@ import scala.io.Codec
 import java.nio.charset.CodingErrorAction
 import olioIO.DataIO
 import data._
+import java.awt.Color
 
 class Olio {
   
@@ -19,6 +20,8 @@ class Olio {
   
   private var fortuneLeft = 0
   
+  private var col = new Color(200, 200, 200)
+  
   private val skillBuffer: Buffer[Skill] = Buffer()
   
   private val talentBuffer: Buffer[Talent] = Buffer()
@@ -29,6 +32,9 @@ class Olio {
   
   val career = new Career
   
+  val armourPoints = Array(0, 0, 0, 0, 0, 0)
+  
+  var comments = ""
   
   /**
    * A Vector containing all possible Talents.
@@ -61,12 +67,15 @@ class Olio {
   //Gives the Olio all Basic Skills on creation.
   this.allSkills.filter(_.skillBasic).foreach(this.skillBuffer += _)
   
+  def colour = this.col
   
   def fortunePoints = this.fortuneLeft
   
   def race = this.raceChangeable
   
   def name = this.nameChangeable
+  
+  def setColour(newColour: Color) = this.col = newColour
   
   def setName(nn: String) = {
     this.nameChangeable = nn

@@ -8,8 +8,9 @@ import olioIO.DataIO
 import scala.swing.event._
 import main._
 
-class WeaponPanel(olio: Olio, index: Int) extends BoxPanel(Orientation.Horizontal) {
+class WeaponPanel(olioPanel: OlioPanel, index: Int) extends BoxPanel(Orientation.Horizontal) {
   
+  val olio = olioPanel.olio
   private var weapon = olio.weapons(index)
   
   private val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
@@ -32,6 +33,7 @@ class WeaponPanel(olio: Olio, index: Int) extends BoxPanel(Orientation.Horizonta
   this.dropMenu.selection.item = weapon.name
   
   this.contents += (dropMenu, damageLabel, rangeLabel)
+  this.contents.foreach(_.font = olioPanel.whFont.deriveFont(16f))
   
   this.listenTo(dropMenu.selection)
   

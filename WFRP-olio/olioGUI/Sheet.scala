@@ -4,6 +4,10 @@ import scala.swing._
 import scala.swing.event._
 import scala.swing.BorderPanel.Position._
 import main._
+import olioIO.SaverLoader
+import scala.io.Source
+import scala.io.Codec
+import java.nio.charset.CodingErrorAction
 
 object Sheet extends SimpleSwingApplication {
   
@@ -14,13 +18,19 @@ object Sheet extends SimpleSwingApplication {
     this.centerOnScreen()
     
     val olio = new Olio
+    val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
+    val saveFile = Source.fromFile("data/saves/Seppo.txt")(decoder)
+    try {
+      SaverLoader.loadOlio(saveFile, olio)
+    } finally {
+      saveFile.close()
+    }
     
     val olioPanel = new OlioPanel(olio)
     
     this.contents = olioPanel
     
     this.title = olio.name
-    
     
     
     

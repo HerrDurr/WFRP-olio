@@ -10,16 +10,17 @@ import java.io.File
 import javax.swing.ImageIcon
 import java.awt.Color
 
-class HitPanel extends Label with SequentialContainer.Wrapper {
+class HitPanel(olioPanel: OlioPanel) extends Label with SequentialContainer.Wrapper {
   
   this.preferredSize = new Dimension(200, 300)
   
-  val head = new ArmourPanel(1, 15)
-  val rArm = new ArmourPanel(36, 55)
-  val lArm = new ArmourPanel(16, 35)
-  val body = new ArmourPanel(56, 80)
-  val rLeg = new ArmourPanel(91, 100)
-  val lLeg = new ArmourPanel(81, 90)
+  val head = new ArmourPanel(olioPanel, 1, 15)
+  val rArm = new ArmourPanel(olioPanel, 16, 35)
+  val lArm = new ArmourPanel(olioPanel, 36, 55)
+  val body = new ArmourPanel(olioPanel, 56, 80)
+  val rLeg = new ArmourPanel(olioPanel, 81, 90)
+  val lLeg = new ArmourPanel(olioPanel, 91, 100)
+  val armourPanels = Vector(head, rArm, lArm, body, rLeg, lLeg)
   //val armourPanelWidth = head.size.getWidth.toInt
   //val armourPanelHeight = head.size.getHeight.toInt
   val wid = 65
@@ -29,16 +30,25 @@ class HitPanel extends Label with SequentialContainer.Wrapper {
   
   this.icon = new ImageIcon("data/stickman.png")
   
-  this.contents += (head, rArm, lArm, body, rLeg, lLeg)
+  armourPanels.foreach(this.contents += _)
   
   val topCorner = this.location
   
   this.head.peer.setBounds(100 - wid / 2 + topCorner.getX.toInt, topCorner.getY.toInt, wid, hei)
-  this.rArm.peer.setBounds(200 - wid + topCorner.getX.toInt, 80 + topCorner.getY.toInt, wid, hei)
-  this.lArm.peer.setBounds(0 + topCorner.getX.toInt, 80 + topCorner.getY.toInt, wid, hei)
+  this.rArm.peer.setBounds(topCorner.getX.toInt, 80 + topCorner.getY.toInt, wid, hei)
+  this.lArm.peer.setBounds(200 - wid + topCorner.getX.toInt, 80 + topCorner.getY.toInt, wid, hei)
   this.body.peer.setBounds(100 - wid / 2 + topCorner.getX.toInt, 130 + topCorner.getY.toInt, wid, hei)
-  this.rLeg.peer.setBounds(200 - wid + topCorner.getX.toInt, 200 + topCorner.getY.toInt, wid, hei)
-  this.lLeg.peer.setBounds(0 + topCorner.getX.toInt, 200 + topCorner.getY.toInt, wid, hei)
+  this.rLeg.peer.setBounds(topCorner.getX.toInt, 200 + topCorner.getY.toInt, wid, hei)
+  this.lLeg.peer.setBounds(200 - wid + topCorner.getX.toInt, 200 + topCorner.getY.toInt, wid, hei)
+  
+  def update() = {
+    val armourPoints = olioPanel.olio.armourPoints
+    for (i <- 0 to 5)
+    {
+      armourPanels(i).armourSpinner.value = armourPoints(i)
+    }
+  }
+  
   
   /*
   //this.contents += (head, rArm, lArm, body, rLeg, lLeg)
