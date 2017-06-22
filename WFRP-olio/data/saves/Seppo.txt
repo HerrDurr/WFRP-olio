@@ -1,1 +1,1 @@
-NAM05SeppoRAC05DwarfCAR08EngineerCOL10204,255,51ATR4011,11,11,11,11,11,11,11,1,11,1,1,1,1,1,1CRW019FOR011WPN40Hand Weapon,None,Gauntlet/Knuckle-dusterSKL402Outdoor Survival,2Trade (S),1NavigationTAL13Acute HearingAPO114,2,2,2,2,2CMT22Seppo on paras! jeejeeEND00
+NAM05SeppoRAC05DwarfCAR08EngineerCOL08255,0,51ATR4011,11,11,21,11,11,11,11,1,11,1,2,1,1,1,1CRW019FOR011WPN41Quarterstaff,None,Gauntlet/Knuckle-dusterSKL402Outdoor Survival,2Trade (S),1NavigationTAL13Acute HearingAPO114,2,2,2,2,2CMT22Seppo on paras! jeejeeEND00
