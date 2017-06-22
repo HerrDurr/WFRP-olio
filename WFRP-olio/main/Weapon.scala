@@ -40,7 +40,13 @@ class Weapon(name: String) extends Loadable(name) {
   
   private var weaponQualities: Option[Vector[String]] = None
   
+  private var reload: Option[String] = None
   
+  
+  def reloadTime = this.reload.getOrElse("-")
+  
+  
+  def setReloadTime(input: String) = this.reload = Option(input)
   
   
   def group = this.weaponGroup

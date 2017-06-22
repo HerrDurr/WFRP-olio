@@ -186,7 +186,7 @@ object DataIO {
        * Reads the .txt file data on the weapon and sets its values accordingly.
        */
       def readWeaponData() = {
-        var done = Array(false, false, false, false)
+        var done = Array(false, false, false, false, false)
         val weapon = item.asInstanceOf[Weapon]
         while (!done.forall(_ == true) && !currentLine.isEmpty() && currentLine != null && currentLine.head.toChar != '#') {
           val data = splitDataLine(1)
@@ -200,9 +200,12 @@ object DataIO {
             case "range" =>
               weapon.setRange(data.trim())
               done(2) = true
+            case "reload" =>
+              weapon.setReloadTime(data.trim())
+              done(3) = true
             case "qualities" =>
               weapon.setQualities(data.trim())
-              done(3) = true
+              done(4) = true
           }
           currentLine = lineReader.readLine()
         }
