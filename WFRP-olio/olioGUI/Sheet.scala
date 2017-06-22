@@ -35,15 +35,17 @@ object Sheet extends SimpleSwingApplication {
       else if (newOrLoad == Dialog.Result.No) 
       {
         val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
-        val fileChooser = new FileChooser
-        fileChooser.showOpenDialog(this)
-        val file = Source.fromFile(fileChooser.selectedFile)(decoder)
+        //val fileChooser = new FileChooser
+        val fileChooser = new javax.swing.JFileChooser(".\\data/saves")
+        fileChooser.showOpenDialog(this.peer)
+        if (/*fileChooser.selectedFile == null*/ fileChooser.getSelectedFile == null) quit()
+        val file = Source.fromFile(/*fileChooser.selectedFile*/fileChooser.getSelectedFile)(decoder)
         try {
           SaverLoader.loadOlio(file, character)
         } finally {
           file.close()
         }
-      }
+      } else quit()
       character
     }
     

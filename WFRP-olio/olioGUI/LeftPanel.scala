@@ -26,7 +26,7 @@ class LeftPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
   val hitPanel = new HitPanel(olioPanel)
   
   
-  val critButton = new Button("Critical Hit Tables")
+  val critButton = new Button("Critical Hit Tables") { font = olioPanel.whFont.deriveFont(14f) }
   this.contents += (hitPanel, critButton)
   hitPanel.repaint()
   

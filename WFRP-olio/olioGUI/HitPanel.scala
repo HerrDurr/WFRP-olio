@@ -14,12 +14,12 @@ class HitPanel(olioPanel: OlioPanel) extends Label with SequentialContainer.Wrap
   
   this.preferredSize = new Dimension(200, 300)
   
-  val head = new ArmourPanel(olioPanel, 1, 15)
-  val rArm = new ArmourPanel(olioPanel, 16, 35)
-  val lArm = new ArmourPanel(olioPanel, 36, 55)
-  val body = new ArmourPanel(olioPanel, 56, 80)
-  val rLeg = new ArmourPanel(olioPanel, 81, 90)
-  val lLeg = new ArmourPanel(olioPanel, 91, 100)
+  val head = new ArmourPanel(olioPanel, 0, 1, 15)
+  val rArm = new ArmourPanel(olioPanel, 1, 16, 35)
+  val lArm = new ArmourPanel(olioPanel, 2, 36, 55)
+  val body = new ArmourPanel(olioPanel, 3, 56, 80)
+  val rLeg = new ArmourPanel(olioPanel, 4, 81, 90)
+  val lLeg = new ArmourPanel(olioPanel, 5, 91, 100)
   val armourPanels = Vector(head, rArm, lArm, body, rLeg, lLeg)
   //val armourPanelWidth = head.size.getWidth.toInt
   //val armourPanelHeight = head.size.getHeight.toInt

@@ -2,8 +2,9 @@ package olioGUI
 
 import scala.swing._
 import javax.swing.SpinnerNumberModel
+import scala.swing.event._
 
-class ArmourPanel(olioPanel: OlioPanel, hitMin: Int, hitMax: Int) extends BoxPanel(Orientation.Vertical) {
+class ArmourPanel(olioPanel: OlioPanel, index: Int, hitMin: Int, hitMax: Int) extends BoxPanel(Orientation.Vertical) {
   
   val whFont = olioPanel.whFont.deriveFont(14f)
   val spinModel = new SpinnerNumberModel(0, 0, 7, 1)
@@ -25,5 +26,12 @@ class ArmourPanel(olioPanel: OlioPanel, hitMin: Int, hitMax: Int) extends BoxPan
   //this.preferredSize = new Dimension(50, 60)
   this.background = transpCol
   
+  this.listenTo(armourSpinner)
+  
+  reactions += {
+    case adjustingEvent: ValueChanged => {
+      olioPanel.olio.armourPoints(index) = this.armourSpinner.value.asInstanceOf[Int]
+    }
+  }
   
 }

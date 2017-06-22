@@ -64,9 +64,12 @@ class TopPanel(olioPanel: OlioPanel) extends FlowPanel {
   val nextDayButton = new Button("Next Day") { font = whFont }
   this.nextDayButton.preferredSize = new Dimension(100, 60)
   
-  this.contents += leftPanel
-  this.contents += wfPanel
-  this.contents += nextDayButton
+  val saveColourPanel = new BoxPanel(Vertical)
+  val colourButton = new Button("Colour") { font = whFont }
+  val saveButton = new Button("Save") { font = whFont }
+  saveColourPanel.contents += (colourButton, saveButton)
+  
+  this.contents += (leftPanel, wfPanel, nextDayButton, saveColourPanel)
   
   
   this.listenTo(careerLabel.mouse.clicks)
@@ -74,7 +77,7 @@ class TopPanel(olioPanel: OlioPanel) extends FlowPanel {
   this.listenTo(raceLabel.mouse.clicks)
   this.listenTo(nextDayButton)
   this.listenTo(wfPanel.woundPanel.woundButton)
-  this.listenTo(wfPanel.fortunePanel.fortuneButton)
+  this.listenTo(wfPanel.fortunePanel.fortuneButton, colourButton, saveButton)
   
   
   
@@ -88,7 +91,7 @@ class TopPanel(olioPanel: OlioPanel) extends FlowPanel {
         update()
       }
       
-      if(clickEvent.source == wfPanel.woundPanel.woundButton)
+      else if(clickEvent.source == wfPanel.woundPanel.woundButton)
       {
         val w = Dialog.showInput(contents.head, "Enter current wounds", initial = "")
         w match {
@@ -100,13 +103,28 @@ class TopPanel(olioPanel: OlioPanel) extends FlowPanel {
         }
       }
       
-      if(clickEvent.source == nextDayButton)
+      else if(clickEvent.source == nextDayButton)
       {
         val wounds = olio.currentWounds
         if(wounds >= 3)
           olio.setCurrentWounds(wounds + 1)
         olio.setFortune(olio.attributes.fatePoints)
         update()
+      }
+      
+      else if (clickEvent.source == colourButton)
+      {
+        val newCol = ColorChooser.showDialog(this, "Choose a colour", olio.colour).getOrElse(olio.colour)
+        olio.setColour(newCol)
+        olioPanel.update()
+      }
+      
+      else if (clickEvent.source == saveButton)
+      {
+        val save = Dialog.showConfirmation(this,
+            "Would you like to save your character/NPC?\nWARNING: This will overwrite any file with the same title as the character's/NPC's name!",
+            "Save?", Dialog.Options.YesNo, Dialog.Message.Warning, null)
+        if (save == Dialog.Result.Yes) olioIO.SaverLoader.saveOlio(olio)
       }
       
     }

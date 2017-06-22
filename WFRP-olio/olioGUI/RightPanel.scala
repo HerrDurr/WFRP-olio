@@ -48,16 +48,16 @@ class RightPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
   
   val talentsButton = new Button("Talents")
   
-  val colourButton = new Button("Colour")
+  //val colourButton = new Button("Colour")
   
   val toolBar = new BoxPanel(Orientation.Horizontal)
   
-  this.toolBar.contents += (skillsButton, talentsButton, colourButton)
+  this.toolBar.contents += (skillsButton, talentsButton)
   this.toolBar.contents.foreach(_.font = olioPanel.whFont.deriveFont(16f))
   
   this.contents += (weaponGrid, skillGrid, /*Swing.VGlue, */toolBar)
   
-  this.listenTo(skillsButton, talentsButton, colourButton)
+  this.listenTo(skillsButton, talentsButton)
   
   val skillMenu = new SkillMenu(olioPanel)
   val talentMenu = new TalentMenu(olioPanel)
@@ -66,29 +66,28 @@ class RightPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
     case clickEvent: ButtonClicked => {
       
       
-      
+      /*
       if (clickEvent.source == colourButton)
       {
         val newCol = ColorChooser.showDialog(this, "Choose a colour", olio.colour).getOrElse(olio.colour)
         olio.setColour(newCol)
         olioPanel.update()
       }
-      else
+      */
+      val frame = new Frame
+      if (clickEvent.source == skillsButton)
       {
-        val frame = new Frame
-        if (clickEvent.source == skillsButton)
-        {
-          frame.title = olio.name + "'s Skills"
-          frame.contents = skillMenu
-        }
-        if (clickEvent.source == talentsButton)
-        {
-          frame.title = olio.name + "'s Talents"
-          frame.contents = talentMenu
-        }
-        frame.visible = true
-        frame.setLocationRelativeTo(this)
+        frame.title = olio.name + "'s Skills"
+        frame.contents = skillMenu
       }
+      if (clickEvent.source == talentsButton)
+      {
+        frame.title = olio.name + "'s Talents"
+        frame.contents = talentMenu
+      }
+      frame.visible = true
+      frame.setLocationRelativeTo(this)
+      
     }
   }
   
