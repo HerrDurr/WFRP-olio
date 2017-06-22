@@ -164,6 +164,12 @@ object SaverLoader {
     
     try {
       
+      var data = olio.name
+      var header = ""
+      
+      saveData += "NAM" + this.chunkSizer(data.length()) + data
+      val race = olio.race
+      
       
       
       file.print(saveData)
@@ -172,6 +178,103 @@ object SaverLoader {
       file.close()
     }
     
+  }
+  
+  def appendData(header: String, olio: Olio): Tuple2[String, String] = {
+    
+    var resHeader = ""
+    var resData = ""
+    var data = ""
+    
+    if (header.isEmpty())
+    {
+      resHeader = "NAM"
+      data = olio.name
+    }
+    
+    else if (header == "NAM")
+    {
+      resHeader = "RAC"
+      data = olio.race
+    }
+    
+    else if (header == "RAC")
+    {
+      resHeader = "CAR"
+      data = olio.career.current
+    }
+    
+    else if (header == "CAR")
+    {
+      resHeader = "COL"
+      data = olio.colour.getRed.toString() + "," + olio.colour.getGreen.toString() + "," + olio.colour.getBlue.toString()
+    }
+    
+    else if (header == "COL")
+    {
+      resHeader = "ATR"
+      val attributeValues = olio.attributes.listValues
+      attributeValues.dropRight(1).foreach( data += _ + "," )
+      attributeValues.takeRight(1).foreach( data += _ )
+    }
+    
+    else if (header == "ATR")
+    {
+      resHeader = "CRW"
+      data = olio.currentWounds.toString()
+    }
+    
+    else if (header == "CRW")
+    {
+      resHeader = "FOR"
+      data = olio.fortunePoints.toString()
+    }
+    
+    else if (header == "FOR")
+    {
+      resHeader = "WPN"
+      data = olio.currentWounds.toString()
+    }
+    
+    else if (header == "WPN")
+    {
+      
+    }
+    
+    else if (header == "SKL")
+    {
+      
+    }
+    
+    else if (header == "TAL")
+    {
+      
+    }
+    
+    else if (header == "APO")
+    {
+      
+    }
+    
+    else if (header == "CMT")
+    {
+      
+    }
+    
+    else if (header == "END")
+    {
+      
+    }
+    
+    resData += resHeader + this.chunkSizer(data.length()) + data
+    (resHeader, resData)
+  }
+  
+  def chunkSizer(length: Int) = {
+    var result = ""
+    result += (length / 10)
+    result += (length % 10)
+    result
   }
   
   
