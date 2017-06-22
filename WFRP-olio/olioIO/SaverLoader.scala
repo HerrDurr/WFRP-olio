@@ -161,19 +161,39 @@ object SaverLoader {
     val file = new PrintWriter(fileName)
     
     var saveData = ""
+    var header = ""
     
     try {
       
-      var data = olio.name
-      var header = ""
       
-      saveData += "NAM" + this.chunkSizer(data.length()) + data
-      val race = olio.race
-      
+      while (header != "END")
+      {
+        val dataTuple = appendData(header, olio)
+        header = dataTuple._1
+        saveData += dataTuple._2
+      }
       
       
       file.print(saveData)
       
+    } catch {
+      
+      case e: IOException =>
+        val dataException = new CorruptedDataFileException("Creating the save data failed.")
+        dataException.initCause(e)
+        throw dataException
+      case e: NoSuchElementException =>
+        val dataException = new CorruptedDataFileException("A piece of data is missing.")
+        dataException.initCause(e)
+        throw dataException
+      case e: IndexOutOfBoundsException =>
+        val dataException = new CorruptedDataFileException("Reading the data failed (index out of bounds).")
+        dataException.initCause(e)
+        throw dataException
+      case e: IllegalArgumentException =>
+        val dataException = new CorruptedDataFileException("Illegal argument.")
+        dataException.initCause(e)
+        throw dataException
     } finally {
       file.close()
     }
