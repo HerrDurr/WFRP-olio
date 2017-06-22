@@ -21,7 +21,17 @@ object Sheet extends SimpleSwingApplication {
     
     val olio: Olio = {
       val character = new Olio
-      if (newOrLoad == Dialog.Result.Yes) character
+      if (newOrLoad == Dialog.Result.Yes)
+      {
+        
+        val name = Dialog.showInput(this, "Enter a name for your character/NPC", "Name", initial = "").getOrElse("Seppo")
+        val race = Dialog.showInput(this, "Enter your character's/NPC's race (or species)", "Race", initial = "Human").getOrElse("human")
+        val career = Dialog.showInput(this, "Enter your character's/NPC's career", "Career", initial = "").getOrElse("Dung Shoveler")
+        
+        character.setName(name)
+        character.setRace(race)
+        character.career.change(career)
+      }
       else if (newOrLoad == Dialog.Result.No) 
       {
         val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
