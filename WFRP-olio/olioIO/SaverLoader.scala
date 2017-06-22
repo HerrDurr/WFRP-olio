@@ -233,32 +233,43 @@ object SaverLoader {
     else if (header == "FOR")
     {
       resHeader = "WPN"
-      data = olio.currentWounds.toString()
+      olio.weapons.dropRight(1).foreach(data += _.name + ",")
+      data += olio.weapons.takeRight(1)(0).name
     }
     
     else if (header == "WPN")
     {
-      
+      resHeader = "SKL"
+      val skills = olio.skills.filter(_.timesGained > 0).map(s => s.timesGained.toString() + s.name)
+      skills.dropRight(1).foreach(data += _ + ",")
+      data += skills.takeRight(1)(0)
     }
     
     else if (header == "SKL")
     {
-      
+      resHeader = "TAL"
+      val talents = olio.talents.map(_.name)
+      talents.dropRight(1).foreach(data += _ + ",")
+      data += talents.takeRight(1)(0)
     }
     
     else if (header == "TAL")
     {
-      
+      resHeader = "APO"
+      val armourPoints = olio.armourPoints.map(_.toString)
+      armourPoints.dropRight(1).foreach(data += _ + ",")
+      data += armourPoints.takeRight(1)(0)
     }
     
     else if (header == "APO")
     {
-      
+      resHeader = "CMT"
+      data += olio.comments
     }
     
     else if (header == "CMT")
     {
-      
+      resHeader = "END"
     }
     
     else if (header == "END")
