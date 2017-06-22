@@ -32,7 +32,10 @@ object Sheet extends SimpleSwingApplication {
     
     this.title = olio.name
     
-    
+    //Saving test
+    olio.setName("Timi")
+    val saveQuestion = Dialog.showConfirmation(this, "Create test save file?", "Save?", Dialog.Options.YesNo, Dialog.Message.Question, null)
+    if (saveQuestion == Dialog.Result.Yes) SaverLoader.saveOlio(olio)
     
   }
   
