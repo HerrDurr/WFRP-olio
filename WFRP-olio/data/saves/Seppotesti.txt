@@ -1,0 +1,1 @@
+NAM05SeppoRAC05DwarfCAR08EngineerCOL10255,255,51ATR4011,11,11,21,11,11,11,11,1,11,1,2,1,1,1,1CRW019FOR011WPN28Longbow,None,Repeater PistolSKL402Outdoor Survival,2Trade (S),1NavigationTAL13Acute HearingAPO114,2,2,2,2,2CMT22Seppo on paras! jeejeeEND00

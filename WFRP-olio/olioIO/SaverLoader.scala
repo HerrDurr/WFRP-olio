@@ -2,6 +2,7 @@ package olioIO
 
 import java.io.IOException
 import java.io.PrintWriter
+import java.io.File
 import main.{Olio, Weapon}
 import scala.io.Source
 import java.awt.Color
@@ -147,11 +148,12 @@ object SaverLoader {
   
   
   
-  def saveOlio(olio: Olio) = {
-    //TODO: Tee tama
+  def saveOlio(olio: Olio, saveFile: File) = {
     
-    val fileName = "data/saves/" + olio.name.trim() + ".txt"
-    val file = new PrintWriter(fileName)
+    
+    //val fileName = "data/saves/" + olio.name.trim() + ".txt"
+    //val file = new PrintWriter(fileName)
+    val file = new PrintWriter(saveFile)
     
     var saveData = ""
     var header = ""

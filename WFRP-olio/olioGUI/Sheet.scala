@@ -7,7 +7,9 @@ import main._
 import olioIO.SaverLoader
 import scala.io.Source
 import scala.io.Codec
+import java.io.File
 import java.nio.charset.CodingErrorAction
+import javax.swing.JFileChooser
 
 object Sheet extends SimpleSwingApplication {
   
@@ -19,32 +21,16 @@ object Sheet extends SimpleSwingApplication {
     
     val newOrLoad = Dialog.showOptions(this, "Create or load character?", "Welcome!", Dialog.Options.YesNoCancel, Dialog.Message.Question, null, Seq("New", "Load", "Cancel"), 1)
     
-    val olio: Olio = {
+    private var olio: Olio = {
       val character = new Olio
       if (newOrLoad == Dialog.Result.Yes)
       {
-        
-        val name = Dialog.showInput(this, "Enter a name for your character/NPC", "Name", initial = "").getOrElse("Seppo")
-        val race = Dialog.showInput(this, "Enter your character's/NPC's race (or species)", "Race", initial = "Human").getOrElse("human")
-        val career = Dialog.showInput(this, "Enter your character's/NPC's career", "Career", initial = "").getOrElse("Dung Shoveler")
-        
-        character.setName(name)
-        character.setRace(race)
-        character.career.change(career)
+        newOlioSetup(character)
       }
       else if (newOrLoad == Dialog.Result.No) 
       {
-        val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
-        //val fileChooser = new FileChooser
-        val fileChooser = new javax.swing.JFileChooser(".\\data/saves")
-        fileChooser.showOpenDialog(this.peer)
-        if (/*fileChooser.selectedFile == null*/ fileChooser.getSelectedFile == null) quit()
-        val file = Source.fromFile(/*fileChooser.selectedFile*/fileChooser.getSelectedFile)(decoder)
-        try {
-          SaverLoader.loadOlio(file, character)
-        } finally {
-          file.close()
-        }
+        val load = loadOlioSetup(character)
+        if (!load) quit()
       } else quit()
       character
     }
@@ -61,11 +47,87 @@ object Sheet extends SimpleSwingApplication {
     * 
     */
     
-    val olioPanel = new OlioPanel(olio)
+    private var olioPanel = new OlioPanel(olio)
     
     this.contents = olioPanel
     
-    this.title = olio.name
+    this.title = "Oliosheet"
+    
+    this.menuBar = new MenuBar {
+      
+      contents += new Menu("File") {
+        
+        contents += new MenuItem(new Action("New (Not working)") {
+          def apply {
+            val really = Dialog.showConfirmation(menuBar,
+                "Create new character? Any unsaved changes to the current character will be lost.",
+                "New...", Dialog.Options.OkCancel, Dialog.Message.Question)
+            if (really == Dialog.Result.Ok)
+            {
+              
+            }
+          }
+        })
+        
+        contents += new MenuItem(new Action("Load") {
+          def apply {
+            val really = Dialog.showConfirmation(menuBar,
+                "Load another character? Any unsaved changes to the current character will be lost.",
+                "Open...", Dialog.Options.OkCancel, Dialog.Message.Question)
+            if (really == Dialog.Result.Ok)
+            {
+              loadOlioSetup(olio)
+              olioPanel.update()
+            }
+          }
+        })
+        
+        contents += new MenuItem(new Action("Save As...") {
+          def apply {
+            val fileChooser = new JFileChooser(".\\data/saves")
+            val fileName = Dialog.showInput(menuBar, "Enter a name for your save file", initial = olio.name)
+                                 .getOrElse(olio.name) + ".txt"
+            fileChooser.setSelectedFile(new File(fileName))
+            val save = fileChooser.showSaveDialog(menuBar.peer)
+            if (save == JFileChooser.APPROVE_OPTION) olioIO.SaverLoader.saveOlio(olio, fileChooser.getSelectedFile)
+          }
+        })
+        
+        contents += new MenuItem(new Action("Exit") {
+          def apply {
+            quit()
+          }
+        })
+      }
+      
+    }
+    
+    
+    def newOlioSetup(olio: Olio) = {
+      val name = Dialog.showInput(this, "Enter a name for your character/NPC", "Name", initial = "")
+      val race = Dialog.showInput(this, "Enter your character's/NPC's race (or species)", "Race", initial = "Human")
+      val career = Dialog.showInput(this, "Enter your character's/NPC's career", "Career", initial = "")
+      
+      olio.setName(name.getOrElse("Seppo"))
+      olio.setRace(race.getOrElse("Human"))
+      olio.career.change(career.getOrElse("Dung Shoveler"))
+    }
+    
+    def loadOlioSetup(olio: Olio): Boolean = {
+      val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
+      //val fileChooser = new FileChooser
+      val fileChooser = new JFileChooser(".\\data/saves")
+      fileChooser.showOpenDialog(this.peer)
+      if (/*fileChooser.selectedFile == null*/ fileChooser.getSelectedFile != null) {
+        val file = Source.fromFile(/*fileChooser.selectedFile*/fileChooser.getSelectedFile)(decoder)
+        try {
+          SaverLoader.loadOlio(file, olio)
+        } finally {
+          file.close()
+        }
+        true
+      } else false
+    }
     
     /*
     //Saving test

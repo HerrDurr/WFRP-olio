@@ -8,6 +8,8 @@ import scala.math.max
 import scala.math.min
 import java.awt.geom.Dimension2D
 import java.awt.Insets._
+import javax.swing.JFileChooser
+import java.io.File
 
 class TopPanel(olioPanel: OlioPanel) extends FlowPanel {
   
@@ -121,10 +123,18 @@ class TopPanel(olioPanel: OlioPanel) extends FlowPanel {
       
       else if (clickEvent.source == saveButton)
       {
-        val save = Dialog.showConfirmation(this,
+        val fileChooser = new JFileChooser(".\\data/saves")
+        val fileName = Dialog.showInput(this, "Enter a name for your save file", initial = olio.name)
+                             .getOrElse(olio.name) + ".txt"
+        fileChooser.setSelectedFile(new File(fileName))
+        val save = fileChooser.showSaveDialog(this.peer)
+        if (save == JFileChooser.APPROVE_OPTION) olioIO.SaverLoader.saveOlio(olio, fileChooser.getSelectedFile)
+        /*val save = Dialog.showConfirmation(this,
             "Would you like to save your character/NPC?\nWARNING: This will overwrite any file with the same title as the character's/NPC's name!",
             "Save?", Dialog.Options.YesNo, Dialog.Message.Warning, null)
         if (save == Dialog.Result.Yes) olioIO.SaverLoader.saveOlio(olio)
+        * 
+        */
       }
       
     }
