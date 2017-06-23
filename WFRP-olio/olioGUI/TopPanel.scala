@@ -13,6 +13,7 @@ import java.io.File
 
 class TopPanel(olioPanel: OlioPanel) extends FlowPanel {
   
+  val path = this.getClass.getProtectionDomain.getCodeSource.getLocation.getPath
   val olio = olioPanel.olio
   val career = olio.career
   val whFont = olioPanel.whFontBold.deriveFont(16f)
@@ -123,7 +124,7 @@ class TopPanel(olioPanel: OlioPanel) extends FlowPanel {
       
       else if (clickEvent.source == saveButton)
       {
-        val fileChooser = new JFileChooser(".\\data/saves")
+        val fileChooser = new JFileChooser(path + "/data/saves")
         val fileName = Dialog.showInput(this, "Enter a name for your save file", initial = olio.name)
                              .getOrElse(olio.name) + ".txt"
         fileChooser.setSelectedFile(new File(fileName))

@@ -16,6 +16,8 @@ object Sheet extends SimpleSwingApplication {
   
   def top = new MainFrame {
     
+    val path = this.getClass.getProtectionDomain.getCodeSource.getLocation.getPath
+    
     this.visible = true
     this.centerOnScreen()
     
@@ -84,7 +86,7 @@ object Sheet extends SimpleSwingApplication {
         
         contents += new MenuItem(new Action("Save As...") {
           def apply {
-            val fileChooser = new JFileChooser(".\\data/saves")
+            val fileChooser = new JFileChooser(path + "/data/saves")
             val fileName = Dialog.showInput(menuBar, "Enter a name for your save file", initial = olio.name)
                                  .getOrElse(olio.name) + ".txt"
             fileChooser.setSelectedFile(new File(fileName))
@@ -116,7 +118,7 @@ object Sheet extends SimpleSwingApplication {
     def loadOlioSetup(olio: Olio): Boolean = {
       val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
       //val fileChooser = new FileChooser
-      val fileChooser = new JFileChooser(".\\data/saves")
+      val fileChooser = new JFileChooser(path + "/data/saves")
       fileChooser.showOpenDialog(this.peer)
       if (/*fileChooser.selectedFile == null*/ fileChooser.getSelectedFile != null) {
         val file = Source.fromFile(/*fileChooser.selectedFile*/fileChooser.getSelectedFile)(decoder)
