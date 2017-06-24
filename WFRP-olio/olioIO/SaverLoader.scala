@@ -316,7 +316,7 @@ object SaverLoader {
   def chunkSizer(length: Int) = {
     var result = ""
     result += (length / 100)
-    result += (length / 10)
+    result += (length % 100 / 10)
     result += (length % 10)
     result
   }
