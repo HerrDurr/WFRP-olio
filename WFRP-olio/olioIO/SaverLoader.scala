@@ -7,13 +7,14 @@ import main.{Olio, Weapon}
 import scala.io.Source
 import java.awt.Color
 import scala.swing.Dialog
+import scala.collection.mutable.Buffer
 
 object SaverLoader {
   
   
   def loadOlio(input: Source, olio: Olio) = {
     
-    val chunkHeader: Array[Char] = new Array(5)
+    val chunkHeader: Array[Char] = new Array(6)
     var chunkName = ""
     var chunkSize = 0
     
@@ -155,7 +156,7 @@ object SaverLoader {
     //val file = new PrintWriter(fileName)
     val file = new PrintWriter(saveFile)
     
-    var saveData = ""
+    val saveData: Buffer[Char] = Buffer()
     var header = ""
     
     try {
@@ -165,11 +166,12 @@ object SaverLoader {
       {
         val dataTuple = appendData(header, olio)
         header = dataTuple._1
-        saveData += dataTuple._2
+        dataTuple._2.foreach(saveData += _)
+        //saveData += dataTuple._2
       }
       
-      
-      file.print(saveData)
+      saveData.foreach(file.print(_))
+      //file.print(saveData)
       
     } catch {
       
@@ -195,10 +197,10 @@ object SaverLoader {
     
   }
   
-  def appendData(header: String, olio: Olio): Tuple2[String, String] = {
+  def appendData(header: String, olio: Olio): Tuple2[String, Vector[Char]] = {
     
     var resHeader = ""
-    var resData = ""
+    var resData: Buffer[Char] = Buffer()
     var data = ""
     
     if (header.isEmpty())
@@ -292,12 +294,16 @@ object SaverLoader {
       
     }
     
-    resData += resHeader + this.chunkSizer(data.length()) + data
-    (resHeader, resData)
+    resHeader.foreach(resData += _)
+    this.chunkSizer(data.length()).toString.foreach(resData += _)
+    data.foreach(resData += _)
+    //resData += resHeader + this.chunkSizer(data.length()) + data
+    (resHeader, resData.toVector)
   }
   
   def chunkSizer(length: Int) = {
     var result = ""
+    result += (length / 100)
     result += (length / 10)
     result += (length % 10)
     result
@@ -312,7 +318,7 @@ object SaverLoader {
   
   
   def getChunkSize(chunkHeader: Array[Char]) = {
-    10 * (chunkHeader(3) - '0') + (chunkHeader(4) - '0')
+    100 * (chunkHeader(3) - '0') + 10 * (chunkHeader(4) - '0') + (chunkHeader(5) - '0')
   }
   
   def getData(loadTo: Array[Char], input: Source) = {

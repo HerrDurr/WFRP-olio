@@ -1,2 +1,0 @@
-NAM07ClanratRAC06SkavenCAR11(No career)COL0851,51,51ATR3930,25,30,30,40,25,25,15,1,9,0,0,5,0,0,0CRW019FOR010WPN25Hand Weapon,Dagger,ShieldSKL1181Concealment,1Outdoor Survival,1Perception,1Scale Sheer Surface,1Silent Move,1Swim,2Common Knowledge*,1Speak Language*TAL48Night Vision,Specialist Weapon Group*,Tunnel RatAPO111,1,1,1,0,0CMT74Leather Jack, Leather Skullcap, Hand Weapon, Dagger/Sling, Shield
-RoutineEND00

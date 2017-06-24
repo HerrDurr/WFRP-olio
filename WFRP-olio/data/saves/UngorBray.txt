@@ -1,3 +1,0 @@
-NAM05UngorRAC08BeastmanCAR11(No career)COL10152,124,52ATR4030,21,31,35,30,24,24,20,1,10,3,3,5,0,0,0CRW0210FOR010WPN21Spear,Spear(r),ShieldSKL971Concealment,1Outdoor Survival,1Perception,1Silent Move,1Follow Trail,1Shadowing,1Speak Language*TAL17Keen Senses,RoverAPO110,0,0,0,0,0CMT133Hand Weapon/Shield, Spear
-Routine
-Mutations: Animalistic Legs and Bestial Appearance. 25 % chance of extra mutation: Horns->re-rollEND00

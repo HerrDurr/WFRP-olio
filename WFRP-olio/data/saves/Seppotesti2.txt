@@ -1,0 +1,3 @@
+NAM005SeppoRAC005DwarfCAR008EngineerCOL010255,255,51ATR04011,11,11,21,11,11,11,11,1,11,1,2,1,1,1,1CRW0019FOR0011WPN030Demilance,None,Repeater PistolSKL0402Outdoor Survival,2Trade (S),1NavigationTAL013Acute HearingAPO0114,2,2,2,2,2CMT051Seppo on paras! jeejee
+tassa testataan
+rivinvaihtoaEND000
