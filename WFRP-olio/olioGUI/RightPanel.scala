@@ -102,10 +102,12 @@ class RightPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
                         .sortBy(_.skillLevel).takeRight(4)
     val perception = olio.skills.find(_.name == "Perception").get
     skillLabels(0).text = perception.name + " (" + perception.skillLevel + ")"
+    skillLabels(0).tooltip = "Talents: " + perception.skillTalentsString
     skillLabels.takeRight(4).foreach {
       x => {
         val xSkill = topSkills(topSkills.length - skillLabels.indexOf(x))
         x.text = ( xSkill.name + " (" + xSkill.skillLevel + ")" )
+        x.tooltip = "Talents: " + xSkill.skillTalentsString
       }
     }
   }

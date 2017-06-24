@@ -76,6 +76,20 @@ class Skill (name: String) extends Loadable(name) {
    */
   def skillTalents = this.talents
   
+  
+  def skillTalentsString = {
+    var res = ""
+    if (this.talents.isEmpty) res = "-"
+    else
+    {
+      val tals = this.talents.get
+      tals.dropRight(1).foreach(res += _ + ", ")
+      res += tals.takeRight(1)(0)
+    }
+    res
+  }
+  
+  
   /**
    * Returns the description of the Skill.
    */

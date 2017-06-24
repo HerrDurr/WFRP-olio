@@ -19,22 +19,7 @@ class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
   
   val nameLabel = new Label(skill.name + " (" + skill.skillAttribute._1 + ")")
   nameLabel.preferredSize = new Dimension(170, 14)
-  nameLabel.tooltip = {
-      var tooltip = "Related Talents: "
-      /*
-      val talentsOption = skill.skillTalents
-      if (talentsOption.isDefined) {
-        var takenTalentNames = ""
-        talentsOption.get.foreach( t => if ( olio.hasTalent(olio.allTalents.find(_.name == t).getOrElse(new Talent("Name"))) ) takenTalentNames += t + ", " )
-        if (!takenTalentNames.isEmpty()) tooltip += takenTalentNames.dropRight(2) else tooltip = ""
-      } else tooltip = ""
-      * 
-      */
-      val talents = skill.skillTalents.getOrElse(Vector("-")).map(_ + ", ")
-      talents.dropRight(1)foreach(tooltip += _)
-      tooltip += talents.last.dropRight(2)
-      tooltip
-  }
+  nameLabel.tooltip = "Related Talents: " + skill.skillTalentsString
   
   
   val skillOptions: Array[Object]  = Array("-", "X", "+10", "+20")
@@ -44,21 +29,13 @@ class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
   val spinner = new Spinner(skillModel)
   spinner.preferredSize = new Dimension(40, 18)
   
-  /*
-  if (skill.timesGained == 1) spinner.peer.setValue(spinner.peer.getNextValue)  //("X")
-  else if (skill.timesGained == 2) spinner.value = ("+10")
-  else if (skill.timesGained == 3) spinner.value = ("+20")
-  * 
-  */
   
-  //val selector = new ComboBox(skillOptions)
   
   val levelLabel = new Label("")
   levelLabel.preferredSize = new Dimension(40, 18)
   
   
   this.contents += (nameLabel, levelLabel, spinner)
-  //this.contents += (nameLabel, selector, levelLabel)
   
   this.listenTo(spinner, this.mouse.moves, nameLabel.mouse.clicks)
   
@@ -133,8 +110,6 @@ class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
       olioPanel.update()
       this.update()
     }
-    
-    
     
     
   }
