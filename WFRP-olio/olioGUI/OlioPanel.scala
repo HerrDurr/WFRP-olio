@@ -8,11 +8,13 @@ import scala.math.max
 import java.io.File
 import java.awt.Font
 
-class OlioPanel(val olio: Olio) extends BorderPanel {
+class OlioPanel(val olio: Olio, val whFont: Font, val whFontBold: Font) extends BorderPanel {
   
-  
+  /*
   val whFont = Font.createFont(Font.TRUETYPE_FONT, new File("data/CaslonAntique.ttf"))
   val whFontBold = Font.createFont(Font.TRUETYPE_FONT, new File("data/CaslonAntique-Bold.ttf"))
+  * 
+  */
   
   val topPanel = new TopPanel(this)
   val centrePanel = new CentrePanel(this)

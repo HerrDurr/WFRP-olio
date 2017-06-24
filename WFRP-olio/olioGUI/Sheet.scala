@@ -10,12 +10,16 @@ import scala.io.Codec
 import java.io.File
 import java.nio.charset.CodingErrorAction
 import javax.swing.JFileChooser
+import java.awt.Font
 
 object Sheet extends SimpleSwingApplication {
   
   def top = new MainFrame {
     
     val path = this.getClass.getProtectionDomain.getCodeSource.getLocation.getPath
+    
+    val whFont = Font.createFont(Font.TRUETYPE_FONT, new File(path + "/data/CaslonAntique.ttf"))
+    val whFontBold = Font.createFont(Font.TRUETYPE_FONT, new File(path + "/data/CaslonAntique-Bold.ttf"))
     
     this.visible = true
     
@@ -28,6 +32,7 @@ object Sheet extends SimpleSwingApplication {
     val exitButton = new Button("Exit")
     
     masterPanel.contents += (newButton, loadButton, exitButton)
+    masterPanel.contents.foreach(_.font = whFont.deriveFont(16f))
     this.contents = masterPanel
     this.title = "Oliosheetz"
     
@@ -51,7 +56,7 @@ object Sheet extends SimpleSwingApplication {
           val olio = new Olio
           if (clickEvent.source == newButton) newOlioSetup(olio)
           else if (clickEvent.source == loadButton) loadOlioSetup(olio)
-          val olioPanel = new OlioPanel(olio)
+          val olioPanel = new OlioPanel(olio, whFont, whFontBold)
           frame.title = "Oliosheet"
           frame.contents = olioPanel
           frame.visible = true
