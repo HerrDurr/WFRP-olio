@@ -7,6 +7,7 @@ import java.nio.charset.CodingErrorAction
 import olioIO.DataIO
 import scala.swing.event._
 import main._
+import java.awt.Insets._
 
 class WeaponPanel(olioPanel: OlioPanel, index: Int) extends BoxPanel(Orientation.Horizontal) {
   
@@ -36,17 +37,39 @@ class WeaponPanel(olioPanel: OlioPanel, index: Int) extends BoxPanel(Orientation
   reloadLabel.preferredSize = new Dimension(50, 28)
   this.update()
   this.dropMenu.selection.item = weapon.name
+  val infoButton = new Button("i")
+  infoButton.margin = new Insets(3,3,3,3)
   
-  this.contents += (dropMenu, damageLabel, rangeLabel, reloadLabel)
+  this.contents += (dropMenu, damageLabel, rangeLabel, reloadLabel, infoButton)
   this.contents.foreach(_.font = olioPanel.whFont.deriveFont(16f))
   
-  this.listenTo(dropMenu.selection)
+  this.listenTo(dropMenu.selection, infoButton)
   
   reactions += {
-    case SelectionChanged(dropMenu) =>
+    
+    case SelectionChanged(dropMenu) => {
       weapon = new Weapon(this.dropMenu.selection.item)
       olio.weapons(index) = weapon
       this.update()
+    }
+    
+    case ButtonClicked(infoButton) => {
+      val ranged = {
+        if (weapon.range == "-") "Melee" else "Ranged"
+      }
+      val qualities = {
+        var res = ""
+        weapon.qualities.dropRight(1).foreach { res += _ + ", " }
+        res += weapon.qualities.takeRight(1)(0)
+        res
+      }
+      var message = weapon.name + " (" + ranged + ")\n\n" + "Group: " + weapon.group +
+                    "\n\nDamage: " + weapon.damageText(olio) + ", when used by " + olio.name +
+                    "\n\nRange: " + weapon.range + ", Reload time: " + weapon.reloadTime +
+                    "\n\nQualities: " + qualities
+        Dialog.showMessage(this, message, weapon.name, Dialog.Message.Info)
+    }
+    
   }
   
   def update() = {
