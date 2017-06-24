@@ -11,6 +11,30 @@ class Attributes {
   private val values = new Array[Int](16)
   
   
+  def getAttribute(id: Int) = {
+    var result = ""
+    id match {
+      case 0 => result = "WS"
+      case 1 => result = "BS"
+      case 2 => result = "S"
+      case 3 => result = "T"
+      case 4 => result = "Ag"
+      case 5 => result = "Int"
+      case 6 => result = "WP"
+      case 7 => result = "Fel"
+      case 8 => result = "A"
+      case 9 => result = "W"
+      case 10 => result = "SB"
+      case 11 => result = "TB"
+      case 12 => result = "M"
+      case 13 => result = "Mag"
+      case 14 => result = "IP"
+      case 15 => result = "FP"
+    }
+    result
+  }
+  
+  
   /**
    * Can be used to access the value of a particular Attribute using the id number.
    */

@@ -54,9 +54,9 @@ object Sheet extends SimpleSwingApplication {
           
           val frame = new Frame
           val olio = new Olio
-          if (clickEvent.source == newButton) newOlioSetup(olio)
-          else if (clickEvent.source == loadButton) loadOlioSetup(olio)
           val olioPanel = new OlioPanel(olio, whFont, whFontBold)
+          if (clickEvent.source == newButton) newOlioSetup(olioPanel)
+          else if (clickEvent.source == loadButton) loadOlioSetup(olio)
           frame.title = "Oliosheet"
           frame.contents = olioPanel
           frame.visible = true
@@ -154,15 +154,54 @@ object Sheet extends SimpleSwingApplication {
     * 
     */
     
+    class AttributeDialog(olioPanel: OlioPanel) extends Dialog {
+      
+      val attributes = olioPanel.olio.attributes
+      val aPanel = new BorderPanel
+      val upper = new BoxPanel(Orientation.Horizontal)
+      val lower = new BoxPanel(Orientation.Horizontal)
+      for (id <- 0 to 7)
+      {
+        upper.contents += new AttributeSelectionPanel(attributes, id)
+      }
+      for (id <- 8 to 15)
+      {
+        if (id < 10 || id > 11)
+          lower.contents += new AttributeSelectionPanel(attributes, id)
+      }
+      //val doneButton = new Button("Done")
+      aPanel.layout(upper) = North
+      aPanel.layout(lower) = Center
+      //aPanel.layout(doneButton) = South
+      //aPanel.preferredSize = new Dimension(300, 100)
+      this.contents = aPanel
+      //this.listenTo(doneButton)
+      this.title = "Set Attributes"
+      this.modal = true
+      this.open()
+      /*
+      this.reactions += {
+        case clickEvent: ButtonClicked => {
+          olioPanel.update()
+          this.peer.dispose()
+        }
+      }
+      * 
+      */
+    }
     
-    def newOlioSetup(olio: Olio) = {
+    def newOlioSetup(olioPanel: OlioPanel) = {
+      val olio = olioPanel.olio
       val name = Dialog.showInput(this, "Enter a name for your character/NPC", "Name", initial = "")
       val race = Dialog.showInput(this, "Enter your character's/NPC's race (or species)", "Race", initial = "Human")
       val career = Dialog.showInput(this, "Enter your character's/NPC's career", "Career", initial = "")
       
+      new AttributeDialog(olioPanel)
+      
       olio.setName(name.getOrElse("Seppo"))
       olio.setRace(race.getOrElse("Human"))
       olio.career.change(career.getOrElse("Dung Shoveler"))
+      olioPanel.update()
     }
     
     def loadOlioSetup(olio: Olio): Boolean = {
