@@ -29,21 +29,22 @@ class Talent(name: String) extends Loadable(name) {
   
   
   def affects = {
-    var res = ""
+    var res = "-"
     if (this.affectedAttributes.isDefined)
     {
-      res += "Characteristics ("
+      res += " Characteristics ("
       val attr = this.affectedAttributes.get
       attr.dropRight(1).foreach { res += _ + ", " }
       res += attr.takeRight(1)(0) + ")"
-    } else if (this.affectedSkills.isDefined)
+    }
+    if (this.affectedSkills.isDefined)
     {
-      res += "Skills ("
+      res += " Skills ("
       val skls = this.affectedSkills.get
       skls.dropRight(1).foreach { res += _ + ", " }
       res += skls.takeRight(1)(0) + ")"
-    } else if (this.affectedWeapons.isDefined) res = this.affectedWeapons.get
-    else res = "-"
+    }
+    if (this.affectedWeapons.isDefined) res += " " + this.affectedWeapons.get
     res
   }
   

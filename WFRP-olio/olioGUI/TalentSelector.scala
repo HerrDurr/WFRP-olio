@@ -3,11 +3,14 @@ package olioGUI
 import scala.swing._
 import scala.swing.event._
 import main.Talent
+import main.Skill
 import java.awt.Color
+import scala.Tuple2
 
 class TalentSelector(olioPanel: OlioPanel, talent: Talent) extends BoxPanel(Orientation.Horizontal) {
   
   val olio = olioPanel.olio
+  val modSkills = this.modifiesSkills
   
   val nonSelFont = olioPanel.whFont.deriveFont(14f)
   val selFont = olioPanel.whFontBold.deriveFont(14f)
@@ -59,8 +62,18 @@ class TalentSelector(olioPanel: OlioPanel, talent: Talent) extends BoxPanel(Orie
     }
     
     case ButtonClicked(checkBox) => {
-      if (checkBox.selected) olio.addTalent(talent)
-      else olio.removeTalent(talent)
+      if (checkBox.selected)
+      {
+        olio.addTalent(talent)
+        if (!this.modSkills._1.isEmpty) this.modSkills._1.foreach {
+          s => if (s.modifier == 0) s.setModifier(this.modSkills._2) }
+      }
+      else
+      {
+        olio.removeTalent(talent)
+        if (!this.modSkills._1.isEmpty) this.modSkills._1.foreach {
+          s => if (s.modifier != 0) s.setModifier(- this.modSkills._2) }
+      }
       olioPanel.update()
     }
     
@@ -73,6 +86,35 @@ class TalentSelector(olioPanel: OlioPanel, talent: Talent) extends BoxPanel(Orie
       }
     }
     
+  }
+  
+  def modifiesSkills: Tuple2[Vector[Skill], Int] = {
+    talent.name match {
+      case "Aethyric Attunement" =>
+        return (olio.allSkills.filter { s => s.name == "Channeling" || s.name == "Magican Sense" }, 10)
+      case "Dealmaker" =>
+        return (olio.allSkills.filter { s => s.name == "Evaluate" || s.name == "Haggle" }, 10)
+      case "Excellent Vision" =>
+        return (olio.allSkills.filter { s => s.name == "Lip Reading" }, 10)
+      case "Keen Senses" =>
+        return (olio.allSkills.filter { s => s.name == "Perception" }, 20)
+      case "Linguistics" =>
+        return (olio.allSkills.filter { s => s.name == "Read/Write" || s.name == "Speak Language*" }, 10)
+      case "Menacing" =>
+        return (olio.allSkills.filter { s => s.name == "Intimidate" || s.name == "Torture" }, 10)
+      case "Orientation" =>
+        return (olio.allSkills.filter { s => s.name == "Navigation" }, 10)
+      case "Seasoned Traveller" =>
+        return (olio.allSkills.filter { s => s.name == "Common Knowledge*" || s.name == "Speak Language*" }, 10)
+      case "Surgery" =>
+        return (olio.allSkills.filter { s => s.name == "Heal" }, 10)
+      case "Super Numerate" =>
+        return (olio.allSkills.filter { s => s.name == "Gamble" || s.name == "Navigation" }, 10)
+      case "Trick Riding" =>
+        return (olio.allSkills.filter { s => s.name == "Ride" }, 10)
+      case some =>
+        return (Vector(), 0)
+    }
   }
   
   update()

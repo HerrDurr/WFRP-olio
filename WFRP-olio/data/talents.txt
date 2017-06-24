@@ -27,7 +27,7 @@ Skill Tests when in urban locations.
 #Ambidextrous
 Attributes : WS, BS
 Skills : -
-Weapons : -
+Weapons : Dual Wield
 Description : 
 Do not suffer the normal -20% WS or BS penalty 
 when using a weapon in your secondary hand.
@@ -53,8 +53,8 @@ Skills : -
 Weapons : -
 Description : 
 Casting Roll penalty while wearing armour is reduced by 3 
-when you cast chaos and divine spells. Normally, you�d suffer 
-a �3 penalty for wearing a mail shirt, for example, but with 
+when you cast chaos and divine spells. Normally, you'd suffer 
+a -3 penalty for wearing a mail shirt, for example, but with 
 Armoured Casting this penalty would be reduced to 0.
 
 #Artistic
@@ -63,7 +63,7 @@ Skills : Trade (Artist), Evaluate
 Weapons : -
 Description : 
 Gain a +20% bonus on Trade (Artist) Tests and +10% 
-on tests to Evaluate objects d�art.
+on tests to Evaluate objets d'art.
 
 #Contortionist
 Attributes : Ag
@@ -159,7 +159,7 @@ Stoneworker, and Weaponsmith.
 
 #Etiquette
 Attributes : -
-Skills : Charm, Gossip
+Skills : Charm, Disguise, Gossip
 Weapons : -
 Description : 
 Gain a +10% bonus on Charm and Gossip Skill Tests when dealing 
@@ -183,7 +183,7 @@ Description :
 Gain a +20% Weapon Skill bonus when casting touch spells.
 
 #Fearless
-Attributes : -
+Attributes : WP
 Skills : -
 Weapons : -
 Description : 
@@ -269,7 +269,7 @@ Attributes : -
 Skills : -
 Weapons : -
 Description : 
-You can fly low to the ground. 
+You can fly low, close to the ground. 
 
 #Keen Senses
 Attributes : -
@@ -294,7 +294,7 @@ and Skywalk. You must have a Petty Magic talent before you
 can learn a Lesser Magic talent. 
 
 #Lightning Parry
-Attributes : -
+Attributes : A
 Skills : -
 Weapons : -
 Description : 
@@ -326,7 +326,7 @@ Description :
 Gain an extra Fortune Point each day. 
 
 #Marksman
-Attributes : -
+Attributes : BS
 Skills : -
 Weapons : -
 Description : 
@@ -393,7 +393,7 @@ with your natural weapons. You cannot be disarmed.
 
 #Night Vision
 Attributes : -
-Skills : -
+Skills : Perception
 Weapons : -
 Description : 
 You can see extremely well in natural darkness at
@@ -403,7 +403,7 @@ function.
 
 #Orientation
 Attributes : -
-Skills : -
+Skills : Navigation
 Weapons : -
 Description : 
 You rarely get lost and always know the direction of north. 
@@ -571,7 +571,7 @@ Gain a +1 bonus on damage rolls with melee weapons.
 #Strike to Injure
 Attributes : -
 Skills : -
-Weapons : -
+Weapons : Criticals
 Description : 
 The Critical Value of any Critical Hits you inflict is increased by 1.
 
@@ -592,7 +592,7 @@ Attributes : -
 Skills : -
 Weapons : -
 Description : 
-You don�t have to check for insanity until you have 8 Insanity Points. 
+You don't have to check for insanity until you have 8 Insanity Points. 
 
 #Sturdy
 Attributes : M
@@ -606,7 +606,7 @@ Encumbrance values of the armour worn, though the -10%
 Agility modifier still applies. 
 
 #Suave
-Attributes : -
+Attributes : Fel
 Skills : -
 Weapons : -
 Description : 
@@ -615,7 +615,7 @@ Gain a permanent +5% bonus to your Fellowship Characteristic.
 #Sure Shot
 Attributes : -
 Skills : -
-Weapons : -
+Weapons : Ranged
 Description : 
 When you hit with a ranged attack, you can ignore 1 Armour Point. 
 If your target has no armour, this talent has no effect.
@@ -640,7 +640,7 @@ Gain a +10% bonus on Gamble and Navigation Skill Tests, and a
 +20% bonus on Perception Skill Tests that involve estimation.	
 
 #Swashbuckler
-Attributes : -
+Attributes : M
 Skills : -
 Weapons : -
 Description : 
@@ -681,7 +681,7 @@ Gain a +10% bonus on Concealment and Silent Move
 Skill Tests when in underground locations. 
 
 #Undead
-Attributes : -
+Attributes : T, WP
 Skills : -
 Weapons : -
 Description : 

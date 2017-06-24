@@ -32,7 +32,7 @@ class Skill (name: String) extends Loadable(name) {
   def modifier = this.mod
   
   
-  def setModifier(m: Int) = this.mod = m
+  def setModifier(m: Int) = this.mod += m
   
   //The skill's name is given when the skill is created
   this.n = name
@@ -134,7 +134,7 @@ class Skill (name: String) extends Loadable(name) {
       if (this.gainedCount == 2) this.lvl = min(100, newLevel + 10 + this.modifier)
       else if (this.gainedCount == 3) this.lvl = min(100, newLevel + 20 + this.modifier)
       else this.lvl = newLevel + this.modifier
-    } else this.lvl = 0 + this.modifier
+    } else this.lvl = 0
   }
   
   /**
