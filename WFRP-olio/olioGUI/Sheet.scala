@@ -168,7 +168,7 @@ object Sheet extends SimpleSwingApplication {
       }
       for (id <- 8 to 15)
       {
-        if (id < 10 || id > 11)
+        //if (id < 10 || id > 11)
           lower.contents += new AttributeSelectionPanel(attributes, id)
       }
       //val doneButton = new Button("Done")
