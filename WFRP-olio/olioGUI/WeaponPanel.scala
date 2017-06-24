@@ -51,9 +51,17 @@ class WeaponPanel(olioPanel: OlioPanel, index: Int) extends BoxPanel(Orientation
   
   def update() = {
     damageLabel.text = "Dmg: " + weapon.damageText(olio)
-    rangeLabel.text = "Rng: " + weapon.range
-    reloadLabel.text = "Rld: " + weapon.reloadTime
-    dropMenu.tooltip = dropMenu.selection.item
+    rangeLabel.text = " Rng: " + weapon.range
+    reloadLabel.text = " Rld: " + weapon.reloadTime
+    dropMenu.tooltip = weapon.name + " (" + weapon.group + "): " + {
+      var res = ""
+      val qual = weapon.qualities
+      //if (qual.head != '-') {
+        qual.dropRight(1).foreach(res += _ + ", ")
+        res += qual.takeRight(1)(0)
+      //}
+      res
+    }
     damageLabel.tooltip = damageLabel.text
     rangeLabel.tooltip = rangeLabel.text
     reloadLabel.tooltip = weapon.reloadTime
