@@ -83,15 +83,18 @@ object SaverLoader {
         if (chunkName == "SKL")
         {
           val skills = dataString.split(",")
-          val names = skills.map(_.tail)
-          val lvls = skills.map(_.head - '0')
-          val n = skills.length
-          for (i <- 0 to n - 1)
+          if (!skills(0).isEmpty)
           {
-            val skill = olio.allSkills.find(_.name == names(i)).get
-            for (lvl <- 0 to lvls(i) - 1)
+            val names = skills.map(_.tail)
+            val lvls = skills.map(_.head - '0')
+            val n = skills.length
+            for (i <- 0 to n - 1)
             {
-              olio.addSkill(skill)
+              val skill = olio.allSkills.find(_.name == names(i)).get
+              for (lvl <- 0 to lvls(i) - 1)
+              {
+                olio.addSkill(skill)
+              }
             }
           }
         }
@@ -99,11 +102,14 @@ object SaverLoader {
         if (chunkName == "TAL")
         {
           val names = dataString.split(",")
-          val n = names.length
-          for (i <- 0 to n - 1)
+          if (!names(0).isEmpty())
           {
-            val talent = olio.allTalents.find(_.name == names(i)).get
-            olio.addTalent(talent)
+            val n = names.length
+            for (i <- 0 to n - 1)
+            {
+              val talent = olio.allTalents.find(_.name == names(i)).get
+              olio.addTalent(talent)
+            }
           }
         }
          
@@ -258,16 +264,22 @@ object SaverLoader {
     {
       resHeader = "SKL"
       val skills = olio.skills.filter(_.timesGained > 0).map(s => s.timesGained.toString() + s.name)
-      skills.dropRight(1).foreach(data += _ + ",")
-      data += skills.takeRight(1)(0)
+      if (!skills.isEmpty)
+      {
+        skills.dropRight(1).foreach(data += _ + ",")
+        data += skills.takeRight(1)(0)
+      }
     }
     
     else if (header == "SKL")
     {
       resHeader = "TAL"
       val talents = olio.talents.map(_.name)
-      talents.dropRight(1).foreach(data += _ + ",")
-      data += talents.takeRight(1)(0)
+      if (!talents.isEmpty)
+      {
+        talents.dropRight(1).foreach(data += _ + ",")
+        data += talents.takeRight(1)(0)
+      }
     }
     
     else if (header == "TAL")

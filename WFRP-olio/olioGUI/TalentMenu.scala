@@ -21,4 +21,11 @@ class TalentMenu(olioPanel: OlioPanel) extends BoxPanel(Orientation.Horizontal) 
   
   
   this.contents += (lPanel, new Separator(Orientation.Vertical), cPanel, new Separator(Orientation.Vertical), rPanel)
+  
+  def update() = {
+    this.lPanel.contents.foreach { _.asInstanceOf[TalentSelector].update() }
+    this.cPanel.contents.foreach { _.asInstanceOf[TalentSelector].update() }
+    this.rPanel.contents.foreach { _.asInstanceOf[TalentSelector].update() }
+  }
+  
 }

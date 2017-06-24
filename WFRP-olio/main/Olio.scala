@@ -154,6 +154,29 @@ class Olio {
   
   
   /**
+   * Returns a String that lists all talents that the Olio knows that are related to the skill
+   * that was given as a parameter.
+   */
+  def relatedKnownTalents(skill: Skill) = {
+    var res = ""
+    val skillTalents = skill.skillTalents
+    if (skillTalents.isEmpty) res = "-"
+    else
+    {
+      val relTalents = skillTalents.get
+      val known = relTalents.filter(t => this.talents.exists(_.name == t))
+      if (known.isEmpty) res = "-"
+      else
+      {
+        known.dropRight(1).foreach(res += _ + ", ")
+        res += known.takeRight(1)(0)
+      }
+    }
+    res
+  }
+  
+  
+  /**
    * Returns the creature's known talents.
    */
   def talents = {

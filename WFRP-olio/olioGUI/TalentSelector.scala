@@ -18,13 +18,13 @@ class TalentSelector(olioPanel: OlioPanel, talent: Talent) extends BoxPanel(Orie
   nameLabel.tooltip = talent.description
   
   val checkBox = new CheckBox
-  if (olio.hasTalent(talent))this.checkBox.doClick()
   
   this.contents += (nameLabel, checkBox)
   
   
   def update() = {
     if (olio.hasTalent(talent)) {
+      this.checkBox.selected = true
       this.nameLabel.font = selFont
       this.nameLabel.foreground = selCol
     } else {
@@ -61,7 +61,7 @@ class TalentSelector(olioPanel: OlioPanel, talent: Talent) extends BoxPanel(Orie
     case ButtonClicked(checkBox) => {
       if (checkBox.selected) olio.addTalent(talent)
       else olio.removeTalent(talent)
-      this.update()
+      olioPanel.update()
     }
     
     

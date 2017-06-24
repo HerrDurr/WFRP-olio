@@ -77,6 +77,9 @@ class Skill (name: String) extends Loadable(name) {
   def skillTalents = this.talents
   
   
+  /**
+   * Returns the names of the talents which affect the skill as a single String
+   */
   def skillTalentsString = {
     var res = ""
     if (this.talents.isEmpty) res = "-"
