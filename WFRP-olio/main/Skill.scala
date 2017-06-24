@@ -26,6 +26,14 @@ class Skill (name: String) extends Loadable(name) {
   //The description of the Skill
   private var descr = ""
   
+  private var mod = 0
+  
+  
+  def modifier = this.mod
+  
+  
+  def setModifier(m: Int) = this.mod = m
+  
   //The skill's name is given when the skill is created
   this.n = name
   //The skills stats are loaded from data.
@@ -120,13 +128,13 @@ class Skill (name: String) extends Loadable(name) {
    * @param newLevel Basically the level of the skill's corresponding Attribute.
    */
   def setLevel(newLevel: Int) = {
-    if (isBasic && gainedCount == 0) this.lvl = newLevel / 2
+    if (isBasic && gainedCount == 0) this.lvl = newLevel / 2 + this.modifier
     else if (gainedCount > 0)
     {
-      if (this.gainedCount == 2) this.lvl = min(100, newLevel + 10)
-      else if (this.gainedCount == 3) this.lvl = min(100, newLevel + 20)
-      else this.lvl = newLevel
-    } else this.lvl = 0
+      if (this.gainedCount == 2) this.lvl = min(100, newLevel + 10 + this.modifier)
+      else if (this.gainedCount == 3) this.lvl = min(100, newLevel + 20 + this.modifier)
+      else this.lvl = newLevel + this.modifier
+    } else this.lvl = 0 + this.modifier
   }
   
   /**
