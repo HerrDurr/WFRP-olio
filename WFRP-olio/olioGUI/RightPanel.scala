@@ -5,6 +5,7 @@ import scala.swing._
 import data._
 import event._
 import javax.swing.JFrame
+//import scala.swing.BorderPanel.Position._
 
 //import javax.swing.table.DefaultTableModel
 //import collection.mutable.ArrayBuffer
@@ -17,21 +18,21 @@ class RightPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
   val weapon2 = new WeaponPanel(olioPanel, 1)
   val weapon3 = new WeaponPanel(olioPanel, 2)
   
-  val weaponGrid = new GridPanel(3, 1) {
+  val weaponGrid = new GridPanel(3,1) {
     contents += (weapon1, weapon2, weapon3)
+    //this.layout(weapon1) = North
+    //this.layout(weapon2) = Center
+    //this.layout(weapon3) = South
   }
   
   
-  val skill1 = new Label("")
-  val skill2 = new Label("")
-  val skill3 = new Label("")
-  val skill4 = new Label("")
-  val skillLabels = Vector(skill1, skill2, skill3, skill4)
+  
+  val skillLabels = Vector(new Label(""), new Label(""), new Label(""), new Label(""), new Label(""))
   
   //Pressing this button shows all skills, which have tickboxes next to them so they can be picked and trained in.
   val skillsButton = new Button("All Skills")
   
-  val skillGrid = new GridPanel(4,1) {
+  val skillGrid = new GridPanel(5,1) {
     skillLabels.foreach(contents += _)
     //contents += skillsButton
   }
@@ -97,10 +98,13 @@ class RightPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
   def update() = {
     this.weaponGrid.contents.tail.foreach(_.asInstanceOf[WeaponPanel].update())
     this.skillMenu.update()
-    val topSkills = olio.skills.sortBy(_.skillLevel).takeRight(4)
-    skillLabels.foreach {
+    val topSkills = olio.skills.filterNot( s => s.name == "Common Knowledge*" || s.name == "Speak Language*" )
+                        .sortBy(_.skillLevel).takeRight(4)
+    val perception = olio.skills.find(_.name == "Perception").get
+    skillLabels(0).text = perception.name + " (" + perception.skillLevel + ")"
+    skillLabels.takeRight(4).foreach {
       x => {
-        val xSkill = topSkills(3 - skillLabels.indexOf(x))
+        val xSkill = topSkills(topSkills.length - skillLabels.indexOf(x))
         x.text = ( xSkill.name + " (" + xSkill.skillLevel + ")" )
       }
     }
