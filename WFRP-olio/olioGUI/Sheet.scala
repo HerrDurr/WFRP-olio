@@ -16,7 +16,8 @@ object Sheet extends SimpleSwingApplication {
   
   def top = new MainFrame {
     
-    val path = this.getClass.getProtectionDomain.getCodeSource.getLocation.getPath
+    //val path = this.getClass.getProtectionDomain.getCodeSource.getLocation.getPath
+    val path = this.getClass.getClassLoader.getResource("").getPath
     
     val whFont = Font.createFont(Font.TRUETYPE_FONT, new File(path + "/data/CaslonAntique.ttf"))
     val whFontBold = Font.createFont(Font.TRUETYPE_FONT, new File(path + "/data/CaslonAntique-Bold.ttf"))
@@ -57,6 +58,7 @@ object Sheet extends SimpleSwingApplication {
           val olioPanel = new OlioPanel(olio, whFont, whFontBold)
           if (clickEvent.source == newButton) newOlioSetup(olioPanel)
           else if (clickEvent.source == loadButton) loadOlioSetup(olio)
+          olioPanel.update()
           frame.title = "Oliosheet"
           frame.contents = olioPanel
           frame.visible = true
@@ -201,7 +203,6 @@ object Sheet extends SimpleSwingApplication {
       olio.setName(name.getOrElse("Seppo"))
       olio.setRace(race.getOrElse("Human"))
       olio.career.change(career.getOrElse("Dung Shoveler"))
-      olioPanel.update()
     }
     
     def loadOlioSetup(olio: Olio): Boolean = {
