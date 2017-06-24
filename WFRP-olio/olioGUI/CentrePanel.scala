@@ -13,6 +13,7 @@ class CentrePanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
   val rightPanel = new RightPanel(olioPanel)
   val leftPanel = new LeftPanel(olioPanel)
   val commentPane = new EditorPane { font = olioPanel.whFontBold.deriveFont(16f) }
+  commentPane.preferredSize = new Dimension(400, 84)
   
   this.contents += (attributePanel, new BoxPanel(Orientation.Horizontal) { contents += (leftPanel, rightPanel) }, new Separator(Orientation.Horizontal), commentPane)
   

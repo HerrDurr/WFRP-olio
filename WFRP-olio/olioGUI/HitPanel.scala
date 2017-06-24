@@ -31,6 +31,9 @@ class HitPanel(olioPanel: OlioPanel) extends Label with SequentialContainer.Wrap
   this.icon = new ImageIcon("data/stickman.png")
   
   armourPanels.foreach(this.contents += _)
+  val critButton = new Button("Critical Hit Tables") { font = olioPanel.whFont.deriveFont(14f) }
+  critButton.preferredSize = new Dimension(140, 34)
+  this.contents += critButton
   
   val topCorner = this.location
   
@@ -40,6 +43,7 @@ class HitPanel(olioPanel: OlioPanel) extends Label with SequentialContainer.Wrap
   this.body.peer.setBounds(100 - wid / 2 + topCorner.getX.toInt, 130 + topCorner.getY.toInt, wid, hei)
   this.rLeg.peer.setBounds(topCorner.getX.toInt, 200 + topCorner.getY.toInt, wid, hei)
   this.lLeg.peer.setBounds(200 - wid + topCorner.getX.toInt, 200 + topCorner.getY.toInt, wid, hei)
+  this.critButton.peer.setBounds(100 - 140 / 2 + topCorner.getX.toInt, 300 - 34 + topCorner.getY.toInt, 140, 34)
   
   def update() = {
     val armourPoints = olioPanel.olio.armourPoints

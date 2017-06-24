@@ -13,7 +13,6 @@ import javax.swing.JFileChooser
 
 object Sheet extends SimpleSwingApplication {
   
-  
   def top = new MainFrame {
     
     val path = this.getClass.getProtectionDomain.getCodeSource.getLocation.getPath

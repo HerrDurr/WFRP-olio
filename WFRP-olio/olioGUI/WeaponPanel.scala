@@ -26,6 +26,7 @@ class WeaponPanel(olioPanel: OlioPanel, index: Int) extends BoxPanel(Orientation
   
   val dropMenu = new ComboBox(this.weaponList)
   dropMenu.preferredSize = new Dimension(120, 28)
+  dropMenu.maximumSize = new Dimension(120, 28)
   val damageLabel = new Label("Dmg: ")
   damageLabel.preferredSize = new Dimension(50, 28)
   val rangeLabel = new Label("Rng: ")
