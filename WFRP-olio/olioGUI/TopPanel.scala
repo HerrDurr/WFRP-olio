@@ -3,6 +3,7 @@ package olioGUI
 import main._
 import scala.swing._
 import scala.swing.Orientation._
+import scala.swing.BorderPanel.Position._
 import event._
 import scala.math.max
 import scala.math.min
@@ -26,10 +27,10 @@ class TopPanel(olioPanel: OlioPanel) extends FlowPanel {
   val rcPanel = new BoxPanel(Horizontal)
   this.rcPanel.contents += (raceLabel, new Label(" "), careerLabel)
   
-  val leftPanel = new BoxPanel(Vertical) {
-    contents += nameLabel
+  val leftPanel = new BorderPanel {
+    this.layout(nameLabel) = North
     //contents += new Separator(Horizontal)
-    contents += rcPanel
+    this.layout(rcPanel) = South
   }
   
   val wfPanel = new GridPanel(2,1) {
@@ -67,10 +68,11 @@ class TopPanel(olioPanel: OlioPanel) extends FlowPanel {
   val nextDayButton = new Button("Next Day") { font = whFont }
   this.nextDayButton.preferredSize = new Dimension(100, 60)
   
-  val saveColourPanel = new BoxPanel(Vertical)
+  val saveColourPanel = new BorderPanel
   val colourButton = new Button("Colour") { font = whFont }
   val saveButton = new Button("Save") { font = whFont }
-  saveColourPanel.contents += (colourButton, saveButton)
+  saveColourPanel.layout(colourButton) = North
+  saveColourPanel.layout(saveButton) = South
   
   this.contents += (leftPanel, wfPanel, nextDayButton, saveColourPanel)
   
