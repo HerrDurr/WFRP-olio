@@ -365,7 +365,7 @@ Weapons : -
 Description :  
 Gain a +1 bonus on damage rolls with magic missile spells. 
 
-#Mighty shot
+#Mighty Shot
 Attributes : -
 Skills : -
 Weapons : Ranged

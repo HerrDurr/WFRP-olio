@@ -28,12 +28,31 @@ class Talent(name: String) extends Loadable(name) {
   }
   
   
+  def affects = {
+    var res = ""
+    if (this.affectedAttributes.isDefined)
+    {
+      res += "Characteristics ("
+      val attr = this.affectedAttributes.get
+      attr.dropRight(1).foreach { res += _ + ", " }
+      res += attr.takeRight(1)(0) + ")"
+    } else if (this.affectedSkills.isDefined)
+    {
+      res += "Skills ("
+      val skls = this.affectedSkills.get
+      skls.dropRight(1).foreach { res += _ + ", " }
+      res += skls.takeRight(1)(0) + ")"
+    } else if (this.affectedWeapons.isDefined) res = this.affectedWeapons.get
+    else res = "-"
+    res
+  }
+  
   //private var shortDescr = ""
   
   def affectedAttributes = this.attributesOption
   
   
-  def affectedSkill = this.skillsOption
+  def affectedSkills = this.skillsOption
   
   
   def affectedWeapons = this.weaponsOption

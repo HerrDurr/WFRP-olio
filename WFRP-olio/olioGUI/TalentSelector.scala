@@ -15,7 +15,7 @@ class TalentSelector(olioPanel: OlioPanel, talent: Talent) extends BoxPanel(Orie
   val selCol = new Color(0, 0, 0, 200)
   
   val nameLabel = new Label(talent.name + " ")
-  nameLabel.tooltip = talent.description
+  nameLabel.tooltip = "Affects: " + talent.affects
   
   val checkBox = new CheckBox
   
@@ -33,7 +33,7 @@ class TalentSelector(olioPanel: OlioPanel, talent: Talent) extends BoxPanel(Orie
     }
   }
   
-  this.listenTo(checkBox, nameLabel.mouse.moves)
+  this.listenTo(checkBox, nameLabel.mouse.moves, nameLabel.mouse.clicks)
   
   def highLight(c: Component, hLight: Boolean) = {
       if (hLight) c.foreground = Color.MAGENTA
@@ -64,6 +64,14 @@ class TalentSelector(olioPanel: OlioPanel, talent: Talent) extends BoxPanel(Orie
       olioPanel.update()
     }
     
+    case clickEvent: MouseClicked => {
+      if (clickEvent.clicks > 1) {
+        var message = "Affects: " + talent.affects
+        message += "\n\nDescription:\n" + talent.description
+        Dialog.showMessage(this, message, talent.name, Dialog.Message.Info)
+        
+      }
+    }
     
   }
   
