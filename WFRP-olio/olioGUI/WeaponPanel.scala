@@ -14,7 +14,8 @@ class WeaponPanel(olioPanel: OlioPanel, index: Int) extends BoxPanel(Orientation
   private var weapon = olio.weapons(index)
   
   private val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
-  private val file = Source.fromFile("data/weapons.txt")(decoder)
+  val path = this.getClass.getClassLoader.getResource("").getPath
+  private val file = Source.fromFile(path + "/data/weapons.txt")(decoder)
   private var weaponList: Vector[String] = Vector()
   try {
    weaponList = DataIO.loadNames(file.reader())

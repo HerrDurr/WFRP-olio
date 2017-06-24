@@ -13,7 +13,7 @@ import java.io.File
 
 class TopPanel(olioPanel: OlioPanel) extends FlowPanel {
   
-  val path = this.getClass.getProtectionDomain.getCodeSource.getLocation.getPath
+  val path = this.getClass.getClassLoader.getResource("").getPath
   val olio = olioPanel.olio
   val career = olio.career
   val whFont = olioPanel.whFontBold.deriveFont(16f)

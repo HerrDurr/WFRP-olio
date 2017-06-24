@@ -41,7 +41,8 @@ class Olio {
    */
   val allTalents = {
     val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
-    val file = Source.fromFile("data/talents.txt")(decoder)
+    val path = this.getClass.getClassLoader.getResource("").getPath
+    val file = Source.fromFile(path + "/data/talents.txt")(decoder)
     try {
       DataIO.loadNames(file.reader()).map( new Talent(_) )
     } finally {
@@ -54,7 +55,8 @@ class Olio {
    */
   val allSkills = {
     val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
-    val file = Source.fromFile("data/skills.txt")(decoder)
+    val path = this.getClass.getClassLoader.getResource("").getPath
+    val file = Source.fromFile(path + "/data/skills.txt")(decoder)
     try {
       DataIO.loadNames(file.reader()).map( new Skill(_) )
     } finally {

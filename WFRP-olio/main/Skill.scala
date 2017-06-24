@@ -30,7 +30,8 @@ class Skill (name: String) extends Loadable(name) {
   this.n = name
   //The skills stats are loaded from data.
   val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
-  val file = Source.fromFile("data/skills.txt")(decoder)
+  val path = this.getClass.getClassLoader.getResource("").getPath
+  val file = Source.fromFile(path + "/data/skills.txt")(decoder)
   try {
     DataIO.loadItem(file.reader(), this)
   } finally {

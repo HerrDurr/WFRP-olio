@@ -128,7 +128,8 @@ class Weapon(name: String) extends Loadable(name) {
   
   
   val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
-  val file = Source.fromFile("data/weapons.txt")(decoder)
+  val path = this.getClass.getClassLoader.getResource("").getPath
+  val file = Source.fromFile(path + "/data/weapons.txt")(decoder)
   try {
     DataIO.loadItem(file.reader(), this)
   } finally {
