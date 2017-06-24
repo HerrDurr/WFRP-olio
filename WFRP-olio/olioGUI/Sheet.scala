@@ -18,8 +18,50 @@ object Sheet extends SimpleSwingApplication {
     val path = this.getClass.getProtectionDomain.getCodeSource.getLocation.getPath
     
     this.visible = true
-    this.centerOnScreen()
     
+    val masterPanel = new BoxPanel(Orientation.Horizontal)
+    
+    val newButton = new Button("New")
+    newButton.tooltip = "Create new character/NPC"
+    val loadButton = new Button("Load")
+    loadButton.tooltip = "Load a character/NPC"
+    val exitButton = new Button("Exit")
+    
+    masterPanel.contents += (newButton, loadButton, exitButton)
+    this.contents = masterPanel
+    this.title = "Oliosheetz"
+    
+    this.listenTo(newButton, loadButton, exitButton)
+    
+    this.reactions += {
+      case clickEvent: ButtonClicked => {
+        
+        if (clickEvent.source == exitButton)
+        {
+          val quitChoice = Dialog.showConfirmation(this,
+              "Are you sure you want to quit?\nAny unsaved changes to open character sheets will be lost.",
+              "Quit?", Dialog.Options.OkCancel, Dialog.Message.Warning)
+          if (quitChoice == Dialog.Result.Ok) quit()
+        }
+        
+        else
+        {
+          
+          val frame = new Frame
+          val olio = new Olio
+          if (clickEvent.source == newButton) newOlioSetup(olio)
+          else if (clickEvent.source == loadButton) loadOlioSetup(olio)
+          val olioPanel = new OlioPanel(olio)
+          frame.title = "Oliosheet"
+          frame.contents = olioPanel
+          frame.visible = true
+          
+        }
+        
+      }
+    }
+    
+    /*
     val newOrLoad = Dialog.showOptions(this, "Create or load character?", "Welcome!", Dialog.Options.YesNoCancel, Dialog.Message.Question, null, Seq("New", "Load", "Cancel"), 1)
     
     private var olio: Olio = {
@@ -53,7 +95,9 @@ object Sheet extends SimpleSwingApplication {
     this.contents = olioPanel
     
     this.title = "Oliosheet"
+    */
     
+    /*
     this.menuBar = new MenuBar {
       
       contents += new Menu("File") {
@@ -102,6 +146,8 @@ object Sheet extends SimpleSwingApplication {
       }
       
     }
+    * 
+    */
     
     
     def newOlioSetup(olio: Olio) = {
