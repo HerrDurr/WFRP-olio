@@ -324,7 +324,7 @@ finding edible food, constructing improvised shelters, and so on.
 #Perception
 Attribute : Int
 Basic : y
-Talents : Acute Hearing, Excellent Vision, Super Numerate, Trapfinder
+Talents : Acute Hearing, Excellent Vision, Keen Senses, Night Vision, Super Numerate, Trapfinder
 Description : 
 Use this skill to observe your surroundings and	to notice 
 small details that others might	miss. It can also be used to spot 

@@ -27,16 +27,23 @@ class RightPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
   
   
   
-  val skillLabels = Vector(new Label(""), new Label(""), new Label(""), new Label(""), new Label(""))
+  val skillLabels = Vector(new Label(""), new Label(""), new Label(""), new Label(""), new Label(""),
+                           new Label(""), new Label(""), new Label(""), new Label(""), new Label(""))
   
   //Pressing this button shows all skills, which have tickboxes next to them so they can be picked and trained in.
   val skillsButton = new Button("All Skills")
   
-  val skillGrid = new GridPanel(5,1) {
-    skillLabels.foreach(contents += _)
+  val masterSkillGrid = new GridPanel(1,2)
+  val lSkillGrid = new GridPanel(5,1) {
+    skillLabels.take(5).foreach(contents += _)
     //contents += skillsButton
   }
-  this.skillGrid.contents.foreach(_.font = olioPanel.whFont.deriveFont(16f))
+  val rSkillGrid = new GridPanel(5,1) {
+    skillLabels.drop(5).foreach(contents += _)
+  }
+  masterSkillGrid.contents += (lSkillGrid, rSkillGrid)
+  
+  this.skillLabels.foreach(_.font = olioPanel.whFont.deriveFont(16f))
   
   /*
   val skillPopup = new ListView {
@@ -56,7 +63,7 @@ class RightPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
   this.toolBar.contents += (skillsButton, talentsButton)
   this.toolBar.contents.foreach(_.font = olioPanel.whFont.deriveFont(16f))
   
-  this.contents += (weaponGrid, skillGrid, /*Swing.VGlue, */toolBar)
+  this.contents += (weaponGrid, masterSkillGrid, /*Swing.VGlue, */toolBar)
   
   this.listenTo(skillsButton, talentsButton)
   
@@ -100,11 +107,11 @@ class RightPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
     this.skillMenu.update()
     val topSkills = olio.skills.filterNot( s => s.name == "Common Knowledge*" ||
                                            s.name == "Perception" || s.name == "Speak Language*" )
-                        .sortBy(_.skillLevel).takeRight(4)
+                        .sortBy(_.skillLevel).tail
     val perception = olio.skills.find(_.name == "Perception").get
-    skillLabels(0).text = perception.name + " (" + perception.skillLevel + ")"
-    skillLabels(0).tooltip = "Related known Talents: " + olio.relatedKnownTalents(perception)
-    skillLabels.takeRight(4).foreach {
+    skillLabels.head.text = perception.name + " (" + perception.skillLevel + ")"
+    skillLabels.head.tooltip = "Related known Talents: " + olio.relatedKnownTalents(perception)
+    skillLabels.tail.foreach {
       x => {
         val xSkill = topSkills(topSkills.length - skillLabels.indexOf(x))
         x.text = ( xSkill.name + " (" + xSkill.skillLevel + ")" )
