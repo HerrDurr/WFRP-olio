@@ -75,8 +75,8 @@ class WeaponPanel(olioPanel: OlioPanel, index: Int) extends BoxPanel(Orientation
   def update() = {
     weapon = this.olio.weapons(index)
     if (weapon.name == "Unarmed" && olio.hasTalent(this.streetFighting)) this.weapon.setModifier(1)
-    if (weapon.range != "-" && olio.hasTalent(this.mightyShot)) this.weapon.setModifier(1)
-    if (weapon.range == "-" && weapon.name != "Unarmed" && olio.hasTalent(this.mightyShot))
+    if (weapon.range.head != '-' && olio.hasTalent(this.mightyShot)) this.weapon.setModifier(1)
+    if (weapon.range.head == '-' && weapon.name != "Unarmed" && olio.hasTalent(this.mightyBlow))
       this.weapon.setModifier(1)
     this.dropMenu.selection.item = weapon.name
     damageLabel.text = "Dmg: " + weapon.damageText(olio)

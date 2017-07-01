@@ -53,9 +53,7 @@ class Weapon(name: String) extends Loadable(name) {
   /**
    * Sets a talent-based modifier to the weapon's damage. Called by TalentSelector GUI-class.
    */
-  def setModifier(m: Int) = {
-    
-  }
+  def setModifier(m: Int) = this.mod = m
   
   
   def reloadTime = this.reload.getOrElse("-")

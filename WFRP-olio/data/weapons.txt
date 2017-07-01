@@ -1,5 +1,12 @@
 Weapon Data File
 
+#None
+Group : -
+Damage : -
+Range : -
+Reload : -
+Qualities : -
+
 #Unarmed
 Group : -
 Damage : SB - 4

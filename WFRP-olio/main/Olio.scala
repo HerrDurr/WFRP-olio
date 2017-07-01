@@ -26,7 +26,7 @@ class Olio {
   
   private val talentBuffer: Buffer[Talent] = Buffer()
   
-  val weapons: Array[Weapon] = Array(new Weapon("Unarmed"), new Weapon("Unarmed"), new Weapon("Unarmed"))
+  val weapons: Array[Weapon] = Array(new Weapon("Unarmed"), new Weapon("None"), new Weapon("None"))
   
   val attributes = new Attributes
   
