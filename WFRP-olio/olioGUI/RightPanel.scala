@@ -96,7 +96,7 @@ class RightPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
    * Updates all fields in this Panel. Be sure to give the Olio its Skills before using this!
    */
   def update() = {
-    this.weaponGrid.contents.tail.foreach(_.asInstanceOf[WeaponPanel].update())
+    this.weaponGrid.contents.foreach(_.asInstanceOf[WeaponPanel].update())
     this.skillMenu.update()
     val topSkills = olio.skills.filterNot( s => s.name == "Common Knowledge*" || s.name == "Speak Language*" )
                         .sortBy(_.skillLevel).takeRight(4)

@@ -35,8 +35,6 @@ class WeaponPanel(olioPanel: OlioPanel, index: Int) extends BoxPanel(Orientation
   rangeLabel.preferredSize = new Dimension(70, 28)
   val reloadLabel = new Label("Rld: ")
   reloadLabel.preferredSize = new Dimension(50, 28)
-  this.update()
-  this.dropMenu.selection.item = weapon.name
   val infoButton = new Button("i")
   infoButton.margin = new Insets(3,3,3,3)
   
@@ -44,6 +42,7 @@ class WeaponPanel(olioPanel: OlioPanel, index: Int) extends BoxPanel(Orientation
   this.contents.foreach(_.font = olioPanel.whFont.deriveFont(16f))
   
   this.listenTo(dropMenu.selection, infoButton)
+  this.update()
   
   reactions += {
     
@@ -73,6 +72,8 @@ class WeaponPanel(olioPanel: OlioPanel, index: Int) extends BoxPanel(Orientation
   }
   
   def update() = {
+    weapon = this.olio.weapons(index)
+    this.dropMenu.selection.item = weapon.name
     damageLabel.text = "Dmg: " + weapon.damageText(olio)
     rangeLabel.text = " Rng: " + weapon.range
     reloadLabel.text = " Rld: " + weapon.reloadTime

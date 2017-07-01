@@ -166,7 +166,7 @@ object DataIO {
       {
         val itemName = currentLine.tail.trim().toLowerCase()
         
-        //If this is the weapon you're looking for, do things
+        //If this is the item you're looking for, do things
         if (itemName == name)
         {
           currentLine = lineReader.readLine()
