@@ -205,4 +205,18 @@ class Olio {
   }
   
   
+  /**
+   * Returns a nice list-form String of the Loadable objects given as a Vector parameter.
+   */
+  def loadablesString(loadables: Vector[Loadable]) = {
+    var res = ""
+    if (!loadables.isEmpty)
+    {
+      loadables.dropRight(1).foreach(res += _.name + ", ")
+      res += loadables.takeRight(1)(0).name
+    } else res = "-"
+    res
+  }
+  
+  
 }

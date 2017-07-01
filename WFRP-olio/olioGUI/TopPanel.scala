@@ -11,6 +11,7 @@ import java.awt.geom.Dimension2D
 import java.awt.Insets._
 import javax.swing.JFileChooser
 import java.io.File
+import javax.swing.SpinnerNumberModel
 
 class TopPanel(olioPanel: OlioPanel) extends FlowPanel {
   
@@ -50,6 +51,7 @@ class TopPanel(olioPanel: OlioPanel) extends FlowPanel {
     
     //TODO: iffi liittyen Luck-talentiin
     val fortunePanel = new FlowPanel {
+      //val fortuneSpinner = new Spinner(new SpinnerNumberModel(0, 0, olio.attributes.fatePoints, 1))
       val fortuneButton = new Button( olio.attributes.fatePoints.toString() ) { font = whFont }
       val fortuneLabel = new Label( "/ " + olio.attributes.fatePoints.toString() ) { font = whFont }
       fortuneButton.preferredSize = new Dimension(28, 28)

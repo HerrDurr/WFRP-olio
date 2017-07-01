@@ -120,6 +120,7 @@ class RightPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
     }
     
     this.talentMenu.update()
+    this.talentsButton.tooltip = olio.loadablesString(olio.talents)
   }
   
   
