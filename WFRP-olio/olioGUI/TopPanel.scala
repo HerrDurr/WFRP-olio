@@ -217,13 +217,16 @@ class TopPanel(olioPanel: OlioPanel) extends FlowPanel {
     val r = col.getRed
     val g = col.getGreen
     val b = col.getBlue
+    val sum = r + g + b / 2
     /*
     val high = max(r, max(g, b))
     val low = min(r, min(g, b))
     val sum = high + low
     new Color(sum - r, sum - g, sum - b)
      */
-    new Color(255 - r, 255 - g, 255 - b)
+    //new Color(255 - r, 255 - g, 255 - b)
+    if (sum > (220)) new Color(0, 0, 0)
+    else new Color(255, 255, 255)
   }
   
   
