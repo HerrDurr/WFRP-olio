@@ -45,9 +45,21 @@ class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
   def update() = {
     if (olio.hasSkill(skill)) {
       this.deafTo(spinner)
-      if (skill.timesGained == 1) spinner.value = ("X")
-      else if (skill.timesGained == 2) spinner.value = ("+10")
-      else if (skill.timesGained == 3) spinner.value = ("+20")
+      if (skill.timesGained == 1) 
+      {
+        spinner.value = ("X")
+        previousValue = "X"
+      }
+      else if (skill.timesGained == 2)
+      {
+        spinner.value = ("+10")
+        previousValue = "+10"
+      }
+      else if (skill.timesGained == 3)
+      {
+        spinner.value = ("+20")
+        previousValue = "+20"
+      }
       this.listenTo(spinner)
       this.levelLabel.text = skill.skillLevel.toString()
       this.nameLabel.font = selFont

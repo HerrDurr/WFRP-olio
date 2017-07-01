@@ -86,7 +86,7 @@ object SaverLoader {
           if (!skills(0).isEmpty)
           {
             val names = skills.map(_.tail)
-            val lvls = skills.map(_.head - '0')
+            val lvls = skills.map(_.head - '0') // - '0' changes Char to Int
             val n = skills.length
             for (i <- 0 to n - 1)
             {
