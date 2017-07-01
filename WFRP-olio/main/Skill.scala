@@ -32,6 +32,10 @@ class Skill (name: String) extends Loadable(name) {
   def modifier = this.mod
   
   
+  /**
+   * Sets a skill level modifier to the skill, where the source of a permanent modifier is a talent.
+   * Called by TalentSelector class.
+   */
   def setModifier(m: Int) = this.mod += m
   
   //The skill's name is given when the skill is created

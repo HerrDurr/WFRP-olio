@@ -42,6 +42,21 @@ class Weapon(name: String) extends Loadable(name) {
   
   private var reload: Option[String] = None
   
+  private var mod = 0
+  
+  /**
+   * A talent-based permanent modifier to the weapon damage.
+   */
+  def modifier = this.mod
+  
+  
+  /**
+   * Sets a talent-based modifier to the weapon's damage. Called by TalentSelector GUI-class.
+   */
+  def setModifier(m: Int) = {
+    
+  }
+  
   
   def reloadTime = this.reload.getOrElse("-")
   
@@ -63,9 +78,9 @@ class Weapon(name: String) extends Loadable(name) {
    */
   def damage(owner: Olio): Option[Int] = {
     if(this.staticDmg.isDefined)
-      return this.staticDmg
+      return Option(this.staticDmg.get + this.modifier)
     if(this.additiveDmg.isDefined)
-      return Option(owner.attributes.strengthBonus + this.additiveDmg.get)
+      return Option(owner.attributes.strengthBonus + this.additiveDmg.get + this.modifier)
     else None
   }
   
