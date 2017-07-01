@@ -553,6 +553,14 @@ Description :
 Gain a +10% bonus on Fear and Terror Tests, and on Will Power Tests to resist 
 Intimidate attempts. 
 
+#Street Fighting
+Attributes : WS
+Skills : -
+Weapons : Unarmed
+Description : 
+You can make unarmed attacks with a +10% bonus to Weapon Skill.
+Furthermore, you gain a +1 bonus on damage rolls with unarmed attacks.
+
 #Streetwise
 Attributes : -
 Skills : Charm, Gossip
