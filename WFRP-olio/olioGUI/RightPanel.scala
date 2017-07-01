@@ -98,7 +98,8 @@ class RightPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
   def update() = {
     this.weaponGrid.contents.foreach(_.asInstanceOf[WeaponPanel].update())
     this.skillMenu.update()
-    val topSkills = olio.skills.filterNot( s => s.name == "Common Knowledge*" || s.name == "Speak Language*" )
+    val topSkills = olio.skills.filterNot( s => s.name == "Common Knowledge*" ||
+                                           s.name == "Perception" || s.name == "Speak Language*" )
                         .sortBy(_.skillLevel).takeRight(4)
     val perception = olio.skills.find(_.name == "Perception").get
     skillLabels(0).text = perception.name + " (" + perception.skillLevel + ")"
