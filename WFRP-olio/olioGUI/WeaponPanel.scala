@@ -24,7 +24,9 @@ class WeaponPanel(olioPanel: OlioPanel, index: Int) extends BoxPanel(Orientation
     file.close()
   }
   
-  
+  private val streetFighting = this.olio.allTalents.find(_.name == "Street Fighting").get
+  private val mightyShot = this.olio.allTalents.find(_.name == "Mighty Shot").get
+  private val mightyBlow = this.olio.allTalents.find(_.name == "Strike Mighty Blow").get
   
   val dropMenu = new ComboBox(this.weaponList)
   dropMenu.preferredSize = new Dimension(120, 28)
@@ -72,6 +74,10 @@ class WeaponPanel(olioPanel: OlioPanel, index: Int) extends BoxPanel(Orientation
   
   def update() = {
     weapon = this.olio.weapons(index)
+    if (weapon.name == "Unarmed" && olio.hasTalent(this.streetFighting)) this.weapon.setModifier(1)
+    if (weapon.range != "-" && olio.hasTalent(this.mightyShot)) this.weapon.setModifier(1)
+    if (weapon.range == "-" && weapon.name != "Unarmed" && olio.hasTalent(this.mightyShot))
+      this.weapon.setModifier(1)
     this.dropMenu.selection.item = weapon.name
     damageLabel.text = "Dmg: " + weapon.damageText(olio)
     rangeLabel.text = " Rng: " + weapon.range

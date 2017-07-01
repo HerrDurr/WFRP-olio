@@ -11,6 +11,7 @@ class TalentSelector(olioPanel: OlioPanel, talent: Talent) extends BoxPanel(Orie
   
   val olio = olioPanel.olio
   val modSkills = this.modifiesSkills
+  val modDamage = this.modifiesDamage
   
   val nonSelFont = olioPanel.whFont.deriveFont(14f)
   val selFont = olioPanel.whFontBold.deriveFont(14f)
@@ -67,12 +68,20 @@ class TalentSelector(olioPanel: OlioPanel, talent: Talent) extends BoxPanel(Orie
         olio.addTalent(talent)
         if (!this.modSkills._1.isEmpty) this.modSkills._1.foreach {
           s => if (s.modifier == 0) s.setModifier(this.modSkills._2) }
+        if (this.modDamage == 'u') olio.weapons.filter(_.name == "Unarmed").foreach(_.setModifier(1))
+        if (this.modDamage == 'r') olio.weapons.filter(_.range != "-").foreach(_.setModifier(1))
+        if (this.modDamage == 'm') olio.weapons.filter(w => w.range == "-" && w.name != "Unarmed")
+                                               .foreach(_.setModifier(1))
       }
       else
       {
         olio.removeTalent(talent)
         if (!this.modSkills._1.isEmpty) this.modSkills._1.foreach {
           s => if (s.modifier != 0) s.setModifier(- this.modSkills._2) }
+        if (this.modDamage == 'u') olio.weapons.filter(_.name == "Unarmed").foreach(_.setModifier(0))
+        if (this.modDamage == 'r') olio.weapons.filter(_.range != "-").foreach(_.setModifier(0))
+        if (this.modDamage == 'm') olio.weapons.filter(w => w.range == "-" && w.name != "Unarmed")
+                                               .foreach(_.setModifier(0))
       }
       olioPanel.update()
     }
@@ -88,10 +97,31 @@ class TalentSelector(olioPanel: OlioPanel, talent: Talent) extends BoxPanel(Orie
     
   }
   
+  
+  /**
+   * If the talent permanently modifies the damage of certain weapons, return a tag for
+   * those weapons.
+   */
+  def modifiesDamage: Char = {
+    talent.name match {
+      case "Mighty Missile" =>
+        return 's'
+      case "Mighty Shot" =>
+        return 'r'
+      case "Street Fighting" =>
+        return 'u'
+      case "Strike Mighty Blow" =>
+        return 'm'
+      case some =>
+        return '-'
+    }
+  }
+  
+  
   def modifiesSkills: Tuple2[Vector[Skill], Int] = {
     talent.name match {
       case "Aethyric Attunement" =>
-        return (olio.allSkills.filter { s => s.name == "Channeling" || s.name == "Magican Sense" }, 10)
+        return (olio.allSkills.filter { s => s.name == "Channeling" || s.name == "Magical Sense" }, 10)
       case "Dealmaker" =>
         return (olio.allSkills.filter { s => s.name == "Evaluate" || s.name == "Haggle" }, 10)
       case "Excellent Vision" =>
