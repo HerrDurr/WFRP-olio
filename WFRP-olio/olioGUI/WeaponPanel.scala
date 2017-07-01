@@ -42,7 +42,6 @@ class WeaponPanel(olioPanel: OlioPanel, index: Int) extends BoxPanel(Orientation
   this.contents.foreach(_.font = olioPanel.whFont.deriveFont(16f))
   
   this.listenTo(dropMenu.selection, infoButton)
-  this.update()
   
   reactions += {
     

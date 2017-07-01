@@ -115,6 +115,5 @@ class RightPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
   }
   
   
-  this.update()
   
 }
