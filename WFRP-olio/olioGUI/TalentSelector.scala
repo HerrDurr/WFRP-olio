@@ -31,9 +31,21 @@ class TalentSelector(olioPanel: OlioPanel, talent: Talent) extends BoxPanel(Orie
       this.checkBox.selected = true
       this.nameLabel.font = selFont
       this.nameLabel.foreground = selCol
+      if (!this.modSkills._1.isEmpty) this.modSkills._1.foreach {
+        s => if (s.modifier == 0) s.setModifier(this.modSkills._2) }
+      if (this.modDamage == 'u') olio.weapons.filter(_.name == "Unarmed").foreach(_.setModifier(1))
+      if (this.modDamage == 'r') olio.weapons.filter(_.range.head != '-').foreach(_.setModifier(1))
+      if (this.modDamage == 'm') olio.weapons.filter(w => w.range.head == '-' && w.name != "Unarmed")
+                                             .foreach(_.setModifier(1))
     } else {
       this.nameLabel.font = nonSelFont
       this.nameLabel.foreground = nonSelCol
+      if (!this.modSkills._1.isEmpty) this.modSkills._1.foreach {
+        s => if (s.modifier != 0) s.setModifier(- this.modSkills._2) }
+      if (this.modDamage == 'u') olio.weapons.filter(_.name == "Unarmed").foreach(_.setModifier(0))
+      if (this.modDamage == 'r') olio.weapons.filter(_.range.head != '-').foreach(_.setModifier(0))
+      if (this.modDamage == 'm') olio.weapons.filter(w => w.range.head == '-' && w.name != "Unarmed")
+                                             .foreach(_.setModifier(0))
     }
   }
   
@@ -66,22 +78,28 @@ class TalentSelector(olioPanel: OlioPanel, talent: Talent) extends BoxPanel(Orie
       if (checkBox.selected)
       {
         olio.addTalent(talent)
+        /*
         if (!this.modSkills._1.isEmpty) this.modSkills._1.foreach {
           s => if (s.modifier == 0) s.setModifier(this.modSkills._2) }
         if (this.modDamage == 'u') olio.weapons.filter(_.name == "Unarmed").foreach(_.setModifier(1))
         if (this.modDamage == 'r') olio.weapons.filter(_.range.head != '-').foreach(_.setModifier(1))
         if (this.modDamage == 'm') olio.weapons.filter(w => w.range.head == '-' && w.name != "Unarmed")
                                                .foreach(_.setModifier(1))
+                                               * 
+                                               */
       }
       else
       {
         olio.removeTalent(talent)
+        /*
         if (!this.modSkills._1.isEmpty) this.modSkills._1.foreach {
           s => if (s.modifier != 0) s.setModifier(- this.modSkills._2) }
         if (this.modDamage == 'u') olio.weapons.filter(_.name == "Unarmed").foreach(_.setModifier(0))
         if (this.modDamage == 'r') olio.weapons.filter(_.range.head != '-').foreach(_.setModifier(0))
         if (this.modDamage == 'm') olio.weapons.filter(w => w.range.head == '-' && w.name != "Unarmed")
                                                .foreach(_.setModifier(0))
+                                               * 
+                                               */
       }
       olioPanel.update()
     }

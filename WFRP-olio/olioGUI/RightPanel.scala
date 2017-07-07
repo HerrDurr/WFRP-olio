@@ -104,6 +104,9 @@ class RightPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
    */
   def update() = {
     this.weaponGrid.contents.foreach(_.asInstanceOf[WeaponPanel].update())
+    this.talentMenu.update()
+    this.talentsButton.tooltip = olio.loadablesString(olio.talents)
+    this.olioPanel.updateSkills()
     this.skillMenu.update()
     val topSkills = olio.skills.filterNot( s => s.name == "Common Knowledge*" ||
                                            s.name == "Perception" || s.name == "Speak Language*" )
@@ -119,8 +122,6 @@ class RightPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
       }
     }
     
-    this.talentMenu.update()
-    this.talentsButton.tooltip = olio.loadablesString(olio.talents)
   }
   
   
