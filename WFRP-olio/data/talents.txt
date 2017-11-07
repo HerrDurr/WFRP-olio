@@ -351,6 +351,15 @@ You can affect 100 times the normal number
 of people when using the Charm skill. You must have 
 Public Speaking before you can gain this talent. 
 
+#Meditation
+Attributes : -
+Skills : -
+Weapons : -
+Description :  
+You can focus your mind and ignore the world around 
+you. When performing ritual magic, you gain a bonus to your 
+Casting Roll equal to your Magic Characteristic. 
+
 #Menacing
 Attributes : -
 Skills : Intimidate, Torture
