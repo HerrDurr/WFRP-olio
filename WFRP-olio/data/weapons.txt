@@ -140,6 +140,13 @@ Range : -
 Reload : -
 Qualities : Balanced, Special
 
+#Blowgun
+Group : Blowgun
+Damage : 0
+Range : 4/8
+Reload : Half
+Qualities : Special
+
 #Bola
 Group : Entangling
 Damage : 1
