@@ -19,30 +19,30 @@ class GMPanel extends BorderPanel {
     
   val whFont = Font.createFont(Font.TRUETYPE_FONT, new File(path + "/data/CaslonAntique.ttf"))
   val whFontBold = Font.createFont(Font.TRUETYPE_FONT, new File(path + "/data/CaslonAntique-Bold.ttf"))
-  // Making the Party Panel on the left for character selection
-  val partyPanelUpper = new BorderPanel
+  // Making the Group Panel on the left for character selection
+  val groupPanelUpper = new BorderPanel
   
   val newButton = new Button("New")
   newButton.tooltip = "Create new character/NPC"
   val loadButton = new Button("Load")
   loadButton.tooltip = "Load a character/NPC"
-  // Button for choosing whether to view Player Party or Enemy Group
+  // Button for choosing whether to view Player group or Enemy Group
   val playerEnemyButton = new Button("Foes")
-  playerEnemyButton.tooltip = "Switch between Player Party/Enemy Group"
+  playerEnemyButton.tooltip = "Switch between Player group/Enemy Group"
   // Holder for New and Load buttons
   val newLoadButtonPanel = new GridPanel(1,2)
   
-  val partyPanel = new PartyPanel
+  val groupPanel = new GroupPanel
   
-  // Organize Party Panel
+  // Organize Group Panel
   newLoadButtonPanel.contents += (newButton, loadButton)
-  partyPanelUpper.layout(playerEnemyButton) = North
-  partyPanelUpper.layout(newLoadButtonPanel) = South
-  partyPanelUpper.layout(partyPanel) = Center
+  groupPanelUpper.layout(playerEnemyButton) = North
+  groupPanelUpper.layout(newLoadButtonPanel) = South
+  groupPanelUpper.layout(groupPanel) = Center
   
   
-  // Add stuff to this (GMPanel)
-  this.layout(partyPanelUpper) = West
+  // Add stuff to GMPanel
+  this.layout(groupPanelUpper) = West
   
   
   // Event handling
