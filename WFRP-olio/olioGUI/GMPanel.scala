@@ -27,8 +27,8 @@ class GMPanel extends BorderPanel {
   val loadButton = new Button("Load")
   loadButton.tooltip = "Load a character/NPC"
   // Button for choosing whether to view Player group or Enemy Group
-  val playerEnemyButton = new Button("Foes")
-  playerEnemyButton.tooltip = "Switch between Player group/Enemy Group"
+  val groupButton = new Button("Foes")
+  groupButton.tooltip = "Switch between groups"
   // Holder for New and Load buttons
   val newLoadButtonPanel = new GridPanel(1,2)
   
@@ -36,7 +36,7 @@ class GMPanel extends BorderPanel {
   
   // Organize Group Panel
   newLoadButtonPanel.contents += (newButton, loadButton)
-  groupPanelUpper.layout(playerEnemyButton) = North
+  groupPanelUpper.layout(groupButton) = North
   groupPanelUpper.layout(newLoadButtonPanel) = South
   groupPanelUpper.layout(groupPanel) = Center
   
