@@ -128,7 +128,7 @@ class GMPanel extends BorderPanel {
       if (/*fileChooser.selectedFile == null*/ fileChooser.getSelectedFile != null) {
         val file = Source.fromFile(/*fileChooser.selectedFile*/fileChooser.getSelectedFile)(decoder)
         try {
-          SaverLoader.loadOlio(file, olio)
+          SaverLoader.loadOlioOrGroup(file, olio)
         } finally {
           file.close()
         }

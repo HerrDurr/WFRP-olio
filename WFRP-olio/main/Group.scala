@@ -16,6 +16,8 @@ class Group {
   
   def members = this.groupMembers.toVector
   
+  def size = this.groupMembers.size
+  
   def addMember(member: Olio) = {
     this.groupMembers += member
     this.groupMembers.sortBy(_.name)

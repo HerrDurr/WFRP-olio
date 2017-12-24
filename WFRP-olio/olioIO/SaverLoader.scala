@@ -3,8 +3,10 @@ package olioIO
 import java.io.IOException
 import java.io.PrintWriter
 import java.io.File
+import java.nio.charset.CodingErrorAction
 import main.{Olio, Weapon, Group}
 import scala.io.Source
+import scala.io.Codec
 import java.awt.Color
 import scala.swing.Dialog
 import scala.collection.mutable.Buffer
@@ -12,133 +14,74 @@ import scala.collection.mutable.Buffer
 object SaverLoader {
   
   
-  def loadGroup() = ???
-  
-  
-  def saveGroup(group: Group) = {
-    ???
+  def saveGroupMembers(group: Group) = {
+    
+    for (member <- group.members)
+    {
+      val file = new File(member.saveFileName)
+      saveOlio(member, file)
+    }
   }
   
   
-  def loadOlio(input: Source, olio: Olio) = {
+  def saveGroup(group: Group, saveFile: File) = {
+    var iMember = 0
+    
+    val file = new PrintWriter(saveFile)
+    
+    val saveData: Buffer[Char] = Buffer()
+    var header = ""
+    
+    try {
+      
+      
+      while (header != "END")
+      {
+        val dataTuple = appendData(header, group, Option(iMember))
+        header = dataTuple._1
+        dataTuple._2.foreach(saveData += _)
+        iMember += 1
+        //saveData += dataTuple._2
+      }
+      
+      saveData.foreach(file.print(_))
+      //file.print(saveData)
+      
+    } catch {
+      
+      case e: IOException =>
+        val dataException = new CorruptedDataFileException("Creating the save data failed.")
+        dataException.initCause(e)
+        throw dataException
+      case e: NoSuchElementException =>
+        val dataException = new CorruptedDataFileException("A piece of data is missing.")
+        dataException.initCause(e)
+        throw dataException
+      case e: IndexOutOfBoundsException =>
+        val dataException = new CorruptedDataFileException("Reading the data failed (index out of bounds).")
+        dataException.initCause(e)
+        throw dataException
+      case e: IllegalArgumentException =>
+        val dataException = new CorruptedDataFileException("Illegal argument.")
+        dataException.initCause(e)
+        throw dataException
+    } finally {
+      file.close()
+    }
+  }
+  
+  
+  def loadOlioOrGroup(input: Source, loadWhat: Object): Unit = {
     
     val chunkHeader: Array[Char] = new Array(6)
     var chunkName = ""
     var chunkSize = 0
     
     try {
-      getData(chunkHeader, input)
       
-      chunkName = this.getChunkName(chunkHeader)
-      chunkSize = this.getChunkSize(chunkHeader)
+      // loadWhat needs to be an Olio or Group object
+      objectLoader(chunkHeader, input, loadWhat)
       
-      while (chunkName != "END") {
-        val dataArray: Array[Char] = new Array(chunkSize)
-        getData(dataArray, input)
-        var dataString = ""
-        dataArray.foreach(dataString += _)
-        
-        if (chunkName == "NAM")
-        {
-          olio.setName(dataString)
-        }
-           
-        if (chunkName == "RAC")
-        {
-          olio.setRace(dataString)
-        }
-             
-        if (chunkName == "CAR")
-        {
-          olio.career.change(dataString)
-        }
-            
-        if (chunkName == "COL")
-        {
-          val split = dataString.split(",").map(_.toInt)
-          olio.setColour(new Color(split(0), split(1), split(2)))
-        }
-          
-        if (chunkName == "ATR")
-        {
-          val split = dataString.split(",").map(_.toInt)
-          for (i <- 0 to split.length - 1)
-          {
-            olio.attributes.setAttribute(i, split(i))
-          }
-        }
-          
-        if (chunkName == "CRW")
-        {
-          olio.setCurrentWounds(dataString.toInt)
-        }
-       
-        if (chunkName == "FOR")
-        {
-          olio.setFortune(dataString.toInt)
-        }
-          
-        if (chunkName == "WPN")
-        {
-          val names = dataString.split(",")
-          val n = names.length
-          for (i <- 0 to n - 1)
-          {
-            olio.weapons(i) = new Weapon(names(i))
-          }
-        }
-          
-        if (chunkName == "SKL")
-        {
-          val skills = dataString.split(",")
-          if (!skills(0).isEmpty)
-          {
-            val names = skills.map(_.tail)
-            val lvls = skills.map(_.head - '0') // - '0' changes Char to Int
-            val n = skills.length
-            for (i <- 0 to n - 1)
-            {
-              val skill = olio.allSkills.find(_.name == names(i)).get
-              for (lvl <- 0 to lvls(i) - 1)
-              {
-                olio.addSkill(skill)
-              }
-            }
-          }
-        }
-          
-        if (chunkName == "TAL")
-        {
-          val names = dataString.split(",")
-          if (!names(0).isEmpty())
-          {
-            val n = names.length
-            for (i <- 0 to n - 1)
-            {
-              val talent = olio.allTalents.find(_.name == names(i)).get
-              olio.addTalent(talent)
-            }
-          }
-        }
-         
-        if (chunkName == "APO")
-        {
-          val split = dataString.split(",").map(_.toInt)
-          for (i <- 0 to split.length - 1)
-          {
-            olio.armourPoints(i) = split(i)
-          }
-        }
-          
-        if (chunkName == "CMT")
-        {
-          olio.comments = dataString
-        }
-          
-        getData(chunkHeader, input)
-        chunkName = this.getChunkName(chunkHeader)
-        chunkSize = this.getChunkSize(chunkHeader)
-      }
     } catch {
       
       case e: IOException =>
@@ -178,7 +121,7 @@ object SaverLoader {
       
       while (header != "END")
       {
-        val dataTuple = appendData(header, olio)
+        val dataTuple = appendData(header, olio, None)
         header = dataTuple._1
         dataTuple._2.foreach(saveData += _)
         //saveData += dataTuple._2
@@ -211,111 +154,144 @@ object SaverLoader {
     
   }
   
-  def appendData(header: String, olio: Olio): Tuple2[String, Vector[Char]] = {
+  def appendData(header: String, saveThis: Object, iMember: Option[Int]): Tuple2[String, Vector[Char]] = {
     
     var resHeader = ""
     var resData: Buffer[Char] = Buffer()
     var data = ""
     
-    if (header.isEmpty())
+    if (saveThis.isInstanceOf[Olio])
     {
-      resHeader = "NAM"
-      data = olio.name
-    }
-    
-    else if (header == "NAM")
-    {
-      resHeader = "RAC"
-      data = olio.race
-    }
-    
-    else if (header == "RAC")
-    {
-      resHeader = "CAR"
-      data = olio.career.current
-    }
-    
-    else if (header == "CAR")
-    {
-      resHeader = "COL"
-      data = olio.colour.getRed.toString() + "," + olio.colour.getGreen.toString() + "," + olio.colour.getBlue.toString()
-    }
-    
-    else if (header == "COL")
-    {
-      resHeader = "ATR"
-      val attributeValues = olio.attributes.listValues
-      attributeValues.dropRight(1).foreach( data += _ + "," )
-      attributeValues.takeRight(1).foreach( data += _ )
-    }
-    
-    else if (header == "ATR")
-    {
-      resHeader = "CRW"
-      data = olio.currentWounds.toString()
-    }
-    
-    else if (header == "CRW")
-    {
-      resHeader = "FOR"
-      data = olio.fortunePoints.toString()
-    }
-    
-    else if (header == "FOR")
-    {
-      resHeader = "WPN"
-      olio.weapons.dropRight(1).foreach(data += _.name + ",")
-      data += olio.weapons.takeRight(1)(0).name
-    }
-    
-    else if (header == "WPN")
-    {
-      resHeader = "SKL"
-      val skills = olio.skills.filter(_.timesGained > 0).map(s => s.timesGained.toString() + s.name)
-      if (!skills.isEmpty)
+      val olio = saveThis.asInstanceOf[Olio]
+      
+      if (header.isEmpty())
       {
-        skills.dropRight(1).foreach(data += _ + ",")
-        data += skills.takeRight(1)(0)
+        resHeader = "NAM"
+        data = olio.name
+      }
+    
+      else if (header == "NAM")
+      {
+        resHeader = "RAC"
+        data = olio.race
+      }
+    
+      else if (header == "RAC")
+      {
+        resHeader = "CAR"
+        data = olio.career.current
+      }
+    
+      else if (header == "CAR")
+      {
+        resHeader = "COL"
+        data = olio.colour.getRed.toString() + "," + olio.colour.getGreen.toString() + "," + olio.colour.getBlue.toString()
+      }
+    
+      else if (header == "COL")
+      {
+        resHeader = "ATR"
+        val attributeValues = olio.attributes.listValues
+        attributeValues.dropRight(1).foreach( data += _ + "," )
+        attributeValues.takeRight(1).foreach( data += _ )
+      }
+    
+      else if (header == "ATR")
+      {
+        resHeader = "CRW"
+        data = olio.currentWounds.toString()
+      }
+    
+      else if (header == "CRW")
+      {
+        resHeader = "FOR"
+        data = olio.fortunePoints.toString()
+      }
+    
+      else if (header == "FOR")
+      {
+        resHeader = "WPN"
+        olio.weapons.dropRight(1).foreach(data += _.name + ",")
+        data += olio.weapons.takeRight(1)(0).name
+      }
+    
+      else if (header == "WPN")
+      {
+        resHeader = "SKL"
+        val skills = olio.skills.filter(_.timesGained > 0).map(s => s.timesGained.toString() + s.name)
+        if (!skills.isEmpty)
+        {
+          skills.dropRight(1).foreach(data += _ + ",")
+          data += skills.takeRight(1)(0)
+        }
+      }
+    
+      else if (header == "SKL")
+      {
+        resHeader = "TAL"
+        val talents = olio.talents.map(_.name)
+        if (!talents.isEmpty)
+        {
+          talents.dropRight(1).foreach(data += _ + ",")
+          data += talents.takeRight(1)(0)
+        }
+      }
+      
+      else if (header == "TAL")
+      {
+        resHeader = "APO"
+        val armourPoints = olio.armourPoints.map(_.toString)
+        armourPoints.dropRight(1).foreach(data += _ + ",")
+        data += armourPoints.takeRight(1)(0)
+      }
+    
+      else if (header == "APO")
+      {
+        resHeader = "CMT"
+        data += olio.comments
+      }
+      
+      else if (header == "CMT")
+      {
+        resHeader = "END"
       }
     }
     
-    else if (header == "SKL")
+    //Group saving: CHA = character
+    else if (saveThis.isInstanceOf[Group])
     {
-      resHeader = "TAL"
-      val talents = olio.talents.map(_.name)
-      if (!talents.isEmpty)
+      val group = saveThis.asInstanceOf[Group]
+      
+      if (header.isEmpty())
       {
-        talents.dropRight(1).foreach(data += _ + ",")
-        data += talents.takeRight(1)(0)
+        resHeader = "NAM"
+        data += group.name
+      }
+      else if (header == "NAM"  && iMember.isDefined)
+      {
+        resHeader = "CHA"
+        data += group.members(iMember.get).saveFileName
+      }
+      else if (header == "CHA" && iMember.isDefined)
+      {
+        if (iMember.get < group.size - 1)
+          resHeader = "CHA"
+        else
+          resHeader = "END" 
+        data += group.members(iMember.get).saveFileName
       }
     }
     
-    else if (header == "TAL")
-    {
-      resHeader = "APO"
-      val armourPoints = olio.armourPoints.map(_.toString)
-      armourPoints.dropRight(1).foreach(data += _ + ",")
-      data += armourPoints.takeRight(1)(0)
-    }
-    
-    else if (header == "APO")
-    {
-      resHeader = "CMT"
-      data += olio.comments
-    }
-    
-    else if (header == "CMT")
-    {
-      resHeader = "END"
-    }
-    
+    /*
     else if (header == "END")
     {
       
     }
+    * 
+    */
     
     resHeader.foreach(resData += _)
-    this.chunkSizer(data.length()).toString.foreach(resData += _)
+    this.chunkSizer( data.length() ).toString.foreach(resData += _)
     data.foreach(resData += _)
     //resData += resHeader + this.chunkSizer(data.length()) + data
     (resHeader, resData.toVector)
@@ -363,5 +339,157 @@ object SaverLoader {
   }
   
   
+  def objectLoader(chunkHeader: Array[Char], input: Source, loadWhat: Object) = {
+    getData(chunkHeader, input)
+      
+    var chunkName = this.getChunkName(chunkHeader)
+    var chunkSize = this.getChunkSize(chunkHeader)
+    var olioOpt: Option[Olio] = None
+    var groupOpt: Option[Group] = None
+    
+    if (loadWhat.isInstanceOf[Olio])
+      olioOpt = Option(loadWhat.asInstanceOf[Olio])
+    else if (loadWhat.isInstanceOf[Group])
+      groupOpt = Option(loadWhat.asInstanceOf[Group])
+    
+    while (chunkName != "END") {
+      val dataArray: Array[Char] = new Array(chunkSize)
+      getData(dataArray, input)
+      var dataString = ""
+      dataArray.foreach(dataString += _)
+      
+      if (olioOpt.isDefined)
+        olioChunkLoader(chunkName, dataString, olioOpt.get)
+      else if (groupOpt.isDefined)
+        groupChunkLoader(chunkName, dataString, groupOpt.get)
+        
+      getData(chunkHeader, input)
+      chunkName = this.getChunkName(chunkHeader)
+      chunkSize = this.getChunkSize(chunkHeader)
+    }
+  }
+  
+  
+  def groupChunkLoader(chunkName: String, dataString: String, group: Group) = {
+    
+    if (chunkName == "NAM")
+    {
+      group.changeName(dataString)
+    }
+    else if (chunkName == "CHA")
+    {
+      val decoder = Codec.UTF8.decoder.onMalformedInput(CodingErrorAction.IGNORE)
+      val file = Source.fromFile(dataString)(decoder)
+      try {
+        val olio = new Olio
+        loadOlioOrGroup(file, olio)
+        group.addMember(olio)
+      } finally {
+        file.close()
+      }
+    }
+    
+  }
+  
+  
+  def olioChunkLoader(chunkName: String, dataString: String, olio: Olio) = {
+    
+    if (chunkName == "NAM")
+    {
+      olio.setName(dataString)
+    }
+       
+    if (chunkName == "RAC")
+    {
+      olio.setRace(dataString)
+    }
+         
+    if (chunkName == "CAR")
+    {
+      olio.career.change(dataString)
+    }
+        
+    if (chunkName == "COL")
+    {
+      val split = dataString.split(",").map(_.toInt)
+      olio.setColour(new Color(split(0), split(1), split(2)))
+    }
+      
+    if (chunkName == "ATR")
+    {
+      val split = dataString.split(",").map(_.toInt)
+      for (i <- 0 to split.length - 1)
+      {
+        olio.attributes.setAttribute(i, split(i))
+      }
+    }
+      
+    if (chunkName == "CRW")
+    {
+      olio.setCurrentWounds(dataString.toInt)
+    }
+   
+    if (chunkName == "FOR")
+    {
+      olio.setFortune(dataString.toInt)
+    }
+      
+    if (chunkName == "WPN")
+    {
+      val names = dataString.split(",")
+      val n = names.length
+      for (i <- 0 to n - 1)
+      {
+        olio.weapons(i) = new Weapon(names(i))
+      }
+    }
+      
+    if (chunkName == "SKL")
+    {
+      val skills = dataString.split(",")
+      if (!skills(0).isEmpty)
+      {
+        val names = skills.map(_.tail)
+        val lvls = skills.map(_.head - '0') // - '0' changes Char to Int
+        val n = skills.length
+        for (i <- 0 to n - 1)
+        {
+          val skill = olio.allSkills.find(_.name == names(i)).get
+          for (lvl <- 0 to lvls(i) - 1)
+          {
+            olio.addSkill(skill)
+          }
+        }
+      }
+    }
+      
+    if (chunkName == "TAL")
+    {
+      val names = dataString.split(",")
+      if (!names(0).isEmpty())
+      {
+        val n = names.length
+        for (i <- 0 to n - 1)
+        {
+          val talent = olio.allTalents.find(_.name == names(i)).get
+          olio.addTalent(talent)
+        }
+      }
+    }
+     
+    if (chunkName == "APO")
+    {
+      val split = dataString.split(",").map(_.toInt)
+      for (i <- 0 to split.length - 1)
+      {
+        olio.armourPoints(i) = split(i)
+      }
+    }
+      
+    if (chunkName == "CMT")
+    {
+      olio.comments = dataString
+    }
+  }
   
 }

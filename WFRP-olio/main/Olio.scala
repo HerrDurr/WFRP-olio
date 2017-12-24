@@ -16,6 +16,8 @@ class Olio {
   
   private var nameChangeable = ""
   
+  private var saveName = ""
+  
   private var woundsLeft = 0
   
   private var fortuneLeft = 0
@@ -35,6 +37,7 @@ class Olio {
   val armourPoints = Array(0, 0, 0, 0, 0, 0)
   
   var comments = ""
+  
   
   /**
    * A Vector containing all possible Talents.
@@ -76,6 +79,10 @@ class Olio {
   def race = this.raceChangeable
   
   def name = this.nameChangeable
+  
+  def saveFileName = this.saveName
+  
+  def setSaveFile(fileName: String) = this.saveName = fileName
   
   def setColour(newColour: Color) = this.col = newColour
   
