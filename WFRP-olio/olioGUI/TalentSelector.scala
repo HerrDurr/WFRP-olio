@@ -10,8 +10,8 @@ import scala.Tuple2
 class TalentSelector(olioPanel: OlioPanel, talent: Talent) extends BoxPanel(Orientation.Horizontal) {
   
   val olio = olioPanel.olio
-  val modSkills = this.modifiesSkills
-  val modDamage = this.modifiesDamage
+  //val modSkills = this.modifiesSkills
+  //val modDamage = this.modifiesDamage
   
   val nonSelFont = olioPanel.whFont.deriveFont(14f)
   val selFont = olioPanel.whFontBold.deriveFont(14f)
@@ -66,22 +66,28 @@ class TalentSelector(olioPanel: OlioPanel, talent: Talent) extends BoxPanel(Orie
       if (checkBox.selected)
       {
         olio.addTalent(talent)
+        /*
         if (!this.modSkills._1.isEmpty) this.modSkills._1.foreach {
           s => if (s.modifier == 0) s.setModifier(this.modSkills._2) }
         if (this.modDamage == 'u') olio.weapons.filter(_.name == "Unarmed").foreach(_.setModifier(1))
         if (this.modDamage == 'r') olio.weapons.filter(_.range.head != '-').foreach(_.setModifier(1))
         if (this.modDamage == 'm') olio.weapons.filter(w => w.range.head == '-' && w.name != "Unarmed")
                                                .foreach(_.setModifier(1))
+                                               * 
+                                               */
       }
       else
       {
         olio.removeTalent(talent)
+        /*
         if (!this.modSkills._1.isEmpty) this.modSkills._1.foreach {
           s => if (s.modifier != 0) s.setModifier(- this.modSkills._2) }
         if (this.modDamage == 'u') olio.weapons.filter(_.name == "Unarmed").foreach(_.setModifier(0))
         if (this.modDamage == 'r') olio.weapons.filter(_.range.head != '-').foreach(_.setModifier(0))
         if (this.modDamage == 'm') olio.weapons.filter(w => w.range.head == '-' && w.name != "Unarmed")
                                                .foreach(_.setModifier(0))
+                                               * 
+                                               */
       }
       olioPanel.update()
     }
@@ -97,7 +103,7 @@ class TalentSelector(olioPanel: OlioPanel, talent: Talent) extends BoxPanel(Orie
     
   }
   
-  
+  /*
   /**
    * If the talent permanently modifies the damage of certain weapons, return a tag for
    * those weapons.
@@ -116,8 +122,10 @@ class TalentSelector(olioPanel: OlioPanel, talent: Talent) extends BoxPanel(Orie
         return '-'
     }
   }
+  * 
+  */
   
-  
+  /*
   def modifiesSkills: Tuple2[Vector[Skill], Int] = {
     talent.name match {
       case "Aethyric Attunement" =>
@@ -146,6 +154,8 @@ class TalentSelector(olioPanel: OlioPanel, talent: Talent) extends BoxPanel(Orie
         return (Vector(), 0)
     }
   }
+  * 
+  */
   
   update()
 }
