@@ -3,13 +3,21 @@ package olioIO
 import java.io.IOException
 import java.io.PrintWriter
 import java.io.File
-import main.{Olio, Weapon}
+import main.{Olio, Weapon, Group}
 import scala.io.Source
 import java.awt.Color
 import scala.swing.Dialog
 import scala.collection.mutable.Buffer
 
 object SaverLoader {
+  
+  
+  def loadGroup() = ???
+  
+  
+  def saveGroup(group: Group) = {
+    ???
+  }
   
   
   def loadOlio(input: Source, olio: Olio) = {

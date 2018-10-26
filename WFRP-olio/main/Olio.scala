@@ -195,13 +195,19 @@ class Olio {
   
   def addTalent(talent: Talent) = {
     if (!this.hasTalent(talent))
+    {
       this.talentBuffer += talent
+      talent.setModifiers(this, true)
+    }
   }
   
   
   def removeTalent(talent: Talent) = {
     if (this.hasTalent(talent))
+    {
       this.talentBuffer -= talent
+      talent.setModifiers(this, false)
+    }
   }
   
   
