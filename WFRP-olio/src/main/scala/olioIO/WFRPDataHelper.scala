@@ -15,6 +15,11 @@ object WFRPDataHelper {
       aQuery.join(tableOlioAttributes).on(_.olioId === _.olioId)
     }
     
+    def withAttributes =
+    {
+      aQuery.withOlioAttributes.join(tableAttribute).on(_._2.attributeId === _.attrId)
+    }
+    
     /**
      * Joins Olio with its Skills
      */
@@ -25,6 +30,38 @@ object WFRPDataHelper {
     
   }
   
+  
+  implicit class ItemExtensions[C[_]](aQuery: Query[TableItem, ItemRow, C]) {
+    
+    def withMeleeWeapon =
+    {
+      aQuery.join(tableWeaponMelee).on(_.itemId === _.weaponId)
+    }
+    
+    def withRangedWeapon =
+    {
+      aQuery.join(tableWeaponRanged).on(_.itemId === _.weaponId)
+    }
+    
+  }
+     
+  implicit class MeleeWeaponExtensions[C[_]](aQuery: Query[TableWeaponMelee, WeaponMeleeRow, C]) {
+    
+    def withItem =
+    {
+      aQuery.join(tableItem).on(_.weaponId === _.itemId)
+    }
+    
+  }
+  
+  implicit class RangedWeaponExtensions[C[_]](aQuery: Query[TableWeaponRanged, WeaponRangedRow, C]) {
+    
+    def withItem =
+    {
+      aQuery.join(tableItem).on(_.weaponId === _.itemId)
+    }
+    
+  }
   
   
 }
