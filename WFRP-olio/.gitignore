@@ -1,2 +1,14 @@
 /.cache-main
 /bin
+/.classpath
+/.settings
+/.project
+/.worksheet
+/.idea
+/WFRP-olio.eml
+/WFRP-olio.iml
+/build
+/target
+/project
+org.scala-ide.sdt.core/META-INF/MANIFEST.MF
+org.scala-ide.sdt.update-site/site.xml

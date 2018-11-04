@@ -1,0 +1,4 @@
+NAM016Bonapple WidgeonRAC008HalflingCAR009PhysicianCOL010255,153,51ATR04027,39,28,24,55,60,41,42,1,10,2,2,4,0,3,2CRW00210FOR0012WPN026Unarmed,Hand Weapon,ShieldSKL1291Charm,1Drive,1Gossip,1Haggle,1Perception,1Academic Knowledge*,1Common Knowledge*,1Speak Language*,1Trade (Int),1Heal,1Read/WriteTAL132Night Vision,Resistance to Chaos,Specialist Weapon Group*,Super Numerate,Resistance to Disease,Very Resilient,Strike to Stun,SurgeryAPO0114,2,2,2,2,2CMT111Nosering
+Academic K: Heraldry & Genealogy, Science
+Trade (Int): Cook, Apothecary
+Lang: Halfling, Reiks., TileanEND000

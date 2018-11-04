@@ -1,0 +1,358 @@
+Weapon Data File
+
+#None
+Group : -
+Damage : -
+Range : -
+Reload : -
+Qualities : -
+
+#Unarmed
+Group : -
+Damage : SB - 4
+Range : -
+Reload : -
+Qualities : -
+
+#Buckler
+Group : Parrying
+Damage : SB - 4
+Range : -
+Reload : -
+Qualities : Balanced, Defensive, Pummelling
+
+#Dagger
+Group : Ordinary
+Damage : SB-3
+Range : -
+Reload : -
+Qualities : -
+
+#Demilance
+Group : Cavalry
+Damage : SB
+Range : -
+Reload : -
+Qualities : Fast, Impact, Tiring
+
+#Flail
+Group : Flail
+Damage : SB+1
+Range : -
+Reload : -
+Qualities : Impact, Tiring
+
+#Foil
+Group : Fencing
+Damage : SB-2
+Range : -
+Reload : -
+Qualities : Fast, Precise
+
+#Gauntlet/Knuckle-duster
+Group : Ordinary
+Damage : SB-3
+Range : -
+Reload : -
+Qualities : Pummelling
+
+#Great Weapon
+Group : Two-Handed
+Damage : SB
+Range : -
+Reload : -
+Qualities : Impact, Slow
+
+#Halberd
+Group : Two-Handed
+Damage : SB
+Range : -
+Reload : -
+Qualities : Special
+
+#Hand Weapon
+Group : Ordinary
+Damage : SB
+Range : -
+Reload : -
+Qualities : -
+
+#Improvised
+Group : Ordinary
+Damage : SB - 4
+Range : -
+Reload : -
+Qualities : -
+
+#Lance
+Group : Cavalry
+Damage : SB + 1
+Range : -
+Reload : -
+Qualities : Fast, Impact, Tiring
+
+#Main Gauche
+Group : Parrying
+Damage : SB - 3
+Range : -
+Reload : -
+Qualities : Balanced, Defensive
+
+#Morning Star
+Group : Flail
+Damage : SB
+Range : -
+Reload : -
+Qualities : Impact, Tiring
+
+#Quarterstaff
+Group : Ordinary
+Damage : SB-2
+Range : -
+Reload : -
+Qualities : Defensive, Pummeling
+
+#Rapier
+Group : Fencing
+Damage : SB-1
+Range : -
+Reload : -
+Qualities : Fast
+
+#Shield
+Group : Ordinary
+Damage : SB-2
+Range : -
+Reload : -
+Qualities : Defensive, Special
+
+#Spear
+Group : Ordinary
+Damage : SB
+Range : -
+Reload : -
+Qualities : Fast
+
+#Sword-breaker
+Group : Parrying
+Damage : SB-3
+Range : -
+Reload : -
+Qualities : Balanced, Special
+
+#Blowgun
+Group : Blowgun
+Damage : 0
+Range : 4/8
+Reload : Half
+Qualities : Special
+
+#Bola
+Group : Entangling
+Damage : 1
+Range : 4/8
+Reload : Half
+Qualities : Snare
+
+#Bow
+Group : Ordinary
+Damage : 3
+Range : 12/24
+Reload : Half
+Qualities : -
+
+#Crossbow
+Group : Ordinary
+Damage : 4
+Range : 15/30
+Reload : Full
+Qualities : -
+
+#Crossbow Pistol
+Group : Crossbow
+Damage : 2
+Range : 4/8
+Reload : Full
+Qualities : -
+
+#Elfbow
+Group : Longbow
+Damage : 3
+Range : 18/36
+Reload : Half
+Qualities : Armour Piercing
+
+#Improvised(r)
+Group : Ordinary
+Damage : SB-4
+Range : 3/-
+Reload : Half
+Qualities : -
+
+#Javelin
+Group : Ordinary
+Damage : SB-1
+Range : 4/8
+Reload : Half
+Qualities : -
+
+#Lasso
+Group : Entangling
+Damage : -
+Range : 4/-
+Reload : Half
+Qualities : Snare
+
+#Longbow
+Group : Longbow
+Damage : 3
+Range : 15/30
+Reload : Half
+Qualities : Armour Piercing
+
+#Net
+Group : Entangling
+Damage : -
+Range : 2/4
+Reload : Full
+Qualities : Snare
+
+#Repeater Crossbow
+Group : Crossbow
+Damage : 2
+Range : 8/16
+Reload : 10xFree, 4xFull
+Qualities : Special
+
+#Shortbow
+Group : Ordinary
+Damage : 3
+Range : 8/16
+Reload : Half
+Qualities : -
+
+#Sling
+Group : Sling
+Damage : 3
+Range : 8/16
+Reload : Half
+Qualities : -
+
+#Spear(r)
+Group : Ordinary
+Damage : SB
+Range : 4/-
+Reload : Half
+Qualities : -
+
+#Staff Sling
+Group : Sling
+Damage : 4
+Range : 12/24
+Reload : Full
+Qualities : -
+
+#Throwing Axe
+Group : Throwing
+Damage : SB-2
+Range : 4/-
+Reload : Half
+Qualities : -
+
+#Throwing Dagger
+Group : Throwing
+Damage : SB-3
+Range : 3/6
+Reload : Half
+Qualities : -
+
+#Throwing Hammer
+Group : Throwing
+Damage : SB-2
+Range : 4/-
+Reload : Half
+Qualities : -
+
+#Throwing Star
+Group : Throwing
+Damage : SB-3
+Range : 3/6
+Reload : Half
+Qualities : -
+
+#Whip
+Group : Entangling
+Damage : SB-4
+Range : 3/-
+Reload : Half
+Qualities : Fast, Snare
+
+#Blunderbuss
+Group : Gunpowder
+Damage : 3
+Range : 16/-
+Reload : 3 Full
+Qualities : Shrapnel, Unreliable
+
+#Bomb
+Group : Explosive
+Damage : 6
+Range : 2/10
+Reload : -
+Qualities : Unreliable
+
+#Duck-Foot
+Group : Engineer
+Damage : 3
+Range : 8/-
+Reload : 4 Full
+Qualities : Special, Experimental
+
+#Firearm
+Group : Gunpowder
+Damage : 4
+Range : 12/24
+Reload : 2 Full
+Qualities : Impact, Unreliable
+
+#Hochland Long Rifle
+Group : Engineer
+Damage : 4
+Range : 24/48
+Reload : 2 Full
+Qualities : Impact, Unreliable
+
+#Incendiary
+Group : Explosive
+Damage : 4
+Range : 2/10
+Reload : Full + Half
+Qualities : Special
+
+#Jezzail
+Group : Gunpowder
+Damage : 3
+Range : 12/36
+Reload : 2 Full
+Qualities : -
+
+#Pistol
+Group : Gunpowder
+Damage : 4
+Range : 4/8
+Reload : 2 Full
+Qualities : Impact, Unreliable
+
+#Repeater Handgun
+Group : Engineer
+Damage : 4
+Range : 12/24
+Reload : 6 Free / 6 Full
+Qualities : Experimental, Special
+
+#Repeater Pistol
+Group : Engineer
+Damage : 4
+Range : 4/8
+Reload : 6 Free / 6 Full
+Qualities : Experimental, Special
