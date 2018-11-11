@@ -13,5 +13,6 @@ libraryDependencies ++= Seq(
   "com.typesafe.slick" %% "slick-hikaricp" % "3.2.3" exclude("org.slf4j", "slf4j-nop"),
   "org.scalafx" %% "scalafx" % "8.0.181-R13", // Scalafx
   "org.xerial" % "sqlite-jdbc" % "3.20.0", // SQLite JDBC
+  "com.chuusai" %% "shapeless" % "2.3.3", // Shapeless
   "org.scala-lang.modules" %% "scala-swing" % "2.0.0" // Scala Swing
 )
