@@ -1,0 +1,7 @@
+package oliofxGUI
+
+class EditOlioWFRP {
+  
+  
+  
+}

@@ -1,26 +1,30 @@
 package olioIO
 
 import slick.driver.SQLiteDriver.api._
+import dataElements.DataHelper._
+import scalafx.beans.property._
+import scalafx.collections._
+
 
 object SchemaWFRP {
   
   abstract class DelimitedDataRow {
     
-    /**
-     * Convert a comma-delimited text value to an Array
-     */
-    def CommaTextToArray(rawValue: Option[String]): Option[Array[String]] = {
-      if (rawValue.isEmpty)
-        None
-      else
-        Some(rawValue.get.split(','))
-    }
+    
     
   }
   
   
   
-  case class AttributeRow(idTag: String, name: String)
+  case class AttributeRow(idTag: String, name: String) extends DataPropertyRow {
+    
+    def initProperties: Vector[StringProperty] =
+    {
+      Vector(new StringProperty(this, "attrId", idTag),
+             new StringProperty(this, "attrName", name))
+    }
+    
+  }
   
   /**
    * ATTRIBUTE
@@ -29,11 +33,24 @@ object SchemaWFRP {
     def attrId = column[String]("Attribute", O.PrimaryKey, O.Unique, O.Length(3, true))
     def attrName = column[String]("AttributeName", O.Length(20, true))
     def * = (attrId, attrName).mapTo[AttributeRow] // <> (AttributeRow.tupled, AttributeRow.unapply)
+    //def * = (attrId, attrName) <> (AttributeRow.tupled, )
+    /*
+    def * = (attrId, attrName) <> (AttributeRow( Vector(new StringProperty(attrId.value), new StringProperty(attrName.value)) ),
+                                   (AttributeRow.Properties[0].value, AttributeRow.Properties[1].value]))
+      */                             
   }
   val tableAttribute = TableQuery[TableAttribute]
   
   
-  case class SkillRow(id: Int, name: String, attribute: String, isBasic: Boolean)
+  case class SkillRow(id: Int, name: String, attribute: String, isBasic: Boolean) extends DataPropertyRow {
+    def initProperties =
+    {
+      Vector(new IntegerProperty(this, "skillId", id),
+             new StringProperty(this, "skillName", name),
+             new StringProperty(this, "skillAttribute", attribute),
+             new BooleanProperty(this, "skillIsBasic", isBasic))
+    }
+  }
   
   /**
    * SKILL
@@ -50,7 +67,15 @@ object SchemaWFRP {
   val tableSkill = TableQuery[TableSkill]
   
   
-  case class TalentRow(id: Int, name: String, description: Option[String], weaponGroup: Option[String])
+  case class TalentRow(id: Int, name: String, description: Option[String], weaponGroup: Option[String]) extends DataPropertyRow {
+    def initProperties =
+    {
+      Vector( new IntegerProperty(this, "talentId", id),
+              new StringProperty(this, "talentName", name),
+              new StringProperty(this, "talentDescription", description.getOrElse("")),
+              new StringProperty(this, "talentWeaponGroup", weaponGroup.getOrElse("")) )
+    }
+  }
   
   /**
    * TALENT
@@ -65,7 +90,14 @@ object SchemaWFRP {
   val tableTalent = TableQuery[TableTalent]
   
   
-  case class AvailabilityRow(idTag: String, name: String, modifier: Option[Short])
+  case class AvailabilityRow(idTag: String, name: String, modifier: Option[Short]) extends DataPropertyRow {
+    def initProperties =
+    {
+      Vector( new StringProperty(this, "availabilityId", idTag),
+              new StringProperty(this, "availabilityName", name),
+              new IntegerProperty(this, "availabilityModifier", modifier.getOrElse(0).asInstanceOf[Int]) )
+    }
+  }
   
   /**
    * AVAILABILITY
@@ -79,7 +111,17 @@ object SchemaWFRP {
   val tableAvailability = TableQuery[TableAvailability]
   
   
-  case class ItemRow(id: Int, name: String, craftsmanship: Char, encumbrance: Short, cost: Option[String], availability: Option[String])
+  case class ItemRow(id: Int, name: String, craftsmanship: Char, encumbrance: Short, cost: Option[String], availability: Option[String]) extends DataPropertyRow {
+    def initProperties =
+    {
+      Vector( new IntegerProperty(this, "itemId", id),
+              new StringProperty(this, "itemName", name),
+              new StringProperty(this, "itemCraftsmanship", craftsmanship.toString),
+              new IntegerProperty(this, "itemEncumbrance", encumbrance.asInstanceOf[Int]),
+              new StringProperty(this, "itemCost", cost.getOrElse("")),
+              new StringProperty(this, "itemAvailability", availability.getOrElse("")) )
+    }
+  }
   
   /**
    * ITEM
@@ -98,7 +140,13 @@ object SchemaWFRP {
   val tableItem = TableQuery[TableItem]
   
   
-  case class WeaponQualityRow(idTag: String, name: String)
+  case class WeaponQualityRow(idTag: String, name: String) extends DataPropertyRow {
+    def initProperties =
+    {
+      Vector( new StringProperty(this, "quality", idTag),
+              new StringProperty(this, "qualityName", name) )
+    }
+  }
   
   /**
    * WEAPONQUALITIES
@@ -112,7 +160,16 @@ object SchemaWFRP {
   
   
   case class WeaponMeleeRow(id: Int, twoHanded: Boolean, damageModifier: Option[Short], qualitiesRaw: Option[String], 
-      weaponGroupTalentId: Option[Int]) extends DelimitedDataRow
+      weaponGroupTalentId: Option[Int]) extends DataPropertyRow {
+    def initProperties =
+    {
+      Vector( new IntegerProperty(this, "weaponId", id),
+              new BooleanProperty(this, "meleeTwoHanded", twoHanded),
+              new IntegerProperty(this, "meleeDamageModifier", damageModifier.getOrElse(0).asInstanceOf[Int]),
+              new ObjectProperty(this, "meleeQualities", qualitiesRaw.getOrElse("").split(',').toVector),
+              new IntegerProperty(this, "meleeWeaponGroupTalent", weaponGroupTalentId.getOrElse(-1)) )
+    }
+  }
   
   /**
    * WEAPONMELEE
@@ -135,7 +192,22 @@ object SchemaWFRP {
   
   case class WeaponRangedRow(id: Int, twoHanded: Boolean, baseDamage: Option[String], damageModifier: Option[Short], rangeShort: Option[Short],
       rangeLong: Option[Short], reload: Option[Short], ammoItemId: Option[Int], magazineSize: Option[Short], qualitiesRaw: Option[String], 
-      weaponGroupTalentId: Option[Int]) extends DelimitedDataRow
+      weaponGroupTalentId: Option[Int]) extends DataPropertyRow {
+    def initProperties =
+    {
+      Vector( new IntegerProperty(this, "weaponId", id),
+              new BooleanProperty(this, "rangedTwoHanded", twoHanded),
+              new StringProperty(this, "rangedDamageBase", baseDamage.getOrElse("")),
+              new IntegerProperty(this, "rangedDamageModifier", damageModifier.getOrElse(0).asInstanceOf[Int]),
+              new IntegerProperty(this, "rangeShort", rangeShort.getOrElse(0).asInstanceOf[Int]),
+              new IntegerProperty(this, "rangeLong", rangeLong.getOrElse(0).asInstanceOf[Int]),
+              new IntegerProperty(this, "rangedReload", reload.getOrElse(0).asInstanceOf[Int]),
+              new IntegerProperty(this, "rangedAmmoId", ammoItemId.getOrElse(-1).asInstanceOf[Int]),
+              new IntegerProperty(this, "rangedMagazineSize", magazineSize.getOrElse(1).asInstanceOf[Int]),
+              new ObjectProperty(this, "rangedQualities", qualitiesRaw.getOrElse("").split(',').toVector),
+              new IntegerProperty(this, "rangedWeaponGroupTalent", weaponGroupTalentId.getOrElse(-1)) )
+    }
+  }
   
   /**
    * WEAPONRANGED
@@ -162,7 +234,15 @@ object SchemaWFRP {
   val tableWeaponRanged = TableQuery[TableWeaponRanged]
   
   
-  case class OlioRow(id: Int, name: String, careersRaw: Option[String], talentsRaw: Option[String]) extends DelimitedDataRow
+  case class OlioRow(id: Int, name: String, careersRaw: Option[String], talentsRaw: Option[String]) extends DataPropertyRow {
+    def initProperties =
+    {
+      Vector( new IntegerProperty(this, "olioId", id),
+              new StringProperty(this, "olioName", name),
+              new ObjectProperty(this, "olioCareers", careersRaw.getOrElse("").split(',').toVector),
+              new ObjectProperty(this, "olioTalents", talentsRaw.getOrElse("").split(',').toVector) )
+    }
+  }
   
   /**
    * OLIO
@@ -177,7 +257,14 @@ object SchemaWFRP {
   val tableOlio = TableQuery[TableOlio]
   
   
-  case class OlioAttributesRow(olio: Int, attribute: String, baseVal: Short)
+  case class OlioAttributesRow(olio: Int, attribute: String, baseVal: Short) extends DataPropertyRow {
+    def initProperties =
+    {
+      Vector( new IntegerProperty(this, "olioId", olio),
+              new StringProperty(this, "attributeId", attribute),
+              new IntegerProperty(this, "olioAttributeBaseVal", baseVal.asInstanceOf[Int]) )
+    }
+  }
   
   /**
    * OLIOATTRIBUTES
@@ -196,7 +283,14 @@ object SchemaWFRP {
   val tableOlioAttributes = TableQuery[TableOlioAttributes]
   
   
-  case class OlioSkillsRow(olio: Int, skill: Int, skillTrained: Short)
+  case class OlioSkillsRow(olio: Int, skill: Int, skillTrained: Short) extends DataPropertyRow {
+    def initProperties =
+    {
+      Vector( new IntegerProperty(this, "olioId", olio),
+              new IntegerProperty(this, "skillId", skill),
+              new IntegerProperty(this, "olioSkillTrained", skillTrained.asInstanceOf[Int]) )
+    }
+  }
   
   /**
    * OLIOSKILLS
