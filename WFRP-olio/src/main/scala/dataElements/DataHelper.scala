@@ -1,14 +1,16 @@
 package dataElements
 
 import scalafx.beans.property._
-import scala.reflect.ClassTag
+//import scala.reflect.ClassTag
 import slick.driver.SQLiteDriver.api._
 import scalafx.beans.Observable
 import scalafx.collections.ObservableBuffer
 import scalafx.collections.ObservableHashMap
-import slick.ast.TypedType
-import slick.ast.ScalaBaseType
+//import slick.ast.TypedType
+//import slick.ast.ScalaBaseType
 import scala.collection.immutable.List
+import shapeless._
+import shapeless.Poly1
 
 object DataHelper {
   
@@ -43,21 +45,44 @@ object DataHelper {
   
   abstract class DataPropertyRow {
     
-    private var fProperties : Option[ObservableBuffer[Observable]] = None
+    //private var fProperties : Option[ObservableBuffer[Observable]] = None
+    private var fProps : Option[HList] = None
     
     // I wanna give a Vector[Property] or Vector[ObservableValue]
     // but can't due to the stupid [T,J] in the end
-    def properties : ObservableBuffer[Observable] = {
+    /*def properties : ObservableBuffer[Observable] = {
       if (fProperties.isEmpty)
       {
         fProperties = Some(this.initProperties)
       }
       fProperties.getOrElse(ObservableBuffer())
     }
+    * 
+    */
     
-    def initProperties : ObservableBuffer[Observable]
+    def props : HList = {
+      if (fProps.isEmpty)
+      {
+        fProps = Some(this.initProps)
+      }
+      fProps.getOrElse(HNil)
+    }
     
+    //def initProperties : ObservableBuffer[Observable]
     
+    def initProps : HList = HNil
+    
+  }
+  
+  object MapToProperty extends Poly1 {
+    implicit def caseInt = at[Int]{ IntegerProperty(_) }
+    implicit def caseShort = at[Short]{ case s: Short => IntegerProperty(s.asInstanceOf[Int]) }
+    implicit def caseLong = at[Long]{ LongProperty(_) }
+    implicit def caseFloat = at[Float]{ FloatProperty(_) }
+    implicit def caseDouble = at[Double]{ DoubleProperty(_) }
+    implicit def caseString = at[String]{ StringProperty(_) }
+    implicit def caseBoolean = at[Boolean]{ BooleanProperty(_) }
+    implicit def caseAny = at[AnyRef]{ ObjectProperty(_) }
   }
   
   /*

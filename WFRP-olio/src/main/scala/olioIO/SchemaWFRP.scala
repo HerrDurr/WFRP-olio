@@ -4,36 +4,56 @@ import slick.driver.SQLiteDriver.api._
 import dataElements.DataHelper._
 import scalafx.beans.property._
 import scalafx.collections._
+import shapeless._
+import scala.reflect.internal.Trees.UnApply
 
 
 object SchemaWFRP {
   
-  abstract class DelimitedDataRow {
+  //case class LiftedAttrRow(idCol: Rep[AttributeRow.IdTag], nameCol: Rep[AttributeRow.Name])
+  case class AttributeRow(val idTag: AttributeRow.IdTag, val name: AttributeRow.Name/*idTag: String, name: String*/) extends DataPropertyRow {
     
-    
-    
-  }
-  
-  
-  
-  case class AttributeRow(idTag: String, name: String) extends DataPropertyRow {
-    
-    def initProperties: Vector[StringProperty] =
+    //def tupled = (idTag, name)
+    /*def initProperties: Vector[StringProperty] =
     {
       Vector(new StringProperty(this, "attrId", idTag),
              new StringProperty(this, "attrName", name))
     }
+    * 
+    */
+    //val genericRow = Generic[AttributeRow] 
+    
+    def initProps: HList = 
+    {
+      //genericRow.to(this).map(_.value).map(MapToProperty)
+      (idTag.value :: name.value :: HNil).map(MapToProperty)
+    }
     
   }
+  object AttributeRow {
+    case class IdTag(val value: String) extends MappedTo[String] //extends AnyVal
+    case class Name(val value: String) extends MappedTo[String] //extends AnyVal
+  }
+  
+  /*
+  implicit object AttributeShape extends CaseClassShape({ tup: (Rep[AttributeRow.IdTag],Rep[AttributeRow.Name]) 
+                                                            => LiftedAttrRow(tup._1, tup._2) },
+                                                        { t: (AttributeRow.IdTag, AttributeRow.Name) 
+                                                            => AttributeRow(t._1, t._2) })
+                                                            * 
+                                                            */
+  
   
   /**
    * ATTRIBUTE
    */
   class TableAttribute(tag: Tag) extends Table[AttributeRow/*(String, String)*/](tag, "ATTRIBUTE") {
-    def attrId = column[String]("Attribute", O.PrimaryKey, O.Unique, O.Length(3, true))
-    def attrName = column[String]("AttributeName", O.Length(20, true))
-    def * = (attrId, attrName).mapTo[AttributeRow] // <> (AttributeRow.tupled, AttributeRow.unapply)
-    //def * = (attrId, attrName) <> (AttributeRow.tupled, )
+    def attrId = column[/*String*/AttributeRow.IdTag]("Attribute", O.PrimaryKey, O.Unique, O.Length(3, true))
+    def attrName = column[/*String*/AttributeRow.Name]("AttributeName", O.Length(20, true))
+    //def * = LiftedAttrRow(attrId, attrName) // used with liftedclass and caseclassshape
+    //def * = (attrId, attrName).mapTo[AttributeRow] // <> (AttributeRow.tupled, AttributeRow.unapply)
+    def * = (attrId, attrName) <> ( { tuple => new AttributeRow(tuple._1,tuple._2) },
+                                    AttributeRow.unapply )
     /*
     def * = (attrId, attrName) <> (AttributeRow( Vector(new StringProperty(attrId.value), new StringProperty(attrName.value)) ),
                                    (AttributeRow.Properties[0].value, AttributeRow.Properties[1].value]))
@@ -42,25 +62,34 @@ object SchemaWFRP {
   val tableAttribute = TableQuery[TableAttribute]
   
   
-  case class SkillRow(id: Int, name: String, attribute: String, isBasic: Boolean) extends DataPropertyRow {
-    def initProperties =
+  case class SkillRow(id: SkillRow.Id, name: SkillRow.Name, attribute: AttributeRow.IdTag, 
+      isBasic: SkillRow.Basic) extends DataPropertyRow {
+    /*def initProperties =
     {
       Vector(new IntegerProperty(this, "skillId", id),
              new StringProperty(this, "skillName", name),
-             new StringProperty(this, "skillAttribute", attribute),
+             new StringProperty(this, "skillAttribute", attribute.value),
              new BooleanProperty(this, "skillIsBasic", isBasic))
     }
+    * 
+    */
+  }
+  object SkillRow {
+    case class Id(val value: Int) extends MappedTo[Int]
+    case class Name(val value: String) extends MappedTo[String]
+    case class Basic(val value: Boolean) extends MappedTo[Boolean]
   }
   
   /**
    * SKILL
    */
   class TableSkill(tag: Tag) extends Table[SkillRow/*(Int, String, String, Boolean)*/](tag, "SKILL") {
-    def skillId = column[Int]("SkillId", O.PrimaryKey, O.Unique)
-    def skillName = column[String]("SkillName", O.Length(64, true))
-    def skillAttribute = column[String]("SkillAttribute", O.Length(3, true))
-    def skillIsBasic = column[Boolean]("SkillIsBasic", O.Default(false))
-    def * = (skillId, skillName, skillAttribute, skillIsBasic).mapTo[SkillRow]
+    def skillId = column[SkillRow.Id]("SkillId", O.PrimaryKey, O.Unique)
+    def skillName = column[SkillRow.Name]("SkillName", O.Length(64, true))
+    def skillAttribute = column[AttributeRow.IdTag]("SkillAttribute", O.Length(3, true))
+    def skillIsBasic = column[SkillRow.Basic]("SkillIsBasic", O.Default(new SkillRow.Basic(false)))
+    def * = (skillId, skillName, skillAttribute, skillIsBasic) <> //.mapTo[SkillRow]
+              ({ t => new SkillRow(t._1, t._2, t._3, t._4) }, SkillRow.unapply)
     // Foreign keys
     def attribute = foreignKey("", skillAttribute, tableAttribute)(_.attrId)
   }
@@ -257,11 +286,11 @@ object SchemaWFRP {
   val tableOlio = TableQuery[TableOlio]
   
   
-  case class OlioAttributesRow(olio: Int, attribute: String, baseVal: Short) extends DataPropertyRow {
+  case class OlioAttributesRow(olio: Int, attribute: AttributeRow.IdTag, baseVal: Short) extends DataPropertyRow {
     def initProperties =
     {
       Vector( new IntegerProperty(this, "olioId", olio),
-              new StringProperty(this, "attributeId", attribute),
+              new StringProperty(this, "attributeId", attribute.value),
               new IntegerProperty(this, "olioAttributeBaseVal", baseVal.asInstanceOf[Int]) )
     }
   }
@@ -271,7 +300,7 @@ object SchemaWFRP {
    */
   class TableOlioAttributes(tag: Tag) extends Table[OlioAttributesRow](tag, "OLIOATTRIBUTES") {
     def olioId = column[Int]("OlioId")
-    def attributeId = column[String]("Attribute", O.Length(3, true))
+    def attributeId = column[AttributeRow.IdTag]("Attribute", O.Length(3, true))
     def olioAttributeBaseVal = column[Short]("OlioAttributeBaseVal", O.SqlType("SMALLINT (3)"), O.Default(0))
     def * = (olioId, attributeId, olioAttributeBaseVal).mapTo[OlioAttributesRow]
     // Primary key
