@@ -5,7 +5,6 @@ import dataElements.DataHelper._
 import scalafx.beans.property._
 import scalafx.collections._
 import shapeless._
-import scala.reflect.internal.Trees.UnApply
 
 
 object SchemaWFRP {
@@ -96,7 +95,9 @@ object SchemaWFRP {
   val tableSkill = TableQuery[TableSkill]
   
   
-  case class TalentRow(id: Int, name: String, description: Option[String], weaponGroup: Option[String]) extends DataPropertyRow {
+  case class TalentRow(id: TalentRow.Id, name: TalentRow.Name, description: Option[TalentRow.Description], 
+      weaponGroup: Option[TalentRow.WeaponGroup]) extends DataPropertyRow {
+    /*
     def initProperties =
     {
       Vector( new IntegerProperty(this, "talentId", id),
@@ -104,44 +105,62 @@ object SchemaWFRP {
               new StringProperty(this, "talentDescription", description.getOrElse("")),
               new StringProperty(this, "talentWeaponGroup", weaponGroup.getOrElse("")) )
     }
+    * 
+    */
+  }
+  object TalentRow {
+    case class Id(val value: Int) extends MappedTo[Int]
+    case class Name(val value: String) extends MappedTo[String]
+    case class Description(val value: String) extends MappedTo[String]
+    case class WeaponGroup(val value: String) extends MappedTo[String]
   }
   
   /**
    * TALENT
    */
   class TableTalent(tag: Tag) extends Table[TalentRow/*(Int, String, Option[String], Option[String])*/](tag, "TALENT") {
-    def talentId = column[Int]("TalentId", O.PrimaryKey, O.Unique)
-    def talentName = column[String]("TalentName", O.Unique, O.Length(64, true))
-    def talentDescription = column[Option[String]]("TalentDescription", O.Length(1024, true))
-    def talentWeaponGroup = column[Option[String]]("TalentWeaponGroup", O.Length(16, true))
-    def * = (talentId, talentName, talentDescription, talentWeaponGroup).mapTo[TalentRow]
+    def talentId = column[TalentRow.Id]("TalentId", O.PrimaryKey, O.Unique)
+    def talentName = column[TalentRow.Name]("TalentName", O.Unique, O.Length(64, true))
+    def talentDescription = column[Option[TalentRow.Description]]("TalentDescription", O.Length(1024, true))
+    def talentWeaponGroup = column[Option[TalentRow.WeaponGroup]]("TalentWeaponGroup", O.Length(16, true))
+    def * = (talentId, talentName, talentDescription, talentWeaponGroup) <> //.mapTo[TalentRow]
+        ( { t => new TalentRow(t._1, t._2, t._3, t._4) }, TalentRow.unapply )
   }
   val tableTalent = TableQuery[TableTalent]
   
   
-  case class AvailabilityRow(idTag: String, name: String, modifier: Option[Short]) extends DataPropertyRow {
-    def initProperties =
+  case class AvailabilityRow(idTag: AvailabilityRow.IdTag, name: AvailabilityRow.Name, modifier: Option[AvailabilityRow.Modifier]) extends DataPropertyRow {
+    /*def initProperties =
     {
       Vector( new StringProperty(this, "availabilityId", idTag),
               new StringProperty(this, "availabilityName", name),
               new IntegerProperty(this, "availabilityModifier", modifier.getOrElse(0).asInstanceOf[Int]) )
     }
+    * 
+    */
+  }
+  object AvailabilityRow {
+    case class IdTag(val value: String) extends MappedTo[String]
+    case class Name(val value: String) extends MappedTo[String]
+    case class Modifier(val value: Short) extends MappedTo[Short]
   }
   
   /**
    * AVAILABILITY
    */
   class TableAvailability(tag: Tag) extends Table[AvailabilityRow](tag, "AVAILABILITY") {
-    def availabilityId = column[String]("AvailabilityId", O.PrimaryKey, O.Unique, O.Length(2, true))
-    def availabilityName = column[String]("AvailabilityFull", O.Length(24, true))
-    def availabilityModifier = column[Option[Short]]("AvailabilityModifier", O.SqlType("SMALLINT (3)"))
-    def * = (availabilityId, availabilityName, availabilityModifier).mapTo[AvailabilityRow]
+    def availabilityId = column[AvailabilityRow.IdTag]("AvailabilityId", O.PrimaryKey, O.Unique, O.Length(2, true))
+    def availabilityName = column[AvailabilityRow.Name]("AvailabilityFull", O.Length(24, true))
+    def availabilityModifier = column[Option[AvailabilityRow.Modifier]]("AvailabilityModifier", O.SqlType("SMALLINT (3)"))
+    def * = (availabilityId, availabilityName, availabilityModifier) <> //.mapTo[AvailabilityRow]
+        ( { t => new AvailabilityRow(t._1, t._2, t._3) }, AvailabilityRow.unapply )
   }
   val tableAvailability = TableQuery[TableAvailability]
   
   
-  case class ItemRow(id: Int, name: String, craftsmanship: Char, encumbrance: Short, cost: Option[String], availability: Option[String]) extends DataPropertyRow {
-    def initProperties =
+  case class ItemRow(id: ItemRow.Id, name: ItemRow.Name, craftsmanship: ItemRow.Craftsmanship, encumbrance: ItemRow.Encumbrance, 
+      cost: Option[ItemRow.Cost], availability: Option[AvailabilityRow.IdTag]) extends DataPropertyRow {
+    /*def initProperties =
     {
       Vector( new IntegerProperty(this, "itemId", id),
               new StringProperty(this, "itemName", name),
@@ -150,46 +169,64 @@ object SchemaWFRP {
               new StringProperty(this, "itemCost", cost.getOrElse("")),
               new StringProperty(this, "itemAvailability", availability.getOrElse("")) )
     }
+    * 
+    */
+  }
+  object ItemRow {
+    case class Id(val value: Int) extends MappedTo[Int]
+    case class Name(val value: String) extends MappedTo[String]
+    case class Craftsmanship(val value: Char) extends MappedTo[Char]
+    case class Encumbrance(val value: Short) extends MappedTo[Short]
+    case class Cost(val value: String) extends MappedTo[String]
   }
   
   /**
    * ITEM
    */
   class TableItem(tag: Tag) extends Table[ItemRow](tag, "ITEM") {
-    def itemId = column[Int]("ItemId", O.PrimaryKey, O.Unique)
-    def itemName = column[String]("ItemName", O.Length(64, true))
-    def itemCraftsmanship = column[Char]("ItemCraftsmanship", O.Default('N'))
-    def itemEncumbrance = column[Short]("ItemEncumbrance", O.SqlType("SMALLINT"), O.Default(0))
-    def itemCost = column[Option[String]]("ItemCost", O.Length(16, true))
-    def itemAvailability = column[Option[String]]("ItemAvailability", O.Length(2, true))
-    def * = (itemId, itemName, itemCraftsmanship, itemEncumbrance, itemCost, itemAvailability).mapTo[ItemRow]
+    def itemId = column[ItemRow.Id]("ItemId", O.PrimaryKey, O.Unique)
+    def itemName = column[ItemRow.Name]("ItemName", O.Length(64, true))
+    def itemCraftsmanship = column[ItemRow.Craftsmanship]("ItemCraftsmanship", O.Default( new ItemRow.Craftsmanship('N') ))
+    def itemEncumbrance = column[ItemRow.Encumbrance]("ItemEncumbrance", O.SqlType("SMALLINT"), O.Default( new ItemRow.Encumbrance(0) ))
+    def itemCost = column[Option[ItemRow.Cost]]("ItemCost", O.Length(16, true))
+    def itemAvailability = column[Option[AvailabilityRow.IdTag]]("ItemAvailability", O.Length(2, true))
+    def * = (itemId, itemName, itemCraftsmanship, itemEncumbrance, itemCost, itemAvailability) <> //.mapTo[ItemRow]
+        ( { t => new ItemRow(t._1, t._2, t._3, t._4, t._5, t._6) }, ItemRow.unapply )
     // Foreign keys
     def availability = foreignKey("", itemAvailability, tableAvailability)(_.availabilityId)
   }
   val tableItem = TableQuery[TableItem]
   
   
-  case class WeaponQualityRow(idTag: String, name: String) extends DataPropertyRow {
-    def initProperties =
+  case class WeaponQualityRow(idTag: WeaponQualitiesRow.IdTag, name: WeaponQualitiesRow.Name) extends DataPropertyRow {
+    /*def initProperties =
     {
       Vector( new StringProperty(this, "quality", idTag),
               new StringProperty(this, "qualityName", name) )
     }
+    * 
+    */
+  }
+  object WeaponQualitiesRow {
+    case class IdTag(val value: String) extends MappedTo[String]
+    case class Name(val value: String) extends MappedTo[String]
   }
   
   /**
    * WEAPONQUALITIES
    */
   class TableWeaponQualities(tag: Tag) extends Table[WeaponQualityRow](tag, "WEAPONQUALITIES") {
-    def quality = column[String]("WeaponQuality", O.PrimaryKey, O.Unique, O.Length(2, true))
-    def qualityName = column[String]("WeaponQualName", O.Unique, O.Length(16, true))
+    def quality = column[WeaponQualitiesRow.IdTag]("WeaponQuality", O.PrimaryKey, O.Unique, O.Length(2, true))
+    def qualityName = column[WeaponQualitiesRow.Name]("WeaponQualName", O.Unique, O.Length(16, true))
+    // why in the everliving fuck does this compile when the others don't???
     def * = (quality, qualityName).mapTo[WeaponQualityRow]
   }
   val tableWeaponQualities = TableQuery[TableWeaponQualities]
   
   
-  case class WeaponMeleeRow(id: Int, twoHanded: Boolean, damageModifier: Option[Short], qualitiesRaw: Option[String], 
-      weaponGroupTalentId: Option[Int]) extends DataPropertyRow {
+  case class WeaponMeleeRow(id: ItemRow.Id, twoHanded: WeaponMeleeRow.TwoHanded, damageModifier: Option[WeaponMeleeRow.DamageMod], 
+      qualities: Array[WeaponQualitiesRow.IdTag], /*qualitiesRaw: Option[String]*/ weaponGroupTalentId: Option[TalentRow.Id]) extends DataPropertyRow {
+    /*
     def initProperties =
     {
       Vector( new IntegerProperty(this, "weaponId", id),
@@ -198,20 +235,30 @@ object SchemaWFRP {
               new ObjectProperty(this, "meleeQualities", qualitiesRaw.getOrElse("").split(',').toVector),
               new IntegerProperty(this, "meleeWeaponGroupTalent", weaponGroupTalentId.getOrElse(-1)) )
     }
+    * 
+    */
+  }
+  object WeaponMeleeRow {
+    case class TwoHanded(val value: Boolean) extends MappedTo[Boolean]
+    case class DamageMod(val value: Short) extends MappedTo[Short]
+    //case class Qualities(val value: String) extends MappedTo[String]
   }
   
   /**
    * WEAPONMELEE
    */
   class TableWeaponMelee(tag: Tag) extends Table[WeaponMeleeRow](tag, "WEAPONMELEE") {
-    def weaponId = column[Int]("WeaponItemId", O.PrimaryKey, O.Unique)
-    def meleeTwoHanded = column[Boolean]("WeaponMeleeTwoHanded", O.Default(false))
+    def weaponId = column[ItemRow.Id]("WeaponItemId", O.PrimaryKey, O.Unique)
+    def meleeTwoHanded = column[WeaponMeleeRow.TwoHanded]("WeaponMeleeTwoHanded", O.Default( new WeaponMeleeRow.TwoHanded(false) ))
     // all melee weapons have base damage SB
     //def meleeDamageBase = column[String]("WeaponMeleeDamageBase", O.Length(3, true), O.Default("SB"))
-    def meleeDamageModifier = column[Option[Short]]("WeaponMeleeDamageModifier", O.SqlType("SMALLINT"))
+    def meleeDamageModifier = column[Option[WeaponMeleeRow.DamageMod]]("WeaponMeleeDamageModifier", O.SqlType("SMALLINT"))
+    // Turn this Option[String] into an Array[String] at *
     def meleeQualities = column[Option[String]]("WeaponMeleeQualities", O.Length(20, true))
-    def meleeWeaponGroupTalent = column[Option[Int]]("WeaponMeleeGroupTalent")
-    def * = (weaponId, meleeTwoHanded, meleeDamageModifier, meleeQualities, meleeWeaponGroupTalent).mapTo[WeaponMeleeRow]
+    def meleeWeaponGroupTalent = column[Option[TalentRow.Id]]("WeaponMeleeGroupTalent")
+    def * = (weaponId, meleeTwoHanded, meleeDamageModifier, meleeQualities, meleeWeaponGroupTalent) <> //.mapTo[WeaponMeleeRow]
+        ( { t => new WeaponMeleeRow(t._1, t._2, t._3, CommaTextOptToArray(t._4).map( new WeaponQualitiesRow.IdTag(_) ), t._5 ) },
+          { aRow: WeaponMeleeRow => Some((aRow.id, aRow.twoHanded, aRow.damageModifier, ArrayToCommaTextOpt(aRow.qualities.map(_.value)), aRow.weaponGroupTalentId)) } )
     // Foreign keys
     def item = foreignKey("", weaponId, tableItem)(_.itemId)
     def weaponGroupTalent = foreignKey("", meleeWeaponGroupTalent, tableTalent)(_.talentId)
@@ -219,9 +266,12 @@ object SchemaWFRP {
   val tableWeaponMelee = TableQuery[TableWeaponMelee]
   
   
-  case class WeaponRangedRow(id: Int, twoHanded: Boolean, baseDamage: Option[String], damageModifier: Option[Short], rangeShort: Option[Short],
-      rangeLong: Option[Short], reload: Option[Short], ammoItemId: Option[Int], magazineSize: Option[Short], qualitiesRaw: Option[String], 
-      weaponGroupTalentId: Option[Int]) extends DataPropertyRow {
+  case class WeaponRangedRow(id: ItemRow.Id, twoHanded: WeaponRangedRow.TwoHanded, baseDamage: Option[WeaponRangedRow.DamageBase], 
+                             damageModifier: Option[WeaponRangedRow.DamageMod], rangeShort: Option[WeaponRangedRow.RangeShort], 
+                             rangeLong: Option[WeaponRangedRow.RangeLong], reload: Option[WeaponRangedRow.Reload], 
+                             ammoItemId: Option[ItemRow.Id], magazineSize: Option[WeaponRangedRow.MagazineSize], 
+                             qualities: Array[WeaponQualitiesRow.IdTag], weaponGroupTalentId: Option[TalentRow.Id]) extends DataPropertyRow {
+    /*
     def initProperties =
     {
       Vector( new IntegerProperty(this, "weaponId", id),
@@ -236,25 +286,42 @@ object SchemaWFRP {
               new ObjectProperty(this, "rangedQualities", qualitiesRaw.getOrElse("").split(',').toVector),
               new IntegerProperty(this, "rangedWeaponGroupTalent", weaponGroupTalentId.getOrElse(-1)) )
     }
+    * 
+    */
+  }
+  object WeaponRangedRow {
+    case class TwoHanded(val value: Boolean) extends MappedTo[Boolean]
+    case class DamageBase(val value: String) extends MappedTo[String]
+    case class DamageMod(val value: Short) extends MappedTo[Short]
+    case class RangeShort(val value: Short) extends MappedTo[Short]
+    case class RangeLong(val value: Short) extends MappedTo[Short]
+    case class Reload(val value: Short) extends MappedTo[Short]
+    case class MagazineSize(val value: Short) extends MappedTo[Short]
   }
   
   /**
    * WEAPONRANGED
    */
   class TableWeaponRanged(tag: Tag) extends Table[WeaponRangedRow](tag, "WEAPONRANGED") {
-    def weaponId = column[Int]("WeaponItemId", O.PrimaryKey, O.Unique)
-    def rangedTwoHanded = column[Boolean]("WeaponRangedTwoHanded", O.Default(true))
-    def rangedDamageBase = column[Option[String]]("WeaponRangedDamageBase", O.Length(3, true))
-    def rangedDamageModifier = column[Option[Short]]("WeaponRangedDamageModifier", O.SqlType("SMALLINT"))
-    def rangeShort = column[Option[Short]]("WeaponRangeShort", O.SqlType("SMALLINT"))
-    def rangeLong = column[Option[Short]]("WeaponRangeLong", O.SqlType("SMALLINT"))
-    def rangedReload = column[Option[Short]]("WeaponReload", O.SqlType("SMALLINT"))
-    def rangedAmmoId = column[Option[Int]]("WeaponAmmunitionId")
-    def rangedMagazineSize = column[Option[Short]]("WeaponMagazineSize", O.SqlType("SMALLINT"), O.Default(Some(1)))
+    def weaponId = column[ItemRow.Id]("WeaponItemId", O.PrimaryKey, O.Unique)
+    def rangedTwoHanded = column[WeaponRangedRow.TwoHanded]("WeaponRangedTwoHanded", O.Default( WeaponRangedRow.TwoHanded(true) ))
+    def rangedDamageBase = column[Option[WeaponRangedRow.DamageBase]]("WeaponRangedDamageBase", O.Length(3, true))
+    def rangedDamageModifier = column[Option[WeaponRangedRow.DamageMod]]("WeaponRangedDamageModifier", O.SqlType("SMALLINT"))
+    def rangeShort = column[Option[WeaponRangedRow.RangeShort]]("WeaponRangeShort", O.SqlType("SMALLINT"))
+    def rangeLong = column[Option[WeaponRangedRow.RangeLong]]("WeaponRangeLong", O.SqlType("SMALLINT"))
+    def rangedReload = column[Option[WeaponRangedRow.Reload]]("WeaponReload", O.SqlType("SMALLINT"))
+    def rangedAmmoId = column[Option[ItemRow.Id]]("WeaponAmmunitionId")
+    def rangedMagazineSize = column[Option[WeaponRangedRow.MagazineSize]]("WeaponMagazineSize", O.SqlType("SMALLINT"), 
+                                                                                                O.Default(Some( WeaponRangedRow.MagazineSize(1) )))
     def rangedQualities = column[Option[String]]("WeaponRangedQualities", O.Length(20, true))
-    def rangedWeaponGroupTalent = column[Option[Int]]("WeaponRangedGroupTalent")
+    def rangedWeaponGroupTalent = column[Option[TalentRow.Id]]("WeaponRangedGroupTalent")
     def * = (weaponId, rangedTwoHanded, rangedDamageBase, rangedDamageModifier, rangeShort, rangeLong,
-            rangedReload, rangedAmmoId, rangedMagazineSize, rangedQualities, rangedWeaponGroupTalent).mapTo[WeaponRangedRow]
+            rangedReload, rangedAmmoId, rangedMagazineSize, rangedQualities, rangedWeaponGroupTalent) <> //.mapTo[WeaponRangedRow]
+            ( { t => WeaponRangedRow(t._1, t._2, t._3, t._4, t._5, t._6,
+                                     t._7, t._8, t._9, CommaTextOptToArray(t._10).map( WeaponQualitiesRow.IdTag(_) ), t._11) },
+              { aRow: WeaponRangedRow => Some((aRow.id, aRow.twoHanded, aRow.baseDamage, aRow.damageModifier, aRow.rangeShort, aRow.rangeLong,
+                                              aRow.reload, aRow.ammoItemId, aRow.magazineSize, ArrayToCommaTextOpt( aRow.qualities.map(_.value) ), 
+                                              aRow.weaponGroupTalentId)) } )
     // Foreign keys
     def item = foreignKey("", weaponId, tableItem)(_.itemId)
     def ammoItem = foreignKey("", rangedAmmoId, tableItem)(_.itemId)
@@ -312,11 +379,11 @@ object SchemaWFRP {
   val tableOlioAttributes = TableQuery[TableOlioAttributes]
   
   
-  case class OlioSkillsRow(olio: Int, skill: Int, skillTrained: Short) extends DataPropertyRow {
+  case class OlioSkillsRow(olio: Int, skill: SkillRow.Id, skillTrained: Short) extends DataPropertyRow {
     def initProperties =
     {
       Vector( new IntegerProperty(this, "olioId", olio),
-              new IntegerProperty(this, "skillId", skill),
+              new IntegerProperty(this, "skillId", skill.value),
               new IntegerProperty(this, "olioSkillTrained", skillTrained.asInstanceOf[Int]) )
     }
   }
@@ -326,7 +393,7 @@ object SchemaWFRP {
    */
   class TableOlioSkills(tag: Tag) extends Table[OlioSkillsRow](tag, "OLIOSKILLS") {
     def olioId = column[Int]("OlioId")
-    def skillId = column[Int]("SkillId")
+    def skillId = column[SkillRow.Id]("SkillId")
     def olioSkillTrained = column[Short]("OlioSkillTrained", O.SqlType("SMALLINT (1)"), O.Default(0))
     def * = (olioId, skillId, olioSkillTrained).mapTo[OlioSkillsRow]
     // Primary key

@@ -33,15 +33,20 @@ object DataHelper {
   /**
    * Convert a comma-delimited text value to an Array
    */
-  /*
-  def CommaTextToArray(rawValue: StringProperty): ObservableBuffer = {
+  def CommaTextOptToArray(rawValue: Option[String]): Array[String] = {
     if (rawValue.isEmpty)
+      Array()
+    else
+      rawValue.get.split(',')
+  }
+  
+  def ArrayToCommaTextOpt(values: Array[String]): Option[String] = {
+    if (values.length < 1)
       None
     else
-      Some(rawValue.get.split(','))
+      Some(values.mkString(","))
   }
-  * 
-  */
+  
   
   abstract class DataPropertyRow {
     
