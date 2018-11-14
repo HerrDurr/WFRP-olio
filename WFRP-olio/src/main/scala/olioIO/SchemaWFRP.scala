@@ -329,47 +329,60 @@ object SchemaWFRP {
   }
   val tableWeaponRanged = TableQuery[TableWeaponRanged]
   
-  
-  case class OlioRow(id: Int, name: String, careersRaw: Option[String], talentsRaw: Option[String]) extends DataPropertyRow {
-    def initProperties =
+  // TODO: Career Table and flesh out Olio Table
+  case class OlioRow(id: OlioRow.Id, name: OlioRow.Name, careersRaw: Option[String], talentsRaw: Option[String]) extends DataPropertyRow {
+    /*def initProperties =
     {
       Vector( new IntegerProperty(this, "olioId", id),
               new StringProperty(this, "olioName", name),
               new ObjectProperty(this, "olioCareers", careersRaw.getOrElse("").split(',').toVector),
               new ObjectProperty(this, "olioTalents", talentsRaw.getOrElse("").split(',').toVector) )
     }
+    * 
+    */
+  }
+  object OlioRow {
+    case class Id(val value: Int) extends MappedTo[Int]
+    case class Name(val value: String) extends MappedTo[String]
   }
   
   /**
    * OLIO
    */
   class TableOlio(tag: Tag) extends Table[OlioRow](tag, "OLIO") {
-    def olioId = column[Int]("OlioId", O.PrimaryKey, O.Unique)
-    def olioName = column[String]("OlioName", O.Length(64, true), O.Default("Nimi"))
+    def olioId = column[OlioRow.Id]("OlioId", O.PrimaryKey, O.Unique)
+    def olioName = column[OlioRow.Name]("OlioName", O.Length(64, true), O.Default( OlioRow.Name("Nimi") ))
     def olioCareers = column[Option[String]]("OlioCareers", O.Length(128, true))
     def olioTalents = column[Option[String]]("OlioTalents", O.Length(128, true))
-    def * = (olioId, olioName, olioCareers, olioTalents).mapTo[OlioRow]
+    def * = (olioId, olioName, olioCareers, olioTalents) <> //.mapTo[OlioRow]
+            ( { t => OlioRow(t._1, t._2, t._3, t._4) },
+              { aRow: OlioRow => Some((aRow.id, aRow.name, aRow.careersRaw, aRow.talentsRaw)) } )
   }
   val tableOlio = TableQuery[TableOlio]
   
   
-  case class OlioAttributesRow(olio: Int, attribute: AttributeRow.IdTag, baseVal: Short) extends DataPropertyRow {
-    def initProperties =
+  case class OlioAttributesRow(olio: OlioRow.Id, attribute: AttributeRow.IdTag, baseVal: OlioAttributesRow.BaseVal) extends DataPropertyRow {
+    /*def initProperties =
     {
       Vector( new IntegerProperty(this, "olioId", olio),
               new StringProperty(this, "attributeId", attribute.value),
               new IntegerProperty(this, "olioAttributeBaseVal", baseVal.asInstanceOf[Int]) )
-    }
+    }*/
+  }
+  object OlioAttributesRow {
+    case class BaseVal(val value: Short) extends MappedTo[Short]
   }
   
   /**
    * OLIOATTRIBUTES
    */
   class TableOlioAttributes(tag: Tag) extends Table[OlioAttributesRow](tag, "OLIOATTRIBUTES") {
-    def olioId = column[Int]("OlioId")
+    def olioId = column[OlioRow.Id]("OlioId")
     def attributeId = column[AttributeRow.IdTag]("Attribute", O.Length(3, true))
-    def olioAttributeBaseVal = column[Short]("OlioAttributeBaseVal", O.SqlType("SMALLINT (3)"), O.Default(0))
-    def * = (olioId, attributeId, olioAttributeBaseVal).mapTo[OlioAttributesRow]
+    def olioAttributeBaseVal = column[OlioAttributesRow.BaseVal](
+      "OlioAttributeBaseVal", O.SqlType("SMALLINT (3)"), O.Default( OlioAttributesRow.BaseVal(0) ))
+    def * = (olioId, attributeId, olioAttributeBaseVal) <> //.mapTo[OlioAttributesRow]
+            ( { t => OlioAttributesRow(t._1, t._2, t._3) }, OlioAttributesRow.unapply )
     // Primary key
     def pk = primaryKey("", (olioId, attributeId))
     // Foreign Keys
@@ -379,23 +392,28 @@ object SchemaWFRP {
   val tableOlioAttributes = TableQuery[TableOlioAttributes]
   
   
-  case class OlioSkillsRow(olio: Int, skill: SkillRow.Id, skillTrained: Short) extends DataPropertyRow {
-    def initProperties =
+  case class OlioSkillsRow(olio: OlioRow.Id, skill: SkillRow.Id, skillTrained: OlioSkillsRow.Trained) extends DataPropertyRow {
+    /*def initProperties =
     {
       Vector( new IntegerProperty(this, "olioId", olio),
               new IntegerProperty(this, "skillId", skill.value),
               new IntegerProperty(this, "olioSkillTrained", skillTrained.asInstanceOf[Int]) )
-    }
+    }*/
+  }
+  object OlioSkillsRow {
+    case class Trained(val value: Short) extends MappedTo[Short]
   }
   
   /**
    * OLIOSKILLS
    */
   class TableOlioSkills(tag: Tag) extends Table[OlioSkillsRow](tag, "OLIOSKILLS") {
-    def olioId = column[Int]("OlioId")
+    def olioId = column[OlioRow.Id]("OlioId")
     def skillId = column[SkillRow.Id]("SkillId")
-    def olioSkillTrained = column[Short]("OlioSkillTrained", O.SqlType("SMALLINT (1)"), O.Default(0))
-    def * = (olioId, skillId, olioSkillTrained).mapTo[OlioSkillsRow]
+    def olioSkillTrained = column[OlioSkillsRow.Trained](
+        "OlioSkillTrained", O.SqlType("SMALLINT (1)"), O.Default( OlioSkillsRow.Trained(0) ))
+    def * = (olioId, skillId, olioSkillTrained) <> //.mapTo[OlioSkillsRow]
+            ( { t => OlioSkillsRow(t._1, t._2, t._3) }, OlioSkillsRow.unapply )
     // Primary key
     def pk = primaryKey("", (olioId, skillId))
     // Foreign Keys
