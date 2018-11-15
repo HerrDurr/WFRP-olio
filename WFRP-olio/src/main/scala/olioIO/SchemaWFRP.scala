@@ -329,6 +329,20 @@ object SchemaWFRP {
   }
   val tableWeaponRanged = TableQuery[TableWeaponRanged]
   
+  case class CareerRow(id: CareerRow.Id, name: CareerRow.Name, description: CareerRow.Description,
+      skills, talents, trappings?) // attributes in different table
+  
+  object CareerRow {
+    case class Id(val value: Int) extends MappedTo[Int]
+    case class Name(val value: String) extends MappedTo[String]
+    case class Description(val value: String) extends MappedTo[String]
+  }
+  
+  class TableCareer(tag: Tag) extends Table[CareerRow](tag, "CAREER") {
+    
+  }
+  val tableCareer = TableQuery[TableCareer]
+  
   // TODO: Career Table and flesh out Olio Table
   case class OlioRow(id: OlioRow.Id, name: OlioRow.Name, careersRaw: Option[String], talentsRaw: Option[String]) extends DataPropertyRow {
     /*def initProperties =
@@ -424,7 +438,7 @@ object SchemaWFRP {
   
   
   val tables = Vector(tableAttribute, tableSkill, tableTalent, tableAvailability, tableItem, tableWeaponQualities, tableWeaponMelee,
-                     tableWeaponRanged, tableOlio, tableOlioAttributes, tableOlioSkills
+                     tableWeaponRanged, tableCareer, tableOlio, tableOlioAttributes, tableOlioSkills
                      )
   // all table schemas ++'d together
   val schema = tables.map(_.schema)
