@@ -329,8 +329,11 @@ object SchemaWFRP {
   }
   val tableWeaponRanged = TableQuery[TableWeaponRanged]
   
-  case class CareerRow(id: CareerRow.Id, name: CareerRow.Name, description: CareerRow.Description,
-      skills, talents, trappings?) // attributes in different table
+  case class CareerRow(id: CareerRow.Id, name: CareerRow.Name, description: Option[CareerRow.Description],
+      skills: Array[SkillRow.Id], talents: Array[TalentRow.Id])
+  // attributes in different table
+  // skills (and talents?) need some "or" functionality
+  // trappings maybe don't need to be implemented (yet)
   
   object CareerRow {
     case class Id(val value: Int) extends MappedTo[Int]
@@ -339,12 +342,16 @@ object SchemaWFRP {
   }
   
   class TableCareer(tag: Tag) extends Table[CareerRow](tag, "CAREER") {
-    
+    def careerId = column[CareerRow.Id]("CareerId", O.PrimaryKey, O.AutoInc)
+    def careerName = column[CareerRow.Name]("CareerName", O.Length(32, true))
+    def careerDescription = column[Option[CareerRow.Description]]("CareerDescription", O.Length(1024, true))
+    def careerSkills = column[Option[String]]("CareerSkills", O.Length(100, true))
+    def careerTalents = column[Option[String]]("CareerTalents", O.Length(100, true))
   }
   val tableCareer = TableQuery[TableCareer]
   
   // TODO: Career Table and flesh out Olio Table
-  case class OlioRow(id: OlioRow.Id, name: OlioRow.Name, careersRaw: Option[String], talentsRaw: Option[String]) extends DataPropertyRow {
+  case class OlioRow(id: OlioRow.Id, name: OlioRow.Name, careers: Array[CareerRow.Id] /*careersRaw: Option[String]*/, talentsRaw: Option[String]) extends DataPropertyRow {
     /*def initProperties =
     {
       Vector( new IntegerProperty(this, "olioId", id),
@@ -369,8 +376,8 @@ object SchemaWFRP {
     def olioCareers = column[Option[String]]("OlioCareers", O.Length(128, true))
     def olioTalents = column[Option[String]]("OlioTalents", O.Length(128, true))
     def * = (olioId, olioName, olioCareers, olioTalents) <> //.mapTo[OlioRow]
-            ( { t => OlioRow(t._1, t._2, t._3, t._4) },
-              { aRow: OlioRow => Some((aRow.id, aRow.name, aRow.careersRaw, aRow.talentsRaw)) } )
+            ( { t => OlioRow(t._1, t._2, CommaTextOptToArray(t._3).map(CareerRow.Id(_)), t._4) },
+              { aRow: OlioRow => Some((aRow.id, aRow.name, ArrayToCommaTextOpt(aRow.careers.map(_.value)), aRow.talentsRaw)) } )
   }
   val tableOlio = TableQuery[TableOlio]
   
