@@ -50,6 +50,7 @@ object ControlFactory {
     aRes
   }
   
+  /*
   def dataPropertyTable(aRows: ObservableBuffer[DataPropertyRow]) =
   {
     val aRes = new TableView(aRows)
@@ -61,5 +62,7 @@ object ControlFactory {
       val propCol = new TableColumn
     }
   }
+  * 
+  */
   
 }

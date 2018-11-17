@@ -1,9 +1,12 @@
 package olioIO
 
-import olioIO.SchemaWFRP._
+import SlickSchemaWFRP._
 import slick.driver.SQLiteDriver.api._
 
-object WFRPDataHelper {
+object SlickWFRPDataHelper {
+  
+  
+  
   
   implicit class OlioExtensions[C[_]](aQuery: Query[TableOlio, OlioRow, C]) {
     

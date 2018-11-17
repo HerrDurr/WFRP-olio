@@ -2,6 +2,9 @@ package olioIO
 
 import slick.driver.SQLiteDriver.api._
 
+/**
+ * DEPRECATED - NOT USING SLICK NO MOAH
+ */
 object DBHandler {
   
   private var fConfig = "wfrpdb"

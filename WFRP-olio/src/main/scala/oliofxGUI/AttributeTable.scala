@@ -4,7 +4,7 @@ import scalafx.scene.control.TableView
 import slick.driver.SQLiteDriver.api._
 import olioMain.{Olio}
 import olioIO.SchemaWFRP._
-import olioIO.WFRPDataHelper._
+//import olioIO.WFRPDataHelper._
 
 class AttributeTable(olioRow : OlioRow) extends TableView[OlioAttributesRow] {
   //this.colu
@@ -22,7 +22,7 @@ class AttributeTable(olioRow : OlioRow) extends TableView[OlioAttributesRow] {
   * 
   */
   
-  val olioAttributesQuery = tableOlio.filter(_.olioId === olioRow.id).withAttributes
+  //val olioAttributesQuery = tableOlio.filter(_.olioId === olioRow.id).withAttributes
   
   
   

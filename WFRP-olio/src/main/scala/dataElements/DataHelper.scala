@@ -40,11 +40,122 @@ object DataHelper {
       rawValue.get.split(',')
   }
   
+  def CommaTextOptToIntArray(rawValue: Option[String]): Array[Int] = {
+    try
+      CommaTextOptToArray(rawValue).map(_.toInt)
+    catch
+    {
+      case _: Throwable =>
+      {
+        println("Conversion from comma-text to Array[Int] failed!")
+        // return empty
+        Array()
+      }
+    }
+  }
+  
   def ArrayToCommaTextOpt(values: Array[String]): Option[String] = {
     if (values.length < 1)
       None
     else
       Some(values.mkString(","))
+  }
+  
+  def IntArrayToCommaTextOpt(aInts : Array[Int]): Option[String] = {
+    ArrayToCommaTextOpt( aInts.map(_.toString()) )
+  }
+  
+  /**
+   * Comma-separated Some(Text), where some of Text's values
+   * are "options", i.e. "/" -separated values. E.g. a WFRP
+   * Career has a list of skills and talents, but some of
+   * those available have to be chosen instead of another.
+   * This function filters out either the non-optional or
+   * optional values.
+   */
+  def GetCommaOps(rawValue: Option[String], aWithOptions: Boolean): Array[String] = {
+    val beforeOps = CommaTextOptToArray(rawValue)
+    if (aWithOptions)
+      beforeOps.filter( _.contains("/") )
+    else
+      beforeOps.filterNot( _.contains("/") )
+  }
+  
+  def GetCommaOpsInt(rawValue: Option[String]): Array[Int] = {
+    try
+      GetCommaOps(rawValue, false).map( _.toInt )
+    catch
+    {
+      case _: Throwable =>
+      {
+        println("Conversion from comma-text to Int-Array failed!")
+        // return empty
+        Array()
+      }
+    }
+  }
+  
+  /**
+   * A raw text Some("a,b/c/d") to Array( Array("a"),Array("b","c","d") )
+   */
+  def GetCommaOpsArrayed(rawValue: Option[String]): Array[Array[String]] = {
+    GetCommaOps(rawValue, true).map( _.split("/") )
+  }
+  
+  /**
+   * A raw text Some("1,2/3/4") to Array( Array(1),Array(2,3,4) )
+   */
+  def GetCommaOpsArrayedInt(rawValue: Option[String]): Array[Array[Int]] = {
+    try
+    {
+      GetCommaOpsArrayed(rawValue).map( _.map(_.toInt) )
+    }
+    catch
+    {
+      case _: Throwable =>
+      {
+        println("Conversion from comma-text with optional values to Array[Array[Int]] failed!")
+        // return empty
+        Array()
+      }
+    }
+  }
+  
+  def ArrayedOpsToCommaOps(aOptArray : Array[Array[String]]): Option[String] = {
+    if (aOptArray.length < 1)
+      None
+    else
+    {
+      ArrayToCommaTextOpt( aOptArray.map( _.filterNot(_.isEmpty).mkString("/") ) )
+    }
+  }
+  
+  def ArrayedIntOpsToCommaOps(aOptInts : Array[Array[Int]]): Option[String] = {
+    ArrayedOpsToCommaOps( aOptInts.map( _.map(_.toString) ) )
+  }
+  
+  /**
+   * Array("A","B") + Array(Array("C","D")) => Some("A,B,C/D")
+   */
+  def DataAndOptionalToCommaOps(aData: Array[String], aOptData: Array[Array[String]]): Option[String] = {
+    val nonOps = ArrayToCommaTextOpt(aData)
+    val ops = ArrayedOpsToCommaOps(aOptData)
+    
+    if (nonOps.isEmpty)
+      ops
+    else if (ops.isEmpty)
+      nonOps
+    else
+    { // neither is empty, so "get" is safe
+      ArrayToCommaTextOpt( Array(nonOps.get, ops.get) )
+    }
+  }
+  
+  /**
+   * Array(1,2) + Array(Array(3,4)) => Some("1,2,3/4")
+   */
+  def DataAndOptionalIntsToCommaOps(aData: Array[Int], aOptData: Array[Array[Int]]): Option[String] = {
+    DataAndOptionalToCommaOps( aData.map(_.toString), aOptData.map( _.map(_.toString) ) )
   }
   
   
