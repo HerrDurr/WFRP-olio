@@ -12,7 +12,7 @@ object SchemaWFRP {
   
   lazy val dbContext = new SqliteJdbcContext(CamelCase, "wfrpdb")
   
-  case class AttributeRow(val idTag: AttributeRow.IdTag, val name: AttributeRow.Name/*idTag: String, name: String*/) extends DataPropertyRow {
+  case class Attribute(val idTag: Attribute.IdTag, val name: Attribute.Name/*idTag: String, name: String*/) extends DataPropertyRow {
     
     //def tupled = (idTag, name)
     /*def initProperties: Vector[StringProperty] =
@@ -31,14 +31,14 @@ object SchemaWFRP {
     }
     
   }
-  object AttributeRow {
+  object Attribute {
     case class IdTag(val value: String) extends AnyVal //MappedTo[String] //extends AnyVal
     case class Name(val value: String) extends AnyVal //MappedTo[String] //extends AnyVal
   }
   
   
-  case class SkillRow(id: SkillRow.Id, name: SkillRow.Name, attribute: AttributeRow.IdTag, 
-      isBasic: SkillRow.Basic) extends DataPropertyRow {
+  case class Skill(id: Skill.Id, name: Skill.Name, attribute: Attribute.IdTag, 
+      isBasic: Skill.Basic) /*extends DataPropertyRow*/ {
     /*def initProperties =
     {
       Vector(new IntegerProperty(this, "skillId", id),
@@ -49,15 +49,15 @@ object SchemaWFRP {
     * 
     */
   }
-  object SkillRow {
+  object Skill {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
     case class Basic(val value: Boolean) extends AnyVal //MappedTo[Boolean]
   }
   
   
-  case class TalentRow(id: TalentRow.Id, name: TalentRow.Name, description: Option[TalentRow.Description], 
-      weaponGroup: Option[TalentRow.WeaponGroup]) extends DataPropertyRow {
+  case class Talent(id: Talent.Id, name: Talent.Name, description: Option[Talent.Description], 
+      weaponGroup: Option[Talent.WeaponGroup]) extends DataPropertyRow {
     /*
     def initProperties =
     {
@@ -69,14 +69,14 @@ object SchemaWFRP {
     * 
     */
   }
-  object TalentRow {
+  object Talent {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
     case class Description(val value: String) extends AnyVal //MappedTo[String]
     case class WeaponGroup(val value: String) extends AnyVal //MappedTo[String]
   }
   
-  case class AvailabilityRow(idTag: AvailabilityRow.IdTag, name: AvailabilityRow.Name, modifier: Option[AvailabilityRow.Modifier]) extends DataPropertyRow {
+  case class Availability(idTag: Availability.IdTag, name: Availability.Name, modifier: Option[Availability.Modifier]) extends DataPropertyRow {
     /*def initProperties =
     {
       Vector( new StringProperty(this, "availabilityId", idTag),
@@ -86,7 +86,7 @@ object SchemaWFRP {
     * 
     */
   }
-  object AvailabilityRow {
+  object Availability {
     case class IdTag(val value: String) extends AnyVal //MappedTo[String]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
     case class Modifier(val value: Short) extends AnyVal //MappedTo[Short]
@@ -94,7 +94,7 @@ object SchemaWFRP {
   
   
   case class Item(itemId: Item.Id, itemName: Item.Name, itemCraftsmanship: Item.Craftsmanship, itemEncumbrance: Item.Encumbrance, 
-      itemCost: Option[Item.Cost], itemAvailability: Option[AvailabilityRow.IdTag]) extends DataPropertyRow {
+      itemCost: Option[Item.Cost], itemAvailability: Option[Availability.IdTag]) extends DataPropertyRow {
     /*def initProperties =
     {
       Vector( new IntegerProperty(this, "itemId", id),
@@ -129,7 +129,7 @@ object SchemaWFRP {
   * 
   */
   
-  case class WeaponQualityRow(idTag: WeaponQualitiesRow.IdTag, name: WeaponQualitiesRow.Name) extends DataPropertyRow {
+  case class WeaponQuality(idTag: WeaponQuality.IdTag, name: WeaponQuality.Name) extends DataPropertyRow {
     /*def initProperties =
     {
       Vector( new StringProperty(this, "quality", idTag),
@@ -138,14 +138,14 @@ object SchemaWFRP {
     * 
     */
   }
-  object WeaponQualitiesRow {
+  object WeaponQuality {
     case class IdTag(val value: String) extends AnyVal //MappedTo[String]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
   }
   
   
   case class WeaponMeleeRow(id: Item.Id, twoHanded: WeaponMeleeRow.TwoHanded, damageModifier: Option[WeaponMeleeRow.DamageMod], 
-      qualities: Array[WeaponQualitiesRow.IdTag], /*qualitiesRaw: Option[String]*/ weaponGroupTalentId: Option[TalentRow.Id]) extends DataPropertyRow {
+      qualities: Array[WeaponQuality.IdTag], /*qualitiesRaw: Option[String]*/ weaponGroupTalentId: Option[Talent.Id]) extends DataPropertyRow {
     /*
     def initProperties =
     {
@@ -169,7 +169,7 @@ object SchemaWFRP {
                              damageModifier: Option[WeaponRangedRow.DamageMod], rangeShort: Option[WeaponRangedRow.RangeShort], 
                              rangeLong: Option[WeaponRangedRow.RangeLong], reload: Option[WeaponRangedRow.Reload], 
                              ammoItemId: Option[Item.Id], magazineSize: Option[WeaponRangedRow.MagazineSize], 
-                             qualities: Array[WeaponQualitiesRow.IdTag], weaponGroupTalentId: Option[TalentRow.Id]) /*extends DataPropertyRow*/ {
+                             qualities: Array[WeaponQuality.IdTag], weaponGroupTalentId: Option[Talent.Id]) /*extends DataPropertyRow*/ {
     /*
     def initProperties =
     {
@@ -203,7 +203,7 @@ object SchemaWFRP {
    * (of course with any other restrictions still applicable).
    */
   case class CareerRow(id: CareerRow.Id, name: CareerRow.Name, description: Option[CareerRow.Description],
-      skills: Array[SkillRow.Id], skillOptions: Array[Array[SkillRow.Id]], talents: Array[TalentRow.Id], talentOptions: Array[Array[TalentRow.Id]],
+      skills: Array[Skill.Id], skillOptions: Array[Array[Skill.Id]], talents: Array[Talent.Id], talentOptions: Array[Array[Talent.Id]],
       careerExits: Array[CareerRow.Id])
   // attributes in different table
   // trappings maybe don't need to be implemented (yet)
@@ -216,7 +216,7 @@ object SchemaWFRP {
   
   
   // TODO: Career Table and flesh out Olio Table
-  case class OlioRow(id: OlioRow.Id, name: OlioRow.Name, careers: Array[CareerRow.Id], talents: Array[TalentRow.Id]) extends DataPropertyRow {
+  case class OlioRow(id: OlioRow.Id, name: OlioRow.Name, careers: Array[CareerRow.Id], talents: Array[Talent.Id]) extends DataPropertyRow {
     /*def initProperties =
     {
       Vector( new IntegerProperty(this, "olioId", id),
@@ -233,7 +233,7 @@ object SchemaWFRP {
   }
   
   
-  case class OlioAttributesRow(olio: OlioRow.Id, attribute: AttributeRow.IdTag, baseVal: OlioAttributesRow.BaseVal) extends DataPropertyRow {
+  case class OlioAttributesRow(olio: OlioRow.Id, attribute: Attribute.IdTag, baseVal: OlioAttributesRow.BaseVal) extends DataPropertyRow {
     /*def initProperties =
     {
       Vector( new IntegerProperty(this, "olioId", olio),
@@ -246,7 +246,7 @@ object SchemaWFRP {
   }
   
   
-  case class OlioSkillsRow(olio: OlioRow.Id, skill: SkillRow.Id, skillTrained: OlioSkillsRow.Trained) extends DataPropertyRow {
+  case class OlioSkillsRow(olio: OlioRow.Id, skill: Skill.Id, skillTrained: OlioSkillsRow.Trained) extends DataPropertyRow {
     /*def initProperties =
     {
       Vector( new IntegerProperty(this, "olioId", olio),
