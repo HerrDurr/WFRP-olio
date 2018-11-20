@@ -6,6 +6,7 @@ import scalafx.beans.property._
 import scalafx.collections._
 import shapeless._
 import io.getquill.{SqliteJdbcContext, SqliteDialect, CamelCase}
+import io.getquill.Embedded
 
 
 object SchemaWFRP {
@@ -202,7 +203,7 @@ object SchemaWFRP {
    * Career Entries not stored in db. If a Career has no other that exits to it, it can be taken by anyone
    * (of course with any other restrictions still applicable).
    */
-  case class Career(id: Career.Id, name: Career.Name, description: Option[Career.Description],
+  case class Career(id: Career.Id, name: Career.Name, description: Option[Career.Description], attributes: AttributeSet.Id,
       skills: Array[Skill.Id], skillOptions: Array[Array[Skill.Id]], talents: Array[Talent.Id], talentOptions: Array[Array[Talent.Id]],
       careerExits: Array[Career.Id])
   // attributes in different table
@@ -216,7 +217,9 @@ object SchemaWFRP {
   
   
   // TODO: Career Table and flesh out Olio Table
-  case class Olio(id: Olio.Id, name: Olio.Name, careers: Array[Career.Id], talents: Array[Talent.Id]) extends DataPropertyRow {
+  case class Olio(id: Olio.Id, name: Olio.Name, baseAttributes: AttributeSet.Id,
+      advancedAttributes: Option[AttributeSet.Id], careers: Array[Career.Id], talents: Array[Talent.Id],
+      skills: Array[TrainedSkill.Id]) extends DataPropertyRow {
     /*def initProperties =
     {
       Vector( new IntegerProperty(this, "olioId", id),
@@ -233,6 +236,9 @@ object SchemaWFRP {
   }
   
   
+  /**
+   * DEPRECATED - or is it?
+   */
   case class OlioAttributes(olioId: Olio.Id, attribute: Attribute.IdTag, baseVal: OlioAttributes.BaseVal) extends DataPropertyRow {
     /*def initProperties =
     {
@@ -245,7 +251,9 @@ object SchemaWFRP {
     case class BaseVal(val value: Short) extends AnyVal //MappedTo[Short]
   }
   
-  
+  /**
+   * DEPRECATED
+   */
   case class OlioSkills(olioId: Olio.Id, skillId: Skill.Id, skillTrained: OlioSkills.Trained) extends DataPropertyRow {
     /*def initProperties =
     {
@@ -256,6 +264,36 @@ object SchemaWFRP {
   }
   object OlioSkills {
     case class Trained(val value: Short) extends AnyVal //MappedTo[Short]
+  }
+  
+  case class AttributeSet(id: AttributeSet.Id, weaponSkill: AttributeSet.WS, ballisticSkill: AttributeSet.BS,
+      strength: AttributeSet.S, toughness: AttributeSet.T, agility: AttributeSet.Ag, intelligence: AttributeSet.Int,
+      willPower: AttributeSet.WP, fellowship: AttributeSet.Fel, attacks: AttributeSet.A, wounds: AttributeSet.W,
+      movement: AttributeSet.M, magic: AttributeSet.Mag, insanityPoints: AttributeSet.IP, fatePoints: AttributeSet.FP) extends Embedded
+  
+  object AttributeSet {
+    case class Id(val value: Integer) extends AnyVal
+    case class WS(val value: Short) extends AnyVal
+    case class BS(val value: Short) extends AnyVal
+    case class S(val value: Short) extends AnyVal
+    case class T(val value: Short) extends AnyVal
+    case class Ag(val value: Short) extends AnyVal
+    case class Int(val value: Short) extends AnyVal
+    case class WP(val value: Short) extends AnyVal
+    case class Fel(val value: Short) extends AnyVal
+    case class A(val value: Short) extends AnyVal
+    case class W(val value: Short) extends AnyVal
+    case class M(val value: Short) extends AnyVal
+    case class Mag(val value: Short) extends AnyVal
+    case class IP(val value: Short) extends AnyVal
+    case class FP(val value: Short) extends AnyVal
+  }
+  
+  case class TrainedSkill(id: TrainedSkill.Id, skill: Skill, level: TrainedSkill.Level,
+      trainedCareer: Option[Career])
+  object TrainedSkill {
+    case class Id(val value: Integer) extends AnyVal
+    case class Level(val value: Short) extends AnyVal
   }
   
 }
