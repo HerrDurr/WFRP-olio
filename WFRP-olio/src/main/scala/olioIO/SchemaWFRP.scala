@@ -5,13 +5,11 @@ import dataElements.DataHelper._
 import scalafx.beans.property._
 import scalafx.collections._
 import shapeless._
-import io.getquill.{SqliteJdbcContext, SqliteDialect, CamelCase}
-import io.getquill.Embedded
+//import io.getquill.{SqliteJdbcContext, SqliteDialect, CamelCase, MappedEncoding}
+//import io.getquill.Embedded
 
 
 object SchemaWFRP {
-  
-  lazy val dbContext = new SqliteJdbcContext(CamelCase, "wfrpdb")
   
   case class Attribute(val idTag: Attribute.IdTag, val name: Attribute.Name/*idTag: String, name: String*/) extends DataPropertyRow {
     
@@ -75,6 +73,11 @@ object SchemaWFRP {
     case class Name(val value: String) extends AnyVal //MappedTo[String]
     case class Description(val value: String) extends AnyVal //MappedTo[String]
     case class WeaponGroup(val value: String) extends AnyVal //MappedTo[String]
+    
+    /**
+     * Commatext of Talent Ids
+     */
+    case class Talents(val value: String) extends AnyVal
   }
   
   case class Availability(idTag: Availability.IdTag, name: Availability.Name, modifier: Option[Availability.Modifier]) extends DataPropertyRow {
@@ -203,7 +206,7 @@ object SchemaWFRP {
    * Career Entries not stored in db. If a Career has no other that exits to it, it can be taken by anyone
    * (of course with any other restrictions still applicable).
    */
-  case class Career(id: Career.Id, name: Career.Name, description: Option[Career.Description], attributes: AttributeSet.Id,
+  case class Career(id: Career.Id, name: Career.Name, description: Option[Career.Description], attributes: AttributeSet,
       skills: Array[Skill.Id], skillOptions: Array[Array[Skill.Id]], talents: Array[Talent.Id], talentOptions: Array[Array[Talent.Id]],
       careerExits: Array[Career.Id])
   // attributes in different table
@@ -213,13 +216,17 @@ object SchemaWFRP {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
     case class Description(val value: String) extends AnyVal //MappedTo[String]
+    /**
+     * Commatext of Career Ids
+     */
+    case class Careers(val value: String) extends AnyVal
   }
   
   
   // TODO: Career Table and flesh out Olio Table
   case class Olio(id: Olio.Id, name: Olio.Name, baseAttributes: AttributeSet.Id,
-      advancedAttributes: Option[AttributeSet.Id], careers: Array[Career.Id], talents: Array[Talent.Id],
-      skills: Array[TrainedSkill.Id]) extends DataPropertyRow {
+      advancedAttributes: Option[AttributeSet.Id], careers: Option[Career.Careers] /*Array[Career.Id]*/, talents: Option[Talent.Talents],
+      skills: Option[TrainedSkill.TrainedSkills] /*Array[TrainedSkill.Id]*/) extends DataPropertyRow {
     /*def initProperties =
     {
       Vector( new IntegerProperty(this, "olioId", id),
@@ -269,8 +276,25 @@ object SchemaWFRP {
   case class AttributeSet(id: AttributeSet.Id, weaponSkill: AttributeSet.WS, ballisticSkill: AttributeSet.BS,
       strength: AttributeSet.S, toughness: AttributeSet.T, agility: AttributeSet.Ag, intelligence: AttributeSet.Int,
       willPower: AttributeSet.WP, fellowship: AttributeSet.Fel, attacks: AttributeSet.A, wounds: AttributeSet.W,
-      movement: AttributeSet.M, magic: AttributeSet.Mag, insanityPoints: AttributeSet.IP, fatePoints: AttributeSet.FP) extends Embedded
+      movement: AttributeSet.M, magic: AttributeSet.Mag, insanityPoints: AttributeSet.IP, fatePoints: AttributeSet.FP) {
+    
+    /*def apply(id: AttributeSet.Id) = 
+    {
+      import dbContext._
+      import AttributeSet._
+      val flat = id.value
+      val qAS = quote {
+        query[AttributeSet].filter(_.id == lift(id))
+      }
+      val res = dbContext.run(qAS)
+      AttributeSet.createEmpty(id)
+    }
+    * 
+    */
   
+  }
+  
+  //case class AttributeSetId(val value: Integer) extends AnyVal
   object AttributeSet {
     case class Id(val value: Integer) extends AnyVal
     case class WS(val value: Short) extends AnyVal
@@ -287,6 +311,13 @@ object SchemaWFRP {
     case class Mag(val value: Short) extends AnyVal
     case class IP(val value: Short) extends AnyVal
     case class FP(val value: Short) extends AnyVal
+    def createEmpty(id: Id): AttributeSet = {
+      new AttributeSet( id, WS(0), BS(0), S(0), T(0), Ag(0), Int(0), WP(0), Fel(0),
+                        A(0), W(0), M(0), Mag(0), IP(0), FP(0) )
+    }
+    def createEmpty: AttributeSet = {
+      this.createEmpty(AttributeSet.Id(-1))
+    }
   }
   
   case class TrainedSkill(id: TrainedSkill.Id, skill: Skill, level: TrainedSkill.Level,
@@ -294,6 +325,14 @@ object SchemaWFRP {
   object TrainedSkill {
     case class Id(val value: Integer) extends AnyVal
     case class Level(val value: Short) extends AnyVal
+    
+    /**
+     * Commatext
+     */
+    case class TrainedSkills(val value: String) extends AnyVal
   }
+  
+  
+  lazy val dbContext = new WFRPContext //new SqliteJdbcContext(CamelCase, "wfrpdb")
   
 }
