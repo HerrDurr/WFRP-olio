@@ -96,7 +96,7 @@ object SchemaWFRP {
     case class Modifier(val value: Short) extends AnyVal //MappedTo[Short]
   }
   
-  case class Item(id: Item.Id, name: Item.Name, craftsmanship: Craftsmanship, encumbrance: Item.Encumbrance, 
+  case class Item(id: Item.Id, name: Item.Name, craftsmanship: Craftsmanship.Craftsmanship, encumbrance: Item.Encumbrance, 
       cost: Option[Item.Cost], availability: Option[Availability.IdTag]) extends DataPropertyRow {
     /*def initProperties =
     {
@@ -117,12 +117,14 @@ object SchemaWFRP {
     case class Encumbrance(val value: Short) extends AnyVal //MappedTo[Short]
     case class Cost(val value: String) extends AnyVal //MappedTo[String]
   }
-  case class Craftsmanship(val value: Char) extends AnyVal //MappedTo[Char]
-  /*
+  //case class Craftsmanship(val value: String) extends AnyVal //MappedTo[Char]
+  
   object Craftsmanship extends Enumeration {
     type Craftsmanship = Value
     //val enums = List('P','N','G','B').zipWithIndex
-    lazy val enums = List('P','N','G','B').zipWithIndex //.zip(Craftsmanship.values)
+    // Had to use Strings instead of Chars since Char encoding hasn't been implemented in Quill.. could try 
+    // to do that myself, though
+    lazy val enums = List("P","N","G","B").zipWithIndex // List('P','N','G','B').zipWithIndex //.zip(Craftsmanship.values)
     // not using the direct numbers is semantics, really, but
     // being sure is being sure!
     val Poor = Value(enums(0)._2)
@@ -130,24 +132,22 @@ object SchemaWFRP {
     val Good = Value(enums(2)._2)
     val Best = Value(enums(3)._2)
     
-    def enum(id: Int): Char = {
+    def enum(id: Int): String = {
       enums.find(_._2 == id).getOrElse(throw new IllegalArgumentException(s"Unknown Craftsmanship: $id"))._1
     }
-    def byEnum(enum: Char): Option[Craftsmanship] = {
+    def byEnum(enum: String): Option[Craftsmanship] = {
       val idxPair = enums.find(_._1 == enum)
       if (idxPair.isEmpty)
         None
       else
         byId(idxPair.get._2)
     }
-    def byEnumOrThrow(enum: Char): Craftsmanship = {
+    def byEnumOrThrow(enum: String): Craftsmanship = {
       byEnum(enum).getOrElse(throw new IllegalArgumentException(s"Unknown Craftsmanship: $enum"))
     }
     def byId(id: Int): Option[Craftsmanship] = Craftsmanship.values.find(_.id == id)
     def byIdOrThrow(id: Int): Craftsmanship = byId(id).getOrElse(throw new IllegalArgumentException(s"Unknown Craftsmanship: $id"))
   }
-  * 
-  */
   
   /*val quoteItem = quote {
     querySchema[ItemRow](

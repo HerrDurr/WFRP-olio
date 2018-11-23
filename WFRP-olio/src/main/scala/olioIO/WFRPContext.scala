@@ -22,17 +22,14 @@ class WFRPContext extends SqliteJdbcContext(CamelCase, "wfrpdb") {
    */
   //implicit val encodeItemId = MappedEncoding[Item.Id, Int](_.value)
   //implicit val decodeItemId = MappedEncoding[Int, Item.Id](Item.Id(_))
-  implicit val encodeItemCraftsmanship = MappedEncoding[Craftsmanship, Char](_.value)
-  implicit val decodeItemCraftsmanship = MappedEncoding[Char, Craftsmanship](Craftsmanship(_))
+  //implicit val encodeItemCraftsmanship = MappedEncoding[Craftsmanship, Char](_.value)
+  //implicit val decodeItemCraftsmanship = MappedEncoding[Char, Craftsmanship](Craftsmanship(_))
   
-  /*
-   * why the f can't the compiler find these??!!
-  implicit val encodeCraftsmanship: MappedEncoding[Craftsmanship.Craftsmanship, Char] = 
-      MappedEncoding[Craftsmanship.Craftsmanship, Char]{ crft: Craftsmanship.Craftsmanship => Craftsmanship.enum(crft.id) }
-  implicit val decodeCraftsmanship: MappedEncoding[Char, Craftsmanship.Craftsmanship] =
-      MappedEncoding[Char, Craftsmanship.Craftsmanship]{ Craftsmanship.byEnumOrThrow(_) }
-      * 
-      */
+  // why the f can't the compiler find these??!!
+  implicit val encodeCraftsmanship: MappedEncoding[Craftsmanship.Craftsmanship, String] = 
+      MappedEncoding[Craftsmanship.Craftsmanship, String]{ crft: Craftsmanship.Craftsmanship => Craftsmanship.enum(crft.id) }
+  implicit val decodeCraftsmanship: MappedEncoding[String, Craftsmanship.Craftsmanship] =
+      MappedEncoding[String, Craftsmanship.Craftsmanship]{ Craftsmanship.byEnumOrThrow(_) }
   
   /*
    * OLIO

@@ -51,7 +51,7 @@ object WFRPOlioMain extends JFXApp {
       for {
         item <- query[Item]
       } yield {
-        (item.itemName, item.itemCost)
+        (item.name, item.cost)
       }
     }
     
