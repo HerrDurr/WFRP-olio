@@ -1,6 +1,6 @@
 package olioIO
 
-import io.getquill.{SqliteJdbcContext, SqliteDialect, CamelCase, MappedEncoding}
+import io.getquill.{SqliteJdbcContext, SqliteDialect, CamelCase}
 import SchemaWFRP._
 import dataElements.DataHelper._
 
@@ -16,6 +16,23 @@ class WFRPContext extends SqliteJdbcContext(CamelCase, "wfrpdb") {
   
   //implicit val encodeAttributeSet = MappedEncoding[AttributeSet, Int](_.id.value)
   //implicit val decodeAttributeSet = MappedEncoding[Int, AttributeSet](value: Int => AttributeSet.createEmpty(AttributeSet.Id(value))))
+  
+  /*
+   * Item
+   */
+  //implicit val encodeItemId = MappedEncoding[Item.Id, Int](_.value)
+  //implicit val decodeItemId = MappedEncoding[Int, Item.Id](Item.Id(_))
+  implicit val encodeItemCraftsmanship = MappedEncoding[Craftsmanship, Char](_.value)
+  implicit val decodeItemCraftsmanship = MappedEncoding[Char, Craftsmanship](Craftsmanship(_))
+  
+  /*
+   * why the f can't the compiler find these??!!
+  implicit val encodeCraftsmanship: MappedEncoding[Craftsmanship.Craftsmanship, Char] = 
+      MappedEncoding[Craftsmanship.Craftsmanship, Char]{ crft: Craftsmanship.Craftsmanship => Craftsmanship.enum(crft.id) }
+  implicit val decodeCraftsmanship: MappedEncoding[Char, Craftsmanship.Craftsmanship] =
+      MappedEncoding[Char, Craftsmanship.Craftsmanship]{ Craftsmanship.byEnumOrThrow(_) }
+      * 
+      */
   
   /*
    * OLIO
@@ -37,6 +54,9 @@ class WFRPContext extends SqliteJdbcContext(CamelCase, "wfrpdb") {
   // Never insert or update self-made ids
   implicit val attributeSetInsertMeta = insertMeta[AttributeSet](_.id)
   implicit val attributeSetUpdateMeta = updateMeta[AttributeSet](_.id)
+  
+  implicit val itemInsertMeta = insertMeta[Item](_.id)
+  implicit val itemUpdateMeta = updateMeta[Item](_.id)
   
   implicit val olioInsertMeta = insertMeta[Olio](_.id)
   implicit val olioUpdateMeta = updateMeta[Olio](_.id)

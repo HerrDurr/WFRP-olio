@@ -96,9 +96,8 @@ object SchemaWFRP {
     case class Modifier(val value: Short) extends AnyVal //MappedTo[Short]
   }
   
-  
-  case class Item(itemId: Item.Id, itemName: Item.Name, itemCraftsmanship: Item.Craftsmanship, itemEncumbrance: Item.Encumbrance, 
-      itemCost: Option[Item.Cost], itemAvailability: Option[Availability.IdTag]) extends DataPropertyRow {
+  case class Item(id: Item.Id, name: Item.Name, craftsmanship: Craftsmanship, encumbrance: Item.Encumbrance, 
+      cost: Option[Item.Cost], availability: Option[Availability.IdTag]) extends DataPropertyRow {
     /*def initProperties =
     {
       Vector( new IntegerProperty(this, "itemId", id),
@@ -114,10 +113,41 @@ object SchemaWFRP {
   object Item {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
-    case class Craftsmanship(val value: Char) extends AnyVal //MappedTo[Char]
+    //case class Craftsmanship(val value: Char) extends AnyVal //MappedTo[Char]
     case class Encumbrance(val value: Short) extends AnyVal //MappedTo[Short]
     case class Cost(val value: String) extends AnyVal //MappedTo[String]
   }
+  case class Craftsmanship(val value: Char) extends AnyVal //MappedTo[Char]
+  /*
+  object Craftsmanship extends Enumeration {
+    type Craftsmanship = Value
+    //val enums = List('P','N','G','B').zipWithIndex
+    lazy val enums = List('P','N','G','B').zipWithIndex //.zip(Craftsmanship.values)
+    // not using the direct numbers is semantics, really, but
+    // being sure is being sure!
+    val Poor = Value(enums(0)._2)
+    val Normal = Value(enums(1)._2)
+    val Good = Value(enums(2)._2)
+    val Best = Value(enums(3)._2)
+    
+    def enum(id: Int): Char = {
+      enums.find(_._2 == id).getOrElse(throw new IllegalArgumentException(s"Unknown Craftsmanship: $id"))._1
+    }
+    def byEnum(enum: Char): Option[Craftsmanship] = {
+      val idxPair = enums.find(_._1 == enum)
+      if (idxPair.isEmpty)
+        None
+      else
+        byId(idxPair.get._2)
+    }
+    def byEnumOrThrow(enum: Char): Craftsmanship = {
+      byEnum(enum).getOrElse(throw new IllegalArgumentException(s"Unknown Craftsmanship: $enum"))
+    }
+    def byId(id: Int): Option[Craftsmanship] = Craftsmanship.values.find(_.id == id)
+    def byIdOrThrow(id: Int): Craftsmanship = byId(id).getOrElse(throw new IllegalArgumentException(s"Unknown Craftsmanship: $id"))
+  }
+  * 
+  */
   
   /*val quoteItem = quote {
     querySchema[ItemRow](

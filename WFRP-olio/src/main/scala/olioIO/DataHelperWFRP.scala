@@ -1,6 +1,7 @@
 package olioIO
 
 import SchemaWFRP._
+import shapeless.Generic
 
 object DataHelperWFRP {
   
@@ -47,6 +48,9 @@ object DataHelperWFRP {
       }
       dbContext.run(q)
     }
+    
+    lazy val generic = Generic[AttributeSet]
+    lazy val toHList = generic.to(attrSet)
     
   }
   
