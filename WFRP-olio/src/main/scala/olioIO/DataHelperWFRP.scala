@@ -15,6 +15,41 @@ object DataHelperWFRP {
   }
   val resTest = dbContext.run(qTest)
   
+  def byId(aIdTag: Availability.IdTag): Availability =
+    {
+      val q = quote {
+        query[Availability].filter{ av: Availability => av.idTag == lift(aIdTag) }
+      }
+      dbContext.run(q).headOption.getOrElse(throw new IllegalArgumentException(s"Unknown Availability: $aIdTag"))
+  }
+  
+  def getAllItems: List[Item] =
+  {
+    val q = quote {
+      for {
+        item <- query[Item]
+      } yield {
+        item
+      }
+    }
+    val itemList = dbContext.run(q)
+    itemList
+  }
+  
+  implicit class AvailabilityHelper(avail: Availability) {
+    
+    /*def byId(aIdTag: Availability.IdTag) =
+    {
+      val q = quote {
+        query[Availability].filter{ av: Availability => av.idTag == lift(aIdTag) }
+      }
+      dbContext.run(q)
+    }
+    * 
+    */
+    
+  }
+  
   implicit class AttributeSetHelper(attrSet: AttributeSet) {
     
     def queryById(aId: AttributeSet.Id) =

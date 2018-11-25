@@ -6,6 +6,8 @@ import scalafx.beans.property._
 import scalafx.collections._
 import shapeless._
 //import io.getquill.{SqliteJdbcContext, SqliteDialect, CamelCase, MappedEncoding}
+//import io.getquill.context.Context
+
 //import io.getquill.Embedded
 
 
@@ -14,13 +16,6 @@ object SchemaWFRP {
   case class Attribute(val idTag: Attribute.IdTag, val name: Attribute.Name/*idTag: String, name: String*/) extends DataPropertyRow {
     
     //def tupled = (idTag, name)
-    /*def initProperties: Vector[StringProperty] =
-    {
-      Vector(new StringProperty(this, "attrId", idTag),
-             new StringProperty(this, "attrName", name))
-    }
-    * 
-    */
     //val genericRow = Generic[AttributeRow] 
     
     override def initProps: HList = 
@@ -34,6 +29,17 @@ object SchemaWFRP {
     case class IdTag(val value: String) extends AnyVal //MappedTo[String] //extends AnyVal
     case class Name(val value: String) extends AnyVal //MappedTo[String] //extends AnyVal
   }
+  
+  /*object Attribute extends Enumeration {
+    type Attribute = Value
+    val WS = Value(0)
+    val BS = Value(1)
+    val S = Value(2)
+    val T = Value(3)
+    val 
+  }
+  * 
+  */
   
   
   case class Skill(id: Skill.Id, name: Skill.Name, attribute: Attribute.IdTag, 
@@ -94,6 +100,8 @@ object SchemaWFRP {
     case class IdTag(val value: String) extends AnyVal //MappedTo[String]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
     case class Modifier(val value: Short) extends AnyVal //MappedTo[Short]
+    
+    def avgId = IdTag("Av")
   }
   
   case class Item(id: Item.Id, name: Item.Name, craftsmanship: Craftsmanship.Craftsmanship, encumbrance: Item.Encumbrance, 
@@ -116,6 +124,10 @@ object SchemaWFRP {
     //case class Craftsmanship(val value: Char) extends AnyVal //MappedTo[Char]
     case class Encumbrance(val value: Short) extends AnyVal //MappedTo[Short]
     case class Cost(val value: String) extends AnyVal //MappedTo[String]
+    
+    def createNew: Item = {
+      new Item(Id(-1), Name(""), Craftsmanship.byEnumOrThrow("N"), Encumbrance(0), Some(Cost("")), Some(Availability.avgId))
+    }
   }
   //case class Craftsmanship(val value: String) extends AnyVal //MappedTo[Char]
   
@@ -327,20 +339,48 @@ object SchemaWFRP {
   //case class AttributeSetId(val value: Integer) extends AnyVal
   object AttributeSet {
     case class Id(val value: Integer) extends AnyVal
-    case class WS(val value: Short) extends AnyVal
-    case class BS(val value: Short) extends AnyVal
-    case class S(val value: Short) extends AnyVal
-    case class T(val value: Short) extends AnyVal
-    case class Ag(val value: Short) extends AnyVal
-    case class Int(val value: Short) extends AnyVal
-    case class WP(val value: Short) extends AnyVal
-    case class Fel(val value: Short) extends AnyVal
-    case class A(val value: Short) extends AnyVal
-    case class W(val value: Short) extends AnyVal
-    case class M(val value: Short) extends AnyVal
-    case class Mag(val value: Short) extends AnyVal
-    case class IP(val value: Short) extends AnyVal
-    case class FP(val value: Short) extends AnyVal
+    case class WS(val value: Short) extends AnyVal {
+      def name = "Weapon Skill"
+    }
+    case class BS(val value: Short) extends AnyVal {
+      def name = "Ballistic Skill"
+    }
+    case class S(val value: Short) extends AnyVal {
+      def name = "Strength"
+    }
+    case class T(val value: Short) extends AnyVal {
+      def name = "Toughness"
+    }
+    case class Ag(val value: Short) extends AnyVal {
+      def name = "Agility"
+    }
+    case class Int(val value: Short) extends AnyVal {
+      def name = "Intelligence"
+    }
+    case class WP(val value: Short) extends AnyVal {
+      def name = "Will Power"
+    }
+    case class Fel(val value: Short) extends AnyVal {
+      def name = "Fellowship"
+    }
+    case class A(val value: Short) extends AnyVal {
+      def name = "Attacks"
+    }
+    case class W(val value: Short) extends AnyVal {
+      def name = "Wounds"
+    }
+    case class M(val value: Short) extends AnyVal {
+      def name = "Movement"
+    }
+    case class Mag(val value: Short) extends AnyVal {
+      def name = "Magic"
+    }
+    case class IP(val value: Short) extends AnyVal {
+      def name = "Insanity Points"
+    }
+    case class FP(val value: Short) extends AnyVal {
+      def name = "Fate Points"
+    }
     def createEmpty(id: Id): AttributeSet = {
       new AttributeSet( id, WS(0), BS(0), S(0), T(0), Ag(0), Int(0), WP(0), Fel(0),
                         A(0), W(0), M(0), Mag(0), IP(0), FP(0) )

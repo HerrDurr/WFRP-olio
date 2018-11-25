@@ -5,7 +5,6 @@ import olioMain.Olio
 import scalafx.scene.layout.StackPane
 import scalafx.collections.ObservableBuffer
 import scalafx.scene.control.TableView
-import scalafx.scene.control.TableView.sfxTableView2jfx
   
 // deprecated test stuff
 class OlioSheet(val olio : Olio) extends BorderPane {
