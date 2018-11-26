@@ -9,7 +9,8 @@ import olioIO.DataHelperWFRP._
 import scalafx.scene.control.cell.TextFieldTableCell
 import scalafx.scene.input.MouseEvent
 import scalafx.Includes._
-import shapeless.Generic
+import shapeless._
+import dataElements.DataHelper._
 
 class EditItem(val items: ObservableBuffer[Item]) extends BorderPane {
   
@@ -26,6 +27,7 @@ class EditItem(val items: ObservableBuffer[Item]) extends BorderPane {
   */
   val genItem = Generic[Item]
   
+  val lbldItems = items.map(LabelledGeneric[Item].to(_)).map(getWrappedValue(_))
   
   val colName = new TableColumn[Item, String]("Name")
   colName.cellFactory = { p => {

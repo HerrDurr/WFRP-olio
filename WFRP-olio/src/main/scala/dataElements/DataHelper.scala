@@ -11,6 +11,7 @@ import scalafx.collections.ObservableHashMap
 import scala.collection.immutable.List
 import shapeless._
 import shapeless.Poly1
+import shapeless.ops.hlist.IsHCons
 
 object DataHelper {
   
@@ -29,6 +30,20 @@ object DataHelper {
   }
   * 
   */
+  
+  /**
+   * Friggin' magick! Testicles, barnacles, dicks, rabbits, and
+   * F*CKEN' MAGICK!
+   * From: The Type Astronaut's Guide to Shapeless by Dave Gurnell
+   * Copyright 2016-17 Dave Gurnell.
+   */
+  implicit def getWrappedValue[A, Repr <: HList, Head](aIn: A)(
+      implicit
+      gen: Generic.Aux[A, Repr],
+      isHCons: IsHCons.Aux[Repr, Head, HNil]
+  ): Head = gen.to(aIn).head
+  
+  
   
   /**
    * Convert a comma-delimited text value to an Array
