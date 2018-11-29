@@ -37,7 +37,7 @@ object WFRPOlioMain extends JFXApp {
       }
       //content.add(borderPane)
       //quillTest();
-      content.add(testItems)
+      //content.add(testItems)
       // Slick is utter poop
       //SlickTest.testConfig
       //testDB

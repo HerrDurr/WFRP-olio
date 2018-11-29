@@ -64,6 +64,36 @@ object DataHelper {
   * 
   */
   
+  trait Defaulter[A] {
+    def getDefault[B <: Option[A]](aMaybe : B): A
+  }
+  object Defaulter {
+    def apply[A/*, B <: Option[A]*/](implicit defaulter: Defaulter[A]): Defaulter[A] =
+      defaulter
+      
+    def instance[A/*, Option[A]*/](func: Option[A] => A): Defaulter[A] =
+      new Defaulter[A] {
+         def getDefault[B <: Option[A]](aMaybe : B): A =
+           func(aMaybe)
+      }
+    
+  implicit def intDefaulter: Defaulter[Int] = 
+    instance({aPossibleInt: Option[Int] => 0})
+  implicit def shortDefaulter: Defaulter[Short] =
+    instance({aMaybe: Option[Short] => 0})
+  implicit def stringDefaulter: Defaulter[String] =
+    instance({aMaybe: Option[String] => ""})
+  implicit def booleanDefaulter : Defaulter[Boolean] =
+    instance({aMaybe: Option[Boolean] => false})
+    
+    implicit def genericDefaulter[A, B <: Option[A]](
+      implicit
+      optInstance: Lazy[Defaulter[A]]
+      ): Defaulter[A] = 
+        instance({aVal: Option[A] => optInstance.value.getDefault(aVal)})
+  }
+  
+  
   /**
    * Friggin' magick! Testicles, barnacles, dicks, rabbits, and
    * F*CKEN' MAGICK!
@@ -76,11 +106,25 @@ object DataHelper {
       isHCons: IsHCons.Aux[Repr, Head, HNil]
   ): Head = gen.to(aInput).head
   
+  /**
+   * WARNING! DOES NOT HANDLE NONES, DO NOT USE! Need to
+   * find a way to give defaults for all datatypes... Then
+   * we can call getOrElse(getDefault). Trying this above with
+   * trait Defaulter[A]
+   */
+  def unwrap[A](aInput: Option[A]): A = {
+    aInput.getOrElse(getDefault(aInput))
+  }
+  
   def unwrapContents[A, Repr <: HList, Head](aInput: Array[A])(
       implicit
       gen: Generic.Aux[A, Repr],
       isHCons: IsHCons.Aux[Repr, Head, HNil]
-  ): ArraySeq[Head] = aInput.map(unwrap(_))
+  ): ObservableBuffer[Head] = {
+    val res = new ObservableBuffer[Head]
+    res ++= ( aInput.map(unwrap(_)) )
+    res
+  }
   
   /**
    * Convert a comma-delimited text value to an Array
@@ -250,7 +294,11 @@ object DataHelper {
     implicit def caseDouble = at[Double]{ DoubleProperty(_) }
     implicit def caseString = at[String]{ StringProperty(_) }
     implicit def caseBoolean = at[Boolean]{ BooleanProperty(_) }
-    implicit def caseAny = at[AnyRef]{ ObjectProperty(_) }
+    /*implicit def caseArraySeq = at[ArraySeq[B]]{ 
+      val res = new ObservableBuffer[B]
+      res ++= _
+    }*/
+    implicit def caseAny = at[AnyRef]{ some: AnyRef => some } // }
   }
   
   /*

@@ -12,7 +12,7 @@ import scalafx.Includes._
 import shapeless._
 import dataElements.DataHelper._
 
-class EditItem(val items: ObservableBuffer[Item]) extends BorderPane {
+class EditItem[Repr <: HList](val aItem : Repr) /*val items: ObservableBuffer[Item])*/(implicit gen: LabelledGeneric.Aux[Item, Repr]) extends BorderPane {
   
   /*
   val colName = new TableColumn[Item, Item.Name]("Name")
@@ -25,9 +25,10 @@ class EditItem(val items: ObservableBuffer[Item]) extends BorderPane {
   colName.cellValueFactory = cdf => ObjectProperty(cdf.value.name)
   * 
   */
+  /*
   val genItem = Generic[Item]
   
-  val lbldItems = items.map(LabelledGeneric[Item].to(_)).map(getWrappedValue(_))
+  //val lbldItems = items.map(LabelledGeneric[Item].to(_)).map(getWrappedValue(_))
   
   val colName = new TableColumn[Item, String]("Name")
   colName.cellFactory = { p => {
@@ -50,7 +51,9 @@ class EditItem(val items: ObservableBuffer[Item]) extends BorderPane {
       
   val colAvailability = new TableColumn[Item, Availability.Name]("Availability")
   colAvailability.cellValueFactory = cdf => ObjectProperty( byId(cdf.value.availability.getOrElse(Availability.avgId)).name )
-  
+  * 
+  */
+  val editableItem = aItem.map(unwrap(_)).map(MapToProperty)
   
   val table = new TableView[Item](items)
   table.columns ++= List(colName, colCraftsmanship, colEncumb, colCost, colAvailability)
@@ -64,11 +67,20 @@ object EditItem {
     Item.createNew
   }
   
-  def testItems: EditItem = {
+  /*def testItems: EditItem = {
     val items = getAllItems
     val buffer = new ObservableBuffer[Item]
     buffer ++= items
     new EditItem(buffer)
+  }
+  * 
+  */
+  
+  def testItem2[Repr <: HList](implicit gen: LabelledGeneric.Aux[Item, Repr]): EditItem[Repr] = {
+    val item = byId(Item.Id(1))
+    //val gen = LabelledGeneric[Item]
+    val itemHList = gen.to(item)
+    new EditItem(itemHList)
   }
   
 }

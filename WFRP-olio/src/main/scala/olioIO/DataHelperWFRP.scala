@@ -15,12 +15,24 @@ object DataHelperWFRP {
   }
   val resTest = dbContext.run(qTest)
   
+  /**
+   * byId could (and should!) be done using Shapeless Magick! Use LabelledGeneric and
+   * common names for case class parameters.
+   */
   def byId(aIdTag: Availability.IdTag): Availability =
-    {
-      val q = quote {
-        query[Availability].filter{ av: Availability => av.idTag == lift(aIdTag) }
-      }
-      dbContext.run(q).headOption.getOrElse(throw new IllegalArgumentException(s"Unknown Availability: $aIdTag"))
+  {
+    val q = quote {
+      query[Availability].filter{ av: Availability => av.idTag == lift(aIdTag) }
+    } 
+    dbContext.run(q).headOption.getOrElse(throw new IllegalArgumentException(s"Unknown Availability: $aIdTag"))
+  }
+  
+  def byId(aId: Item.Id): Item =
+  {
+    val q = quote {
+      query[Item].filter{ item: Item => item.id == lift(aId) }
+    } 
+    dbContext.run(q).headOption.getOrElse(throw new IllegalArgumentException(s"Unknown Item: $aId"))
   }
   
   def getAllItems: List[Item] =
