@@ -12,6 +12,7 @@ import scala.collection.immutable.List
 import shapeless._
 import shapeless.Poly1
 import shapeless.ops.hlist.IsHCons
+import scala.collection.mutable.ArraySeq
 
 object DataHelper {
   
@@ -31,19 +32,55 @@ object DataHelper {
   * 
   */
   
+  trait PropertyConverter[A] {
+    def convert(aValue : A): List[Observable]
+  }
+  object PropertyConverter {
+    def apply[A](implicit converter: PropertyConverter[A]): PropertyConverter[A] =
+      converter
+    
+    def instance[A](func: A => List[Observable]): PropertyConverter[A] =
+      new PropertyConverter[A] {
+        def convert(aValue: A): List[Observable] = 
+          func(aValue)
+      }
+    /*
+    implicit val intConverter : PropertyConverter[Int] =
+      new PropertyConverter[Int] {
+        def convert(aValue: Int): List[IntegerProperty] =
+          new IntegerProperty(aValue)
+      }
+      *  
+      */
+  }
+  /*
+  trait UnWrapper[A] {
+    def unWrap(aValue: A): List[AnyVal]
+  }
+  object UnWrapper {
+    def apply[A](implicit unWrapper: UnWrapper[A]): UnWrapper[A] = 
+      unWrapper
+  }
+  * 
+  */
+  
   /**
    * Friggin' magick! Testicles, barnacles, dicks, rabbits, and
    * F*CKEN' MAGICK!
    * From: The Type Astronaut's Guide to Shapeless by Dave Gurnell
    * Copyright 2016-17 Dave Gurnell.
    */
-  implicit def getWrappedValue[A, Repr <: HList, Head](aIn: A)(
+  def unwrap[A, Repr <: HList, Head](aInput: A)(
       implicit
       gen: Generic.Aux[A, Repr],
       isHCons: IsHCons.Aux[Repr, Head, HNil]
-  ): Head = gen.to(aIn).head
+  ): Head = gen.to(aInput).head
   
-  
+  def unwrapContents[A, Repr <: HList, Head](aInput: Array[A])(
+      implicit
+      gen: Generic.Aux[A, Repr],
+      isHCons: IsHCons.Aux[Repr, Head, HNil]
+  ): ArraySeq[Head] = aInput.map(unwrap(_))
   
   /**
    * Convert a comma-delimited text value to an Array
