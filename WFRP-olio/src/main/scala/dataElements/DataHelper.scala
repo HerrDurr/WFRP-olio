@@ -12,6 +12,7 @@ import scala.collection.immutable.List
 import shapeless._
 import shapeless.Poly1
 import shapeless.ops.hlist.IsHCons
+import shapeless.labelled.{FieldType}
 import scala.collection.mutable.ArraySeq
 
 object DataHelper {
@@ -53,6 +54,53 @@ object DataHelper {
       *  
       */
   }
+  
+  trait StringPropertyConverter[A] {
+    def convertToProperty(aValue: A): StringProperty
+  }
+  object StringPropertyConverter {
+    def apply[A](implicit converter: StringPropertyConverter[A]): StringPropertyConverter[A] =
+      converter
+      
+    def instance[A](func: A => StringProperty): StringPropertyConverter[A] =
+      new StringPropertyConverter[A] {
+        def convertToProperty(aValue: A): StringProperty =
+          func(aValue)
+      }
+    
+    implicit def convertString: StringPropertyConverter[String] =
+      instance{ aStr: String => StringProperty(aStr) }
+    
+    /**
+     * Could be generic: replace String with Head in types
+     */
+    implicit def convertStringWrapper[A, Repr <: HList, Head](
+      implicit
+      gen: Generic.Aux[A, Repr],
+      isHCons: IsHCons.Aux[Repr, Head, HNil]
+      ): StringPropertyConverter[A] = instance{aWrapper: A => StringProperty(gen.to(aWrapper).head.toString()) }
+  }
+  
+  /*
+  implicit class StringProps(val aValue: String) extends AnyVal {
+    def toStringProperty: StringProperty = StringProperty(this.aValue)
+  }*/
+  
+  def getFieldName[K, V](value: FieldType[K, V])
+  (implicit witness: Witness.Aux[K]): K =
+    witness.value
+  
+  def getFieldValue[K, V](aValue: FieldType[K, V]): V =
+    aValue
+  
+  /*
+  trait StringVal extends Any {
+    def toStringProperty: StringProperty =
+      new StringProperty(this, "", this)
+  }
+  * 
+  */
+  
   /*
   trait UnWrapper[A] {
     def unWrap(aValue: A): List[AnyVal]
@@ -107,13 +155,17 @@ object DataHelper {
   ): Head = gen.to(aInput).head
   
   /**
-   * WARNING! DOES NOT HANDLE NONES, DO NOT USE! Need to
-   * find a way to give defaults for all datatypes... Then
-   * we can call getOrElse(getDefault). Trying this above with
-   * trait Defaulter[A]
+   * Unwraps a case class instance with one parameter from an
+   * Option (falling back on some default value in case of None),
+   * and still more from its case class.
    */
-  def unwrap[A](aInput: Option[A]): A = {
-    aInput.getOrElse(getDefault(aInput))
+  def unwrap[A, B <: Option[A], Repr <: HList, Head](aInput: B)(
+      implicit
+      defaulter: Defaulter[A],
+      gen: Generic.Aux[A, Repr],
+      isHCons: IsHCons.Aux[Repr, Head, HNil]
+      ): Head = {
+    unwrap( aInput.getOrElse(defaulter.getDefault(aInput)) )
   }
   
   def unwrapContents[A, Repr <: HList, Head](aInput: Array[A])(
@@ -287,13 +339,15 @@ object DataHelper {
   }
   
   object MapToProperty extends Poly1 {
-    implicit def caseInt = at[Int]{ IntegerProperty(_) }
+    // better syntax here!
+    implicit def caseInt: Case.Aux[Int, IntegerProperty] = at(aInt => IntegerProperty(aInt) )
     implicit def caseShort = at[Short]{ case s: Short => IntegerProperty(s.asInstanceOf[Int]) }
     implicit def caseLong = at[Long]{ LongProperty(_) }
     implicit def caseFloat = at[Float]{ FloatProperty(_) }
     implicit def caseDouble = at[Double]{ DoubleProperty(_) }
     implicit def caseString = at[String]{ StringProperty(_) }
     implicit def caseBoolean = at[Boolean]{ BooleanProperty(_) }
+    //implicit def caseIntWrapper: Case.Aux[Int :: HNil, IntegerProperty] = at(aWrap => IntegerProperty(aWrap.head)
     /*implicit def caseArraySeq = at[ArraySeq[B]]{ 
       val res = new ObservableBuffer[B]
       res ++= _

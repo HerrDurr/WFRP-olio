@@ -1,4 +1,6 @@
-package oliofxGUI;
+package start;
+
+import oliofxGUI.WFRPOlioMain;
 
 public class StartOliofx {
 

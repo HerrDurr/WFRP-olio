@@ -2,7 +2,9 @@ package oliofxGUI
 
 import scalafx.scene.layout.BorderPane
 import olioIO.SchemaWFRP._
-import scalafx.scene.control.{TableView, TableColumn}
+import olioIO.SchemaWFRP.Item._
+import scalafx.scene.control.TableColumn._
+import scalafx.scene.control.{TableView, TableColumn, Button}
 import scalafx.collections.ObservableBuffer
 import scalafx.beans.property._
 import olioIO.DataHelperWFRP._
@@ -10,10 +12,16 @@ import scalafx.scene.control.cell.TextFieldTableCell
 import scalafx.scene.input.MouseEvent
 import scalafx.Includes._
 import shapeless._
+import shapeless.labelled._
+import shapeless.record._
+import shapeless.tag._
 import dataElements.DataHelper._
+import scalafx.event.ActionEvent
+import scalafx.scene.control.TableCell
+import scalafx.util.StringConverter
 
-class EditItem[Repr <: HList](val aItem : Repr) /*val items: ObservableBuffer[Item])*/(implicit gen: LabelledGeneric.Aux[Item, Repr]) extends BorderPane {
-  
+//class EditItem[Repr <: HList](val aItem : Repr) /*val items: ObservableBuffer[Item])*/(implicit gen: LabelledGeneric.Aux[Item, Repr]) extends BorderPane {
+class EditItem(val aItem: Item) extends BorderPane {
   /*
   val colName = new TableColumn[Item, Item.Name]("Name")
   colName.cellFactory = { _ => {
@@ -53,12 +61,81 @@ class EditItem[Repr <: HList](val aItem : Repr) /*val items: ObservableBuffer[It
   colAvailability.cellValueFactory = cdf => ObjectProperty( byId(cdf.value.availability.getOrElse(Availability.avgId)).name )
   * 
   */
-  val editableItem = aItem.map(unwrap(_)).map(MapToProperty)
+  //val editableItem = aItem.map(unwrap(_)).map(MapToProperty)
   
-  val table = new TableView[Item](items)
-  table.columns ++= List(colName, colCraftsmanship, colEncumb, colCost, colAvailability)
+  //import olioIO.SchemaWFRP.Item._
+  //import dataElements.DataHelper.StringPropertyConverter._
+  val gen = LabelledGeneric[Item]
+  
+  //val genAux = LabelledGeneric.Aux[Item, aItemRepr]
+  //val gen = Generic[Item]
+  
+  //val aName = new StringProperty(aItem, "Name", gen.to(aItem).select[Name].value)
+  
+  val aGenItem = gen.to(aItem)
+  val aName = aGenItem.get('name)
+  private var currentName: String = aGenItem.get('name).value
+  //private var aCurrentItem: HList = HNil
+  //aCurrentItem = aGenItem
+  //aCurrentItem.+:(aGenItem)
+  /*
+  val colName = new TableColumn[Item, String]("Name")
+  colName.cellFactory = { p =>
+    val cell = new TextFieldTableCell[Item, String]
+    //cell.editable = true
+    cell
+  }
+  * 
+  */
+  //colName.cellValueFactory = cdf => StringProperty(gen.to(cdf.value).get[Name].value)
+  /*colName.cellValueFactory = cdf => {
+    val prop = new StringProperty(aItem, "name", aName.value) 
+    prop.onChange { (_, aOldVal, aNewVal) => aGenItem.updated('name, aNewVal) }
+    prop
+  }*/
+  //val aName = aGenItem.select[Name with KeyTag[Symbol with Tagged[String], Name]]
+  //val aName = aGenItem.filter{aMem: FieldType[K, V] => getFieldName(aMem) == "name"}.head
+  class StringConvrtr extends StringConverter[String] {
+    def fromString(aStr: String) = aStr
+    def toString(aStr: String) = aStr
+  }
+  
+  val buff = new ObservableBuffer[Item]
+  buff += aItem
+  val table = new TableView[Item](buff) {
+    editable = true
+      
+      val colName = new TableColumn[Item, String] {
+        text = "Name"
+        cellValueFactory = cdf => {
+          new StringProperty(aItem, "name", gen.to(cdf.value).get('name).value.toString()) {
+            //onChange{ (_, _, aNewVal) => { aCurrentItem = aGenItem.updated('name, aNewVal) } }
+            onChange{ (_, _, aNewVal) => currentName = aNewVal }
+          }
+        }
+      }
+      colName.cellFactory = {aCol: TableColumn[Item, String] => {
+        val cell = new TextFieldTableCell[Item, String](new StringConvrtr) {
+          //item.onChange{ (_, _, aNewVal) => aGenItem.updated('name, aNewVal) }
+        }
+        cell
+      }
+      }
+    columns ++= List(colName)//, colCraftsmanship, colEncumb, colCost, colAvailability)
+    
+  }
+  
+  val aTestButton = new Button {
+    text = "Print item name"
+    onAction = (ae: ActionEvent) => {
+      val aUpdated = aGenItem.updated('name, table.colName.text.value)
+      println(aUpdated.get('name))
+      println(currentName)
+    }
+  }
   
   this.center = table
+  this.bottom = aTestButton
 }
 
 object EditItem {
@@ -76,11 +153,11 @@ object EditItem {
   * 
   */
   
-  def testItem2[Repr <: HList](implicit gen: LabelledGeneric.Aux[Item, Repr]): EditItem[Repr] = {
+  def testItem2[Repr <: HList](implicit gen: LabelledGeneric.Aux[Item, Repr]): EditItem = {
     val item = byId(Item.Id(1))
     //val gen = LabelledGeneric[Item]
-    val itemHList = gen.to(item)
-    new EditItem(itemHList)
+    //val itemHList = gen.to(item)
+    new EditItem(item)
   }
   
 }

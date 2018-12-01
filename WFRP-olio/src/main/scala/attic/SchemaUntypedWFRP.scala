@@ -1,19 +1,20 @@
-package olioIO
+package attic
 
 //import slick.driver.SQLiteDriver.api._
 import dataElements.DataHelper._
 import scalafx.beans.property._
 import scalafx.collections._
 import shapeless._
+import olioIO.WFRPContext
 //import io.getquill.{SqliteJdbcContext, SqliteDialect, CamelCase, MappedEncoding}
 //import io.getquill.context.Context
 
 //import io.getquill.Embedded
 
 
-object SchemaWFRP {
+object SchemaUntypedWFRP {
   
-  case class Attribute(val idTag: Attribute.IdTag, val name: Attribute.Name/*idTag: String, name: String*/) extends DataPropertyRow {
+  case class Attribute(val idTag: String, val name: String)/* extends DataPropertyRow {
     
     //def tupled = (idTag, name)
     //val genericRow = Generic[AttributeRow] 
@@ -29,7 +30,7 @@ object SchemaWFRP {
     case class IdTag(val value: String) extends AnyVal //MappedTo[String] //extends AnyVal
     case class Name(val value: String) extends AnyVal //MappedTo[String] //extends AnyVal
   }
-  
+  */
   /*object Attribute extends Enumeration {
     type Attribute = Value
     val WS = Value(0)
@@ -42,8 +43,8 @@ object SchemaWFRP {
   */
   
   
-  case class Skill(id: Skill.Id, name: Skill.Name, attribute: Attribute.IdTag, 
-      isBasic: Skill.Basic) /*extends DataPropertyRow*/ {
+  case class Skill(id: Int, name: String, attribute: String, 
+      isBasic: Boolean) /*extends DataPropertyRow*/ {
     /*def initProperties =
     {
       Vector(new IntegerProperty(this, "skillId", id),
@@ -53,16 +54,18 @@ object SchemaWFRP {
     }
     * 
     */
-  }
+  }/*
   object Skill {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
     case class Basic(val value: Boolean) extends AnyVal //MappedTo[Boolean]
   }
+  * 
+  */
   
   
-  case class Talent(id: Talent.Id, name: Talent.Name, description: Option[Talent.Description], 
-      weaponGroup: Option[Talent.WeaponGroup]) extends DataPropertyRow {
+  case class Talent(id: Int, name: String, description: Option[String], 
+      weaponGroup: Option[String]) extends DataPropertyRow {
     /*
     def initProperties =
     {
@@ -73,7 +76,7 @@ object SchemaWFRP {
     }
     * 
     */
-  }
+  }/*
   object Talent {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
@@ -85,8 +88,10 @@ object SchemaWFRP {
      */
     case class Talents(val value: String) extends AnyVal
   }
+  * 
+  */
   
-  case class Availability(idTag: Availability.IdTag, name: Availability.Name, modifier: Option[Availability.Modifier]) extends DataPropertyRow {
+  case class Availability(idTag: String, name: String, modifier: Option[Short]) extends DataPropertyRow {
     /*def initProperties =
     {
       Vector( new StringProperty(this, "availabilityId", idTag),
@@ -96,16 +101,18 @@ object SchemaWFRP {
     * 
     */
   }
-  object Availability {
+  object Availability {/*
     case class IdTag(val value: String) extends AnyVal //MappedTo[String]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
     case class Modifier(val value: Short) extends AnyVal //MappedTo[Short]
+    * 
+    */
     
-    def avgId = IdTag("Av")
+    def avgId = "Av"
   }
   
-  case class Item(id: Item.Id, name: Item.Name, craftsmanship: Craftsmanship.Craftsmanship, encumbrance: Item.Encumbrance, 
-      cost: Option[Item.Cost], availability: Option[Availability.IdTag]) extends DataPropertyRow {
+  case class Item(id: Int, name: String, craftsmanship: String, encumbrance: Short, 
+      cost: Option[String], availability: Option[String]) extends DataPropertyRow {
     /*def initProperties =
     {
       Vector( new IntegerProperty(this, "itemId", id),
@@ -117,18 +124,19 @@ object SchemaWFRP {
     }
     * 
     */
-    //val nameProp = new StringProperty(this,"name",this.name.value)
-    override def toString = this.name.value + " " + this.craftsmanship
   }
-  object Item {
+  object Item {/*
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
     //case class Craftsmanship(val value: Char) extends AnyVal //MappedTo[Char]
     case class Encumbrance(val value: Short) extends AnyVal //MappedTo[Short]
     case class Cost(val value: String) extends AnyVal //MappedTo[String]
+    * 
+    */
     
     def createNew: Item = {
-      new Item(Id(-1), Name(""), Craftsmanship.byEnumOrThrow("N"), Encumbrance(0), Some(Cost("")), Some(Availability.avgId))
+      //new Item(Id(-1), Name(""), Craftsmanship.byEnumOrThrow("N"), Encumbrance(0), Some(Cost("")), Some(Availability.avgId))
+      new Item(-1, "", "N", 0, Some(""), Some(Availability.avgId))
     }
   }
   //case class Craftsmanship(val value: String) extends AnyVal //MappedTo[Char]
@@ -177,7 +185,7 @@ object SchemaWFRP {
   * 
   */
   
-  case class WeaponQuality(idTag: WeaponQuality.IdTag, name: WeaponQuality.Name) extends DataPropertyRow {
+  case class WeaponQuality(idTag: String, name: String) extends DataPropertyRow {
     /*def initProperties =
     {
       Vector( new StringProperty(this, "quality", idTag),
@@ -186,14 +194,16 @@ object SchemaWFRP {
     * 
     */
   }
-  object WeaponQuality {
+  object WeaponQuality {/*
     case class IdTag(val value: String) extends AnyVal //MappedTo[String]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
+    * 
+    */
   }
   
   
-  case class WeaponMelee(id: Item.Id, twoHanded: WeaponMelee.TwoHanded, damageModifier: Option[WeaponMelee.DamageMod], 
-      qualities: Array[WeaponQuality.IdTag], /*qualitiesRaw: Option[String]*/ weaponGroupTalentId: Option[Talent.Id]) extends DataPropertyRow {
+  case class WeaponMelee(id: Int, twoHanded: Boolean, damageModifier: Option[Short], 
+      qualities: Array[String], /*qualitiesRaw: Option[String]*/ weaponGroupTalentId: Option[Int]) extends DataPropertyRow {
     /*
     def initProperties =
     {
@@ -206,18 +216,20 @@ object SchemaWFRP {
     * 
     */
   }
-  object WeaponMelee {
+  object WeaponMelee {/*
     case class TwoHanded(val value: Boolean) extends AnyVal //MappedTo[Boolean]
     case class DamageMod(val value: Short) extends AnyVal //MappedTo[Short]
     //case class Qualities(val value: String) extends MappedTo[String]
+     * 
+     */
   }
   
   
-  case class WeaponRanged(id: Item.Id, twoHanded: WeaponRanged.TwoHanded, damageBase: Option[WeaponRanged.DamageBase], 
-                             damageModifier: Option[WeaponRanged.DamageMod], rangeShort: Option[WeaponRanged.RangeShort], 
-                             rangeLong: Option[WeaponRanged.RangeLong], reload: Option[WeaponRanged.Reload], 
-                             ammunitionId: Option[Item.Id], magazineSize: Option[WeaponRanged.MagazineSize], 
-                             qualities: Array[WeaponQuality.IdTag], weaponGroupTalentId: Option[Talent.Id]) /*extends DataPropertyRow*/ {
+  case class WeaponRanged(id: Int, twoHanded: Boolean, damageBase: Option[String], 
+                             damageModifier: Option[Short], rangeShort: Option[Short], 
+                             rangeLong: Option[Short], reload: Option[Short], 
+                             ammunitionId: Option[Int], magazineSize: Option[Short], 
+                             qualities: Array[String], weaponGroupTalentId: Option[Int]) /*extends DataPropertyRow*/ {
     /*
     def initProperties =
     {
@@ -236,7 +248,7 @@ object SchemaWFRP {
     * 
     */
   }
-  object WeaponRanged {
+  object WeaponRanged {/*
     case class TwoHanded(val value: Boolean) extends AnyVal //MappedTo[Boolean]
     case class DamageBase(val value: String) extends AnyVal //MappedTo[String]
     case class DamageMod(val value: Short) extends AnyVal //MappedTo[Short]
@@ -244,19 +256,21 @@ object SchemaWFRP {
     case class RangeLong(val value: Short) extends AnyVal //MappedTo[Short]
     case class Reload(val value: Short) extends AnyVal //MappedTo[Short]
     case class MagazineSize(val value: Short) extends AnyVal //MappedTo[Short]
+    * 
+    */
   }
   
   /**
    * Career Entries not stored in db. If a Career has no other that exits to it, it can be taken by anyone
    * (of course with any other restrictions still applicable).
    */
-  case class Career(id: Career.Id, name: Career.Name, description: Option[Career.Description], attributes: AttributeSet,
-      skills: Array[Skill.Id], skillOptions: Array[Array[Skill.Id]], talents: Array[Talent.Id], talentOptions: Array[Array[Talent.Id]],
-      careerExits: Array[Career.Id])
+  case class Career(id: Int, name: String, description: Option[String], attributes: Int,
+      skills: Array[Int], skillOptions: Array[Array[Int]], talents: Array[Int], talentOptions: Array[Array[Int]],
+      careerExits: Array[Int])
   // attributes in different table
   // trappings maybe don't need to be implemented (yet)
   
-  object Career {
+  object Career {/*
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
     case class Description(val value: String) extends AnyVal //MappedTo[String]
@@ -264,13 +278,15 @@ object SchemaWFRP {
      * Commatext of Career Ids
      */
     case class Careers(val value: String) extends AnyVal
+    * 
+    */
   }
   
   
   // TODO: Career Table and flesh out Olio Table
-  case class Olio(id: Olio.Id, name: Olio.Name, baseAttributes: AttributeSet.Id,
-      advancedAttributes: Option[AttributeSet.Id], careers: Option[Career.Careers] /*Array[Career.Id]*/, talents: Option[Talent.Talents],
-      skills: Option[TrainedSkill.TrainedSkills] /*Array[TrainedSkill.Id]*/) extends DataPropertyRow {
+  case class Olio(id: Int, name: String, baseAttributes: Int,
+      advancedAttributes: Option[Int], careers: Option[Array[Int]] /*Array[Career.Id]*/, talents: Option[Array[Int]],
+      skills: Option[Array[Int]] /*Array[TrainedSkill.Id]*/) extends DataPropertyRow {
     /*def initProperties =
     {
       Vector( new IntegerProperty(this, "olioId", id),
@@ -281,16 +297,18 @@ object SchemaWFRP {
     * 
     */
   }
-  object Olio {
+  object Olio {/*
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
+    * 
+    */
   }
   
   
   /**
    * DEPRECATED - or is it?
    */
-  case class OlioAttributes(olioId: Olio.Id, attribute: Attribute.IdTag, baseVal: OlioAttributes.BaseVal) extends DataPropertyRow {
+  case class OlioAttributes(olioId: Int, attribute: String, baseVal: Short) extends DataPropertyRow {
     /*def initProperties =
     {
       Vector( new IntegerProperty(this, "olioId", olio),
@@ -305,7 +323,7 @@ object SchemaWFRP {
   /**
    * DEPRECATED
    */
-  case class OlioSkills(olioId: Olio.Id, skillId: Skill.Id, skillTrained: OlioSkills.Trained) extends DataPropertyRow {
+  case class OlioSkills(olioId:  Int, skillId: Int, skillTrained: Short) extends DataPropertyRow {
     /*def initProperties =
     {
       Vector( new IntegerProperty(this, "olioId", olio),
