@@ -75,6 +75,13 @@ class EditItem(val aItem: Item) extends BorderPane {
   val aGenItem = gen.to(aItem)
   val aName = aGenItem.get('name)
   private var currentName: String = aGenItem.get('name).value
+  private var fItemCurrent = aGenItem
+  
+  def SaveItem() = {
+    
+  }
+  
+  
   //private var aCurrentItem: HList = HNil
   //aCurrentItem = aGenItem
   //aCurrentItem.+:(aGenItem)
