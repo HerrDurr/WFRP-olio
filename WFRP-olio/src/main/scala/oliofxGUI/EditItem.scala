@@ -19,6 +19,7 @@ import dataElements.DataHelper._
 import scalafx.event.ActionEvent
 import scalafx.scene.control.TableCell
 import scalafx.beans.value.ObservableValue
+import scalafx.scene.layout.HBox
 
 //import scalafx.util.StringConverter
 
@@ -83,7 +84,7 @@ class EditItem/*[Repr <: HList]*/(val aItem: Item)/*(implicit genAux: LabelledGe
   
   def SaveItem() = {
     import dbContext._
-    
+    /*
     val itemId = this.fItemCurrent.id//get('id)
     
     if (itemId.value >= 0)
@@ -92,8 +93,22 @@ class EditItem/*[Repr <: HList]*/(val aItem: Item)/*(implicit genAux: LabelledGe
       if (opt.isDefined)
       {
         // update
+        val q = quote {
+          query[Item].filter(_.id == lift(itemId)).update(lift(fItemCurrent))
+        }
+        dbContext.run(q)
       }
-    }
+      else
+      {
+      * 
+      */
+        // insert
+        val q = quote {
+          query[Item].insert(lift(fItemCurrent)).onConflictUpdate(_.id)( (t, e) => t -> e )
+        }
+        dbContext.run(q)
+      //}
+    //}
     
   }
   
@@ -148,8 +163,7 @@ class EditItem/*[Repr <: HList]*/(val aItem: Item)/*(implicit genAux: LabelledGe
             { (_, aOld, aNew) => 
               { 
                 val aCrafts = Craftsmanship.byEnumOrName(aNew)
-                if (aCrafts.isDefined)
-                  fItemCurrent = lCraft.set(fItemCurrent)(aCrafts.get)
+                fItemCurrent = lCraft.set(fItemCurrent)( aCrafts.getOrElse(byEnumOrName(aOld).get) )
                 //else oh my fucking god why can i not undo an edit?!?!!
                   //prop.value = aOld
                 // else herja?
@@ -170,16 +184,26 @@ class EditItem/*[Repr <: HList]*/(val aItem: Item)/*(implicit genAux: LabelledGe
   }
   
   val aTestButton = new Button {
-    text = "Print item name"
+    text = "Print me!"
     onAction = (ae: ActionEvent) => {
-      val aUpdated = aGenItem.updated('name, table.colName.text.value)
-      println(aUpdated.get('name))
+      //val aUpdated = aGenItem.updated('name, table.colName.text.value)
+      //println(aUpdated.get('name))
       println(fItemCurrent.name.value)  //currentName)
+      println(fItemCurrent.toString())
+      println(gen.to(fItemCurrent))
+    }
+  }
+  val aSaveBtn = new Button {
+    text = "Save"
+    onAction = (ae: ActionEvent) => {
+      SaveItem()
     }
   }
   
   this.center = table
-  this.bottom = aTestButton
+  this.bottom = new HBox {
+    children ++= List(aTestButton, aSaveBtn)
+  }
 }
 
 object EditItem {
