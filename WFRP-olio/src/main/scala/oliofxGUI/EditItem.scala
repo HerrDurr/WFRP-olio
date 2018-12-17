@@ -18,10 +18,12 @@ import shapeless.tag._
 import dataElements.DataHelper._
 import scalafx.event.ActionEvent
 import scalafx.scene.control.TableCell
-import scalafx.util.StringConverter
+import scalafx.beans.value.ObservableValue
+
+//import scalafx.util.StringConverter
 
 //class EditItem[Repr <: HList](val aItem : Repr) /*val items: ObservableBuffer[Item])*/(implicit gen: LabelledGeneric.Aux[Item, Repr]) extends BorderPane {
-class EditItem(val aItem: Item) extends BorderPane {
+class EditItem/*[Repr <: HList]*/(val aItem: Item)/*(implicit genAux: LabelledGeneric.Aux[Item, Repr])*/ extends BorderPane {
   /*
   val colName = new TableColumn[Item, Item.Name]("Name")
   colName.cellFactory = { _ => {
@@ -65,19 +67,33 @@ class EditItem(val aItem: Item) extends BorderPane {
   
   //import olioIO.SchemaWFRP.Item._
   //import dataElements.DataHelper.StringPropertyConverter._
-  val gen = LabelledGeneric[Item]
+  private val gen = LabelledGeneric[Item]
   
   //val genAux = LabelledGeneric.Aux[Item, aItemRepr]
   //val gen = Generic[Item]
   
   //val aName = new StringProperty(aItem, "Name", gen.to(aItem).select[Name].value)
   
-  val aGenItem = gen.to(aItem)
+  import Item._
+  
+  private val aGenItem = gen.to(aItem)
   val aName = aGenItem.get('name)
   private var currentName: String = aGenItem.get('name).value
-  private var fItemCurrent = aGenItem
+  private var fItemCurrent: Item = gen.from(aGenItem)
   
   def SaveItem() = {
+    import dbContext._
+    
+    val itemId = this.fItemCurrent.id//get('id)
+    
+    if (itemId.value >= 0)
+    {
+      val opt = byId(itemId)
+      if (opt.isDefined)
+      {
+        // update
+      }
+    }
     
   }
   
@@ -102,10 +118,6 @@ class EditItem(val aItem: Item) extends BorderPane {
   }*/
   //val aName = aGenItem.select[Name with KeyTag[Symbol with Tagged[String], Name]]
   //val aName = aGenItem.filter{aMem: FieldType[K, V] => getFieldName(aMem) == "name"}.head
-  class StringConvrtr extends StringConverter[String] {
-    def fromString(aStr: String) = aStr
-    def toString(aStr: String) = aStr
-  }
   
   val buff = new ObservableBuffer[Item]
   buff += aItem
@@ -116,19 +128,44 @@ class EditItem(val aItem: Item) extends BorderPane {
         text = "Name"
         cellValueFactory = cdf => {
           new StringProperty(aItem, "name", gen.to(cdf.value).get('name).value.toString()) {
-            //onChange{ (_, _, aNewVal) => { aCurrentItem = aGenItem.updated('name, aNewVal) } }
-            onChange{ (_, _, aNewVal) => currentName = aNewVal }
+            onChange{ (_, _, aNewVal) => { fItemCurrent = lName.set(fItemCurrent)(Name(aNewVal)) } }
           }
         }
       }
-      colName.cellFactory = {aCol: TableColumn[Item, String] => {
-        val cell = new TextFieldTableCell[Item, String](new StringConvrtr) {
-          //item.onChange{ (_, _, aNewVal) => aGenItem.updated('name, aNewVal) }
+      colName.cellFactory = {
+        aCol: TableColumn[Item, String] => {
+          val cell = new TextFieldTableCell[Item, String](new StringConvrtr)
+          cell
         }
-        cell
       }
+      val colCraftsmanship = new TableColumn[Item, String] {
+        text = "Craftsmanship"
+        cellValueFactory = cdf => {
+          import Craftsmanship._
+          val prop: StringProperty = new StringProperty( aItem, "craftsmanship", gen.to(cdf.value).get('craftsmanship).toString() )
+          {
+            onChange
+            { (_, aOld, aNew) => 
+              { 
+                val aCrafts = Craftsmanship.byEnumOrName(aNew)
+                if (aCrafts.isDefined)
+                  fItemCurrent = lCraft.set(fItemCurrent)(aCrafts.get)
+                //else oh my fucking god why can i not undo an edit?!?!!
+                  //prop.value = aOld
+                // else herja?
+              }
+            }
+          }
+          prop
+        }
       }
-    columns ++= List(colName)//, colCraftsmanship, colEncumb, colCost, colAvailability)
+      colCraftsmanship.cellFactory = {
+        aCol: TableColumn[Item, String] => {
+          new TextFieldTableCell[Item, String](new StringConvrtr)
+        }
+      }
+      
+    columns ++= List(colName, colCraftsmanship)//, //colEncumb, colCost, colAvailability)
     
   }
   
@@ -137,7 +174,7 @@ class EditItem(val aItem: Item) extends BorderPane {
     onAction = (ae: ActionEvent) => {
       val aUpdated = aGenItem.updated('name, table.colName.text.value)
       println(aUpdated.get('name))
-      println(currentName)
+      println(fItemCurrent.name.value)  //currentName)
     }
   }
   
@@ -161,7 +198,7 @@ object EditItem {
   */
   
   def testItem2[Repr <: HList](implicit gen: LabelledGeneric.Aux[Item, Repr]): EditItem = {
-    val item = byId(Item.Id(1))
+    val item = byId(Item.Id(1)).getOrElse(this.newItem)
     //val gen = LabelledGeneric[Item]
     //val itemHList = gen.to(item)
     new EditItem(item)

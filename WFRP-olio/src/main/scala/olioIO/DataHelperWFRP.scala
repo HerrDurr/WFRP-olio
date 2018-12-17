@@ -27,12 +27,19 @@ object DataHelperWFRP {
     dbContext.run(q).headOption.getOrElse(throw new IllegalArgumentException(s"Unknown Availability: $aIdTag"))
   }
   
-  def byId(aId: Item.Id): Item =
+  def byId(aId: Item.Id): Option[Item] =
   {
     val q = quote {
       query[Item].filter{ item: Item => item.id == lift(aId) }
     } 
-    dbContext.run(q).headOption.getOrElse(throw new IllegalArgumentException(s"Unknown Item: $aId"))
+    dbContext.run(q).headOption//.getOrElse(throw new IllegalArgumentException(s"Unknown Item: $aId"))
+  }
+  
+  def insertItem(aItem : Item) : Item.Id = {
+    val q = quote {
+      query[Item].insert(lift(aItem)).returning(_.id)
+    }
+    dbContext.run(q)
   }
   
   def getAllItems: List[Item] =

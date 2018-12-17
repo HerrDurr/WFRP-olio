@@ -14,6 +14,9 @@ import shapeless.Poly1
 import shapeless.ops.hlist.IsHCons
 import shapeless.labelled.{FieldType}
 import scala.collection.mutable.ArraySeq
+import scalafx.util.StringConverter
+import shapeless.ops.record.Updater
+import shapeless.syntax.singleton._
 
 object DataHelper {
   
@@ -32,6 +35,25 @@ object DataHelper {
   }
   * 
   */
+  
+  /*
+  trait DataRecord[A] {
+    
+    def updateData[B, Repr <: HList](aTag: String, aValue: B)(implicit
+      gen: LabelledGeneric.Aux[A, Repr],
+      upd: Updater.Aux[Repr, B, Repr]
+    ): A = {
+      val aSymb = aTag.narrow
+      gen.from(upd(gen.to(this), aValue))
+    }
+    
+  }
+  object DataRecord {
+    
+  }
+  * 
+  */
+  
   
   trait PropertyConverter[A] {
     def convert(aValue : A): List[Observable]
@@ -353,6 +375,11 @@ object DataHelper {
       res ++= _
     }*/
     implicit def caseAny = at[AnyRef]{ some: AnyRef => some } // }
+  }
+  
+  class StringConvrtr extends StringConverter[String] {
+    def fromString(aStr: String) = aStr
+    def toString(aStr: String) = aStr
   }
   
   /*

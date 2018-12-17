@@ -105,7 +105,7 @@ object SchemaWFRP {
   }
   
   case class Item(id: Item.Id, name: Item.Name, craftsmanship: Craftsmanship.Craftsmanship, encumbrance: Item.Encumbrance, 
-      cost: Option[Item.Cost], availability: Option[Availability.IdTag]) extends DataPropertyRow {
+      cost: Option[Item.Cost], availability: Option[Availability.IdTag]) {
     /*def initProperties =
     {
       Vector( new IntegerProperty(this, "itemId", id),
@@ -126,6 +126,13 @@ object SchemaWFRP {
     //case class Craftsmanship(val value: Char) extends AnyVal //MappedTo[Char]
     case class Encumbrance(val value: Short) extends AnyVal //MappedTo[Short]
     case class Cost(val value: String) extends AnyVal //MappedTo[String]
+    
+    val lId = lens[Item] >> 'id
+    val lName = lens[Item] >> 'name
+    val lCraft = lens[Item] >> 'craftsmanship
+    val lEnc = lens[Item] >> 'encumbrance
+    val lCost = lens[Item] >> 'cost
+    val lAvail = lens[Item] >> 'availability
     
     def createNew: Item = {
       new Item(Id(-1), Name(""), Craftsmanship.byEnumOrThrow("N"), Encumbrance(0), Some(Cost("")), Some(Availability.avgId))
@@ -156,6 +163,24 @@ object SchemaWFRP {
       else
         byId(idxPair.get._2)
     }
+    def byName(aName : String): Option[Craftsmanship] = {
+      val craft = { 
+        aName.toLowerCase() match {
+          case "normal" => Some(Normal)
+          case "poor" => Some(Poor)
+          case "good" => Some(Good)
+          case "best" => Some(Best)
+          case _ => None
+        }
+      }
+      craft
+    }
+    def byEnumOrName(aStr : String): Option[Craftsmanship] = {
+      val res1 = byEnum(aStr)
+      if (res1.isDefined) res1
+      else byName(aStr)
+    }
+    
     def byEnumOrThrow(enum: String): Craftsmanship = {
       byEnum(enum).getOrElse(throw new IllegalArgumentException(s"Unknown Craftsmanship: $enum"))
     }
