@@ -3,10 +3,113 @@ package dataUI
 import scalafx.beans.property._
 import scalafx.scene.control._
 import scalafx.scene.layout._
-import dataElements.DataHelper.DataPropertyRow
+import dataElements.DataHelper._
 import scalafx.collections.ObservableBuffer
+import shapeless._
+import shapeless.ops.hlist.IsHCons
+import scalafx.scene.control.cell.TextFieldTableCell
+import scalafx.beans.value.ObservableValue
 
 object ControlFactory {
+  
+  def tableColumn[A, B, Repr <: HList, Head](aTableObj: A, aProp: B)(
+      implicit
+      genB: Generic.Aux[B, Repr],
+      //lGenA: LabelledGeneric[A],
+      isHCons: IsHCons.Aux[Repr, Head, HNil],
+      strConvFactory: StrConverterFactory[Head]
+  ): TableColumn[A, Head] = 
+  {
+    //val genericA = lGenA.to(aTableItem)
+    val res = new TableColumn[A, Head] {
+      
+    }
+    res.cellFactory = {
+      aCol: TableColumn[A, Head] => {
+        new TextFieldTableCell[A, Head]( strConvFactory.strConverter(genB.to(aProp).head) )
+      }
+    }
+    res
+  }
+/*
+  def tableColumn[A, B, /*ReprA <: HList,*/ ReprB <: HList, Head, J1 >: Head](aTableObj: A, aProp: B,
+                    aPropFromObjFunc: A => B,
+                    aOnChangeFunc: (ObservableValue[Head, Head], J1, J1) => Unit)(
+      implicit
+      genB: Generic.Aux[B, ReprB],
+      //genA: Generic.Aux[A, ReprA],
+      isHCons: IsHCons.Aux[ReprB, Head, HNil],
+      strConvFactory: StrConverterFactory[Head]
+  ): TableColumn[A, Head] = 
+  {
+    val aVal : Head = genB.to(aProp).head
+    val strConverter = strConvFactory.strConverter(aVal)
+    //val genericA = lGenA.to(aTableItem)
+    val res = new TableColumn[A, Head] {
+      cellValueFactory = cdf => 
+      {
+        val prop = ObjectProperty( genB.to(aPropFromObjFunc(cdf.value)).head )
+        prop.onChange(aOnChangeFunc)
+        prop
+      }
+    }
+    res.cellFactory = {
+      aCol: TableColumn[A, Head] => {
+        new TextFieldTableCell[A, Head]( strConverter )
+      }
+    }
+    res
+  }
+  * 
+  */
+  
+  /**
+   * MAGICK FUCKEN POPSICKELS!
+   */
+  def tableColumn[A, B, ReprB <: HList, Head, J1 >: Head, AtoB <: A => B, ToA <: Any => A, SetA <: A => Unit, NewB <: Head => B]
+                    (aTableObj: A, aProp: B,
+                    aPropFromObjFunc: AtoB, aGetCurrentFunc: ToA, aSetCurrentFunc: SetA, aLens: Lens[A, B],
+                    aNewBFunc: NewB)(
+      implicit
+      genB: Generic.Aux[B, ReprB],
+      //genA: Generic.Aux[A, ReprA],
+      isHCons: IsHCons.Aux[ReprB, Head, HNil],
+      strConvFactory: StrConverterFactory[Head]
+  ): TableColumn[A, Head] = 
+  {
+    val aVal : Head = genB.to(aProp).head
+    val strConverter = strConvFactory.strConverter(aVal)
+    //val genericA = lGenA.to(aTableItem)
+    val res = new TableColumn[A, Head] {
+      cellValueFactory = cdf => 
+      {
+        val prop = ObjectProperty( genB.to(aPropFromObjFunc(cdf.value)).head )
+        prop.onChange{
+          (_, _, aNew) => {
+            val aCurrent = aGetCurrentFunc(aNew)
+            aSetCurrentFunc(aLens.set(aCurrent)( aNewBFunc(aNew)) )
+          }
+        }
+        prop
+      }
+    }
+    res.cellFactory = {
+      aCol: TableColumn[A, Head] => {
+        new TextFieldTableCell[A, Head]( strConverter )
+      }
+    }
+    res
+  }
+  
+  /*
+  def addCellFactory[A, B, C <: TableColumn[A, B]](aTableItem: A, aItem: B, aCol: C)(
+      //implicit
+      
+  ): Unit = {
+    
+  }
+  * 
+  */
   
   /**
  	 * Simple Label which automatically listens to changes in the parameter

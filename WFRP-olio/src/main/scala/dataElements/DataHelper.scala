@@ -12,10 +12,11 @@ import scala.collection.immutable.List
 import shapeless._
 import shapeless.Poly1
 import shapeless.ops.hlist.IsHCons
-import shapeless.labelled.{FieldType}
+import shapeless.labelled.{FieldType, field}
 import scala.collection.mutable.ArraySeq
 import scalafx.util.StringConverter
-import shapeless.ops.record.Updater
+import scalafx.util.converter._
+import shapeless.ops.record._
 import shapeless.syntax.singleton._
 
 object DataHelper {
@@ -107,8 +108,20 @@ object DataHelper {
   implicit class StringProps(val aValue: String) extends AnyVal {
     def toStringProperty: StringProperty = StringProperty(this.aValue)
   }*/
+  /*
+  def getFieldName[A, Repr <: HList](aObj: A, aTag: Witness)(
+    implicit
+    gen : LabelledGeneric.Aux[A, Repr],
+    selector : Selector[Repr, aTag.T],
+    witn : Witness.Aux[aTag.T]
+  ): String = {
+    ( field[aTag.T]( selector(gen.to(aObj)) ) )
+    witn.value
+  }
+  * 
+  */
   
-  def getFieldName[K, V](value: FieldType[K, V])
+  def getFieldName[K, V](aValue: FieldType[K, V])
   (implicit witness: Witness.Aux[K]): K =
     witness.value
   
@@ -377,10 +390,50 @@ object DataHelper {
     implicit def caseAny = at[AnyRef]{ some: AnyRef => some } // }
   }
   
-  class StringConvrtr extends StringConverter[String] {
-    def fromString(aStr: String) = aStr
-    def toString(aStr: String) = aStr
+  trait StrConverterFactory[A] {
+    def strConverter(aValue: A): StringConverter[A]
   }
+  object StrConverterFactory {
+    def apply[A](implicit convFactory: StrConverterFactory[A]): StrConverterFactory[A] =
+      convFactory
+    
+    def instance[A](func: A => StringConverter[A]): StrConverterFactory[A] =
+      new StrConverterFactory[A] {
+        def strConverter(aValue: A): StringConverter[A] = 
+          func(aValue)
+      }
+    
+    // you can make more of these, see scalafx api!
+    implicit val strConvFactory: StrConverterFactory[String] =
+      instance[String](_ => new DefaultStringConverter)
+    implicit val intConvFactory: StrConverterFactory[Int] =
+      instance[Int](_ => new IntStringConverter)
+    implicit val boolConvFactory: StrConverterFactory[Boolean] =
+      instance[Boolean](_ => new BooleanStringConverter)
+    implicit val shortConvFactory: StrConverterFactory[Short] =
+      instance[Short](_ => new ShortStringConverter)
+    implicit val longConvFactory: StrConverterFactory[Long] =
+      instance[Long](_ => new LongStringConverter)
+    implicit val charConvFactory: StrConverterFactory[Char] =
+      instance[Char](_ => new CharStringConverter)
+    implicit val doubleConvFactory: StrConverterFactory[Double] =
+      instance[Double](_ => new DoubleStringConverter)
+    implicit val floatConvFactory: StrConverterFactory[Float] =
+      instance[Float](_ => new FloatStringConverter)
+      
+      /*
+    implicit def stringConverter[A, Repr <: HList, Head](aIn : A)(
+      implicit
+      convFactory: StrConverterFactory[Head],
+      gen: Generic.Aux[A, Repr],
+      isHCons: IsHCons[Repr, Head, HNil]
+    ): StringConverterFactory[A] =*/
+  }
+  
+  //class WrappedStringConverter[A] extends StringConverter[A] {
+    
+  //}
+  
   
   /*
   def valueToProperty[C](aOwner: AnyRef, aName: String, aValue : C)(implicit tt: TypedType[C]): 

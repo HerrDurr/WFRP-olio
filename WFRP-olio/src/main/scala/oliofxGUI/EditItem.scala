@@ -20,6 +20,8 @@ import scalafx.event.ActionEvent
 import scalafx.scene.control.TableCell
 import scalafx.beans.value.ObservableValue
 import scalafx.scene.layout.HBox
+import scalafx.util.converter.DefaultStringConverter
+import dataUI.ControlFactory._
 
 //import scalafx.util.StringConverter
 
@@ -82,9 +84,12 @@ class EditItem/*[Repr <: HList]*/(val aItem: Item)/*(implicit genAux: LabelledGe
   private var currentName: String = aGenItem.get('name).value
   private var fItemCurrent: Item = gen.from(aGenItem)
   
+  def getCurrent(dummy: Any): Item = this.fItemCurrent
+  def setCurrent(aNewItem: Item) = this.fItemCurrent = aNewItem
+  
   def SaveItem() = {
     import dbContext._
-    /*
+    
     val itemId = this.fItemCurrent.id//get('id)
     
     if (itemId.value >= 0)
@@ -100,15 +105,15 @@ class EditItem/*[Repr <: HList]*/(val aItem: Item)/*(implicit genAux: LabelledGe
       }
       else
       {
-      * 
-      */
         // insert
         val q = quote {
-          query[Item].insert(lift(fItemCurrent)).onConflictUpdate(_.id)( (t, e) => t -> e )
+          // l'erreur
+          //query[Item].insert(lift(fItemCurrent)).onConflictUpdate(_.id)( (t, e) => t -> e )
+          query[Item].insert(lift(fItemCurrent))
         }
         dbContext.run(q)
-      //}
-    //}
+      }
+    }
     
   }
   
@@ -149,7 +154,7 @@ class EditItem/*[Repr <: HList]*/(val aItem: Item)/*(implicit genAux: LabelledGe
       }
       colName.cellFactory = {
         aCol: TableColumn[Item, String] => {
-          val cell = new TextFieldTableCell[Item, String](new StringConvrtr)
+          val cell = new TextFieldTableCell[Item, String](new DefaultStringConverter)
           cell
         }
       }
@@ -160,10 +165,13 @@ class EditItem/*[Repr <: HList]*/(val aItem: Item)/*(implicit genAux: LabelledGe
           val prop: StringProperty = new StringProperty( aItem, "craftsmanship", gen.to(cdf.value).get('craftsmanship).toString() )
           {
             onChange
-            { (_, aOld, aNew) => 
+            { 
+              (_, aOld, aNew) => 
               { 
                 val aCrafts = Craftsmanship.byEnumOrName(aNew)
                 fItemCurrent = lCraft.set(fItemCurrent)( aCrafts.getOrElse(byEnumOrName(aOld).get) )
+                //if (aCrafts.isDefined)
+                  //fItemCurrent = lCraft.set(fItemCurrent)( aCrafts.get )
                 //else oh my fucking god why can i not undo an edit?!?!!
                   //prop.value = aOld
                 // else herja?
@@ -175,11 +183,29 @@ class EditItem/*[Repr <: HList]*/(val aItem: Item)/*(implicit genAux: LabelledGe
       }
       colCraftsmanship.cellFactory = {
         aCol: TableColumn[Item, String] => {
-          new TextFieldTableCell[Item, String](new StringConvrtr)
+          new TextFieldTableCell[Item, String](new DefaultStringConverter)
         }
       }
+    
+      /*
+    val colEncumb = tableColumn(aItem, aItem.encumbrance)
+    colEncumb.text = "Encumbrance"
+    colEncumb.cellValueFactory = cdf => {
+      val prop = ObjectProperty(cdf.value.encumbrance.value)
+      prop.onChange
+      { (_, _, aNew) => 
+        {
+          fItemCurrent = lEnc.set(fItemCurrent)( Encumbrance(aNew) )
+        }
+      }
+      prop
+    }
+    * 
+    */
+    val colEncumb: TableColumn[Item, Short] = tableColumn(aItem, aItem.encumbrance, { aA: Item => aA.encumbrance }, {a: Any => getCurrent(a)}, 
+        {aNewItem : Item => fItemCurrent = aNewItem}, lEnc, {aVal: Short => Encumbrance(aVal)})
       
-    columns ++= List(colName, colCraftsmanship)//, //colEncumb, colCost, colAvailability)
+    columns ++= List(colName, colCraftsmanship, colEncumb)//, colCost, colAvailability)
     
   }
   
