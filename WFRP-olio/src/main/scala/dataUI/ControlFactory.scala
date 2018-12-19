@@ -65,6 +65,7 @@ object ControlFactory {
   
   /**
    * MAGICK FUCKEN POPSICKELS!
+   * could try to do that above version again, this is 'orrible
    */
   def tableColumn[A, B, ReprB <: HList, Head, J1 >: Head, AtoB <: A => B, ToA <: Any => A, SetA <: A => Unit, NewB <: Head => B]
                     (aTableObj: A, aProp: B,
