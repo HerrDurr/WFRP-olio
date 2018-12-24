@@ -31,10 +31,12 @@ object ControlFactory {
     }
     res
   }
-/*
-  def tableColumn[A, B, /*ReprA <: HList,*/ ReprB <: HList, Head, J1 >: Head](aTableObj: A, aProp: B,
-                    aPropFromObjFunc: A => B,
-                    aOnChangeFunc: (ObservableValue[Head, Head], J1, J1) => Unit)(
+
+  
+  def tableColumn[A, B, /*ReprA <: HList,*/ ReprB <: HList, Head, J1 >: Head, PropFunc <: A => B, CFunc <: (ObservableValue[Head, Head], J1, J1) => Unit]
+                 (aTableObj: A, aProp: B,
+                    aPropFromObjFunc: PropFunc,
+                    aOnChangeFunc: CFunc)(
       implicit
       genB: Generic.Aux[B, ReprB],
       //genA: Generic.Aux[A, ReprA],
@@ -60,8 +62,6 @@ object ControlFactory {
     }
     res
   }
-  * 
-  */
   
   /**
    * MAGICK FUCKEN POPSICKELS!

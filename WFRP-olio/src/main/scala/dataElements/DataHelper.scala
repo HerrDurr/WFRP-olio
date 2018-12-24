@@ -176,6 +176,25 @@ object DataHelper {
         instance({aVal: Option[A] => optInstance.value.getDefault(aVal)})
   }
   
+  /*trait Default[A] {
+    def default[A]: A
+  }
+  object Default {
+    def apply[A](implicit aDef: Default[A]): Default[A] =
+      aDef
+      
+    def instance[A](func: () => A): Default[A] =
+      new Default[A] {
+         def default[A]: A = {
+           val res = func.apply()
+           res
+         }
+      }
+      
+    implicit val stringDefault: Default[String]
+  }
+  * 
+  */
   
   /**
    * Friggin' magick! Testicles, barnacles, dicks, rabbits, and
@@ -341,7 +360,9 @@ object DataHelper {
     DataAndOptionalToCommaOps( aData.map(_.toString), aOptData.map( _.map(_.toString) ) )
   }
   
-  
+  /*
+   * not really using this
+   */
   abstract class DataPropertyRow {
     
     //private var fProperties : Option[ObservableBuffer[Observable]] = None
@@ -420,7 +441,9 @@ object DataHelper {
       instance[Double](_ => new DoubleStringConverter)
     implicit val floatConvFactory: StrConverterFactory[Float] =
       instance[Float](_ => new FloatStringConverter)
-      
+    implicit def optionConvFactory[A, B <: Option[A]]: StrConverterFactory[B] = {
+      instance[B]{ aOpt: B => new OptionStringConverter[A](aOpt) }//(aOpt) )
+    }
       /*
     implicit def stringConverter[A, Repr <: HList, Head](aIn : A)(
       implicit
@@ -430,78 +453,32 @@ object DataHelper {
     ): StringConverterFactory[A] =*/
   }
   
-  //class WrappedStringConverter[A] extends StringConverter[A] {
+  class OptionStringConverter[A](aVal : Option[A]) extends StringConverter[Option[A]] {
+    val nullMarkers: Array[String] = Array("", "-", "none", "nil", "null")
     
-  //}
-  
-  
-  /*
-  def valueToProperty[C](aOwner: AnyRef, aName: String, aValue : C)(implicit tt: TypedType[C]): 
-    Property[_ >: String with Int with Boolean with Long with Float with Double, _ >: String with Number with Boolean <: java.io.Serializable] =
-    {
-      tt match
-      {
-        case ScalaBaseType.stringType =>  new StringDataProperty(aOwner, aName, aValue.asInstanceOf[String]) //new StringProperty(aOwner, aName, aValue.asInstanceOf[String])
-        case ScalaBaseType.booleanType => new BooleanDataProperty(aOwner, aName, aValue.asInstanceOf[Boolean])
+    def fromString(string : String)(
+        implicit
+        convFact: StrConverterFactory[A]
+    ): Option[A] = {
+      // need aVal for the converter creation!
+      if ( aVal.isEmpty || nullMarkers.exists( string.toLowerCase() == _ ) )
+        None
+      else {
+        val convA : StringConverter[A] = convFact.strConverter(aVal.get)
+        Some( convA.fromString(string) )
       }
     }
-  
-  
-  abstract class TypedProp[T, J](implicit final val propType : TypedType[T], 
-                                 implicit final val javaType : TypedType[J]) extends Property[T, J]
-  
-  class StringDataProperty(aOwner: AnyRef, aName: String, aValue: String) extends TypedProp[String, String] {
     
-    val innerProp = new StringProperty(aOwner, aName, aValue)
-    
-    def value = innerProp.value
-    def value_=(v: String) = innerProp.value_=(v)
-    def delegate = innerProp.delegate
-    
-  }
-  
-  class BooleanDataProperty(aOwner: AnyRef, aName: String, aValue: Boolean) extends TypedProp[Boolean, Boolean] {
-    
-    val innerProp = new BooleanProperty(aOwner, aName, aValue)
-    
-    def value = innerProp.value
-    def value_=(v: Boolean) = innerProp.value_=(v)
-    def delegate = innerProp.asInstanceOf[Property[Boolean, Boolean]].delegate
-    
-  }*/
-  /*
-  def propertyFromValue[C](aOwner: AnyRef, aName: String, aValue : C)(implicit tt: TypedType[C]) = {
-    
-    
-    
-  }
-  * 
-  */
-  
-  /*
-  def PropertyFromValue(aValue : AnyRef): Property[ClassTag[aValue.getClass], ClassTag[aValue.getClass]] = {
-    
-    val aClassTag = ClassTag(aValue.getClass)
-    // super-fugly kludge mofos!
-    val aString : String = ""
-    val aInt : Int = 0
-    val aBoolean : Boolean = true
-    val aFloat : Float = 0.0
-    val aLong : Long = 0
-    
-    aClassTag match {
-      case ClassTag(aString.getClass) => new StringProperty
+    def toString(aOpt: Option[A])(
+        implicit
+        convFact: StrConverterFactory[A]
+        ): String = {
+      if (aOpt.isDefined)
+        convFact.strConverter(aOpt.get).toString(aOpt.get)
+      else
+        nullMarkers(0)
     }
     
   }
-  * 
-  */
-  /*
-  def PropertyFromValue(aValue : String): Property[String, String] = {
-    new StringProperty(aValue)
-  }
-  * 
-  */
-  
   
 }

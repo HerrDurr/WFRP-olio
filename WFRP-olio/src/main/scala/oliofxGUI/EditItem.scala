@@ -140,7 +140,7 @@ class EditItem/*[Repr <: HList]*/(val aItem: Item)/*(implicit genAux: LabelledGe
   //val aName = aGenItem.filter{aMem: FieldType[K, V] => getFieldName(aMem) == "name"}.head
   
   val buff = new ObservableBuffer[Item]
-  buff += aItem
+  buff += fItemCurrent //aItem
   val table = new TableView[Item](buff) {
     editable = true
       
@@ -202,8 +202,26 @@ class EditItem/*[Repr <: HList]*/(val aItem: Item)/*(implicit genAux: LabelledGe
     }
     * 
     */
-    val colEncumb: TableColumn[Item, Short] = tableColumn(aItem, aItem.encumbrance, { aA: Item => aA.encumbrance }, {a: Any => getCurrent(a)}, 
+    val aItoEnc = { aA: Item => aA.encumbrance }
+    /*def aEncOnChange[J1 >: Short]: (ObservableValue[Short, Short], J1, J1) => Unit = { aTup: (ObservableValue[Short, Short], J1, J1) => 
+          {
+            fItemCurrent = lEnc.set(fItemCurrent)( Encumbrance(aTup._3) )
+          }
+        }
+        *  
+        */
+    // popsickles -version
+    val colEncumb: TableColumn[Item, Short] = tableColumn(fItemCurrent, fItemCurrent.encumbrance/*aItem, aItem.encumbrance*/, aItoEnc, {a: Any => getCurrent(a)}, 
         {aNewItem : Item => fItemCurrent = aNewItem}, lEnc, {aVal: Short => Encumbrance(aVal)})
+    /*val colEncumb: TableColumn[Item, Short] = tableColumn(aItem, aItem.encumbrance, aItoEnc,
+        { aTup: (ObservableValue[Short, Short], Short, Short) => 
+          {
+            fItemCurrent = lEnc.set(fItemCurrent)( Encumbrance(aTup._3) )
+          }
+        }
+    )
+    * 
+    */
       
     columns ++= List(colName, colCraftsmanship, colEncumb)//, colCost, colAvailability)
     
