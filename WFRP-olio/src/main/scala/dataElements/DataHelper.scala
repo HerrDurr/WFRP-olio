@@ -441,9 +441,9 @@ object DataHelper {
       instance[Double](_ => new DoubleStringConverter)
     implicit val floatConvFactory: StrConverterFactory[Float] =
       instance[Float](_ => new FloatStringConverter)
-    implicit def optionConvFactory[A, B <: Option[A]]: StrConverterFactory[B] = {
-      instance[B]{ aOpt: B => new OptionStringConverter[A](aOpt) }//(aOpt) )
-    }
+    //implicit def optionConvFactory[A, B <: Option[A]]: StrConverterFactory[B] = {
+      //instance[B]{ aOpt: B => new OptionStringConverter[A](aOpt) }//(aOpt) )
+    //}
       /*
     implicit def stringConverter[A, Repr <: HList, Head](aIn : A)(
       implicit
@@ -453,13 +453,13 @@ object DataHelper {
     ): StringConverterFactory[A] =*/
   }
   
-  class OptionStringConverter[A](aVal : Option[A]) extends StringConverter[Option[A]] {
+  /*class OptionStringConverter[A, B <: Option[A]](aVal : B) extends StringConverter[B] {
     val nullMarkers: Array[String] = Array("", "-", "none", "nil", "null")
     
-    def fromString(string : String)(
+    def fromString[A, B >: Option[A]](string : String)(
         implicit
         convFact: StrConverterFactory[A]
-    ): Option[A] = {
+    ): B = {
       // need aVal for the converter creation!
       if ( aVal.isEmpty || nullMarkers.exists( string.toLowerCase() == _ ) )
         None
@@ -480,5 +480,7 @@ object DataHelper {
     }
     
   }
+  * 
+  */
   
 }
