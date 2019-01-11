@@ -31,6 +31,12 @@ class WFRPContext extends SqliteJdbcContext(CamelCase, "wfrpdb") {
   implicit val decodeCraftsmanship: MappedEncoding[String, Craftsmanship.Craftsmanship] =
       MappedEncoding[String, Craftsmanship.Craftsmanship]{ Craftsmanship.byEnumOrThrow(_) }
   
+  
+  implicit val encodeWeaponQualities: MappedEncoding[Array[WeaponQuality.IdTag], String] = 
+      MappedEncoding[Array[WeaponQuality.IdTag], String]{ aQuals: Array[WeaponQuality.IdTag] => ArrayToCommaTextOpt( aQuals.map(_.value) ).getOrElse("") }
+  implicit val decodeWeaponQualities: MappedEncoding[String, Array[WeaponQuality.IdTag]] =
+      MappedEncoding[String, Array[WeaponQuality.IdTag]]{ aStr: String => CommaTextOptToArray( Some(aStr) ).map(WeaponQuality.IdTag(_)) }
+  
   /*
    * OLIO
    */

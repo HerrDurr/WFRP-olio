@@ -35,6 +35,20 @@ object DataHelperWFRP {
     dbContext.run(q).headOption//.getOrElse(throw new IllegalArgumentException(s"Unknown Item: $aId"))
   }
   
+  def weaponMelee(aId: Item.Id): Option[WeaponMelee] = {
+    val q = quote {
+      query[WeaponMelee].filter{ weapon: WeaponMelee => weapon.id == lift(aId) }
+    } 
+    dbContext.run(q).headOption
+  }
+  
+  def weaponRanged(aId: Item.Id): Option[WeaponRanged] = {
+    val q = quote {
+      query[WeaponRanged].filter{ weapon: WeaponRanged => weapon.id == lift(aId) }
+    } 
+    dbContext.run(q).headOption
+  }
+  
   def insertItem(aItem : Item) : Item.Id = {
     val q = quote {
       query[Item].insert(lift(aItem)).returning(_.id)
@@ -54,6 +68,27 @@ object DataHelperWFRP {
     val itemList = dbContext.run(q)
     itemList
   }
+  
+  private var availabilities: Option[List[Availability]] = None
+  
+  def getAllAvailabilities: List[Availability] =
+  {
+    if (this.availabilities.isEmpty)
+    {
+      val q = quote {
+        for {
+          ava <- query[Availability]
+        } yield {
+          ava
+        }
+      }
+      val avs = dbContext.run(q)
+      this.availabilities = Some(avs)
+    }
+    
+    this.availabilities.getOrElse(List())
+  }
+  
   
   implicit class AvailabilityHelper(avail: Availability) {
     

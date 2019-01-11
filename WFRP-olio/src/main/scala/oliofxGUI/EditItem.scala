@@ -22,6 +22,12 @@ import scalafx.beans.value.ObservableValue
 import scalafx.scene.layout.HBox
 import scalafx.util.converter.DefaultStringConverter
 import dataUI.ControlFactory._
+import scalafxml.core.FXMLLoader
+import scalafxml.core.DependenciesByType
+import javafx.{scene => jfxs}
+//import scalafx.stage.Stage
+import javafx.scene.Scene
+import javafx.stage.Stage
 
 //import scalafx.util.StringConverter
 
@@ -270,6 +276,26 @@ object EditItem {
     //val gen = LabelledGeneric[Item]
     //val itemHList = gen.to(item)
     new EditItem(item)
+  }
+  
+  //lazy val path = getClass.getResource("editItemWFRP.fxml").getPath
+  
+  lazy val loader = new FXMLLoader(getClass.getResource("editItemWFRP.fxml"),
+      new DependenciesByType(Map())) 
+  
+  def testEditItem(): Unit = {
+    //println(path)
+    val item = byId(Item.Id(1)).getOrElse(Item.createNew)
+    loader.load()
+    val root = loader.getRoot[jfxs.Parent]
+    val ctrlr: EditItemInterface = loader.getController[EditItemInterface]
+    ctrlr.editItem(item)
+    val stage: Stage = new Stage {
+      setTitle("Edit Item")
+      setScene(new Scene(root))
+      show()
+    }
+    
   }
   
 }

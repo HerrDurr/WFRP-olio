@@ -42,7 +42,9 @@ object WFRPOlioMain extends JFXApp {
       //SlickTest.testConfig
       //testDB
       //testDB2()
-         
+      
+      testEditItem()
+      
     }
       
     

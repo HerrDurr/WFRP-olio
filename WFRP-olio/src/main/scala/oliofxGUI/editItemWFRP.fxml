@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="oliofxGUI.EditItemHandler">
+   <children>
+      <HBox prefHeight="374.0" prefWidth="598.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <BorderPane prefHeight="355.0" prefWidth="285.0">
+               <top>
+                  <TextField id="editName" fx:id="editName" prefHeight="25.0" prefWidth="252.0" promptText="Name" BorderPane.alignment="CENTER">
+                     <padding>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </padding>
+                  </TextField>
+               </top>
+               <center>
+                  <FlowPane orientation="VERTICAL" prefHeight="292.0" prefWidth="254.0" vgap="20.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <ComboBox fx:id="comboCraftsmanship" prefHeight="25.0" prefWidth="153.0" promptText="Craftsmanship" />
+                        <Pane prefHeight="102.0" prefWidth="285.0">
+                           <children>
+                              <TextField id="editCost" fx:id="editCost" layoutY="49.0" prefHeight="25.0" prefWidth="106.0" />
+                              <Label layoutX="2.0" layoutY="32.0" text="Cost" />
+                              <Label layoutX="126.0" layoutY="32.0" text="Encumbrance" />
+                              <TextField id="editEnc" fx:id="editEnc" layoutX="118.0" layoutY="49.0" prefHeight="25.0" prefWidth="136.0" />
+                           </children>
+                        </Pane>
+                        <ComboBox id="comboAvailability" fx:id="comboAvailability" prefHeight="25.0" prefWidth="153.0" promptText="Availability" />
+                        <HBox prefHeight="38.0" prefWidth="285.0">
+                           <children>
+                              <CheckBox fx:id="cbIsMelee" mnemonicParsing="false" prefHeight="17.0" prefWidth="141.0" text="Melee Weapon" />
+                              <CheckBox fx:id="cbIsRanged" mnemonicParsing="false" text="Ranged Weapon" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" top="5.0" />
+                     </padding>
+                  </FlowPane>
+               </center>
+               <bottom>
+                  <FlowPane hgap="10.0" prefHeight="48.0" prefWidth="570.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Button fx:id="btnSave" mnemonicParsing="false" onAction="#onSave" text="Save" />
+                        <Button fx:id="btnSaveAs" layoutX="30.0" layoutY="20.0" mnemonicParsing="false" text="Save As..." />
+                     </children>
+                     <BorderPane.margin>
+                        <Insets />
+                     </BorderPane.margin>
+                     <padding>
+                        <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                     </padding>
+                  </FlowPane>
+               </bottom>
+            </BorderPane>
+            <Accordion prefHeight="355.0" prefWidth="294.0">
+              <panes>
+                <TitledPane animated="false" text="Melee">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <FlowPane layoutX="78.0" layoutY="75.0" orientation="VERTICAL" prefHeight="304.0" prefWidth="292.0" vgap="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <Pane>
+                                       <children>
+                                          <Label layoutY="6.0" text="Damage" />
+                                          <CheckBox fx:id="cbMeleeSB" layoutX="73.0" layoutY="6.0" mnemonicParsing="false" selected="true" text="SB" />
+                                          <TextField fx:id="editMeleeDmg" layoutX="137.0" layoutY="2.0" prefHeight="25.0" prefWidth="37.0" text="0" />
+                                       </children>
+                                    </Pane>
+                                    <Pane prefHeight="96.0" prefWidth="273.0">
+                                       <children>
+                                          <Label layoutY="9.0" text="Qualities" />
+                                          <ListView fx:id="listMeleeQualities" layoutX="67.0" layoutY="4.0" prefHeight="85.0" prefWidth="192.0" />
+                                       </children>
+                                    </Pane>
+                                    <Pane>
+                                       <children>
+                                          <Label layoutY="9.0" text="Group" />
+                                          <ComboBox fx:id="comboMeleeGroup" editable="true" layoutX="55.0" layoutY="5.0" prefHeight="25.0" prefWidth="218.0" promptText="Weapon Group" />
+                                       </children>
+                                    </Pane>
+                                 </children>
+                              </FlowPane>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </TitledPane>
+                <TitledPane animated="false" text="Ranged">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <FlowPane layoutX="21.0" layoutY="52.0" prefHeight="304.0" prefWidth="292.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <Pane>
+                                       <children>
+                                          <CheckBox fx:id="cbRangedSB" layoutX="80.0" layoutY="4.0" mnemonicParsing="false" selected="true" text="SB" />
+                                          <TextField fx:id="editRangedDmg" layoutX="137.0" prefHeight="25.0" prefWidth="37.0" text="0" />
+                                          <ToggleButton fx:id="toggleRangedDmg" layoutY="1.0" mnemonicParsing="false" selected="true" text="Damage" />
+                                       </children>
+                                    </Pane>
+                                    <Pane prefHeight="39.0" prefWidth="273.0">
+                                       <children>
+                                          <Label layoutY="11.0" text="Range (sq)" />
+                                          <Label layoutX="150.0" layoutY="11.0" text="/" />
+                                          <TextField fx:id="editRangeShort" layoutX="88.0" layoutY="7.0" prefHeight="25.0" prefWidth="55.0" text="0" />
+                                          <TextField fx:id="editRangeLong" layoutX="161.0" layoutY="7.0" prefHeight="25.0" prefWidth="55.0" text="-" />
+                                       </children>
+                                    </Pane>
+                                    <Pane>
+                                       <children>
+                                          <Label layoutY="9.0" text="Reload" />
+                                          <ComboBox fx:id="comboReload" editable="true" layoutX="55.0" layoutY="5.0" prefHeight="25.0" prefWidth="218.0" promptText="Reload rate" />
+                                       </children>
+                                    </Pane>
+                                    <Pane prefHeight="96.0" prefWidth="273.0">
+                                       <children>
+                                          <Label layoutY="9.0" text="Qualities" />
+                                          <ListView fx:id="listRangedQualities" layoutX="67.0" layoutY="4.0" prefHeight="85.0" prefWidth="192.0" />
+                                       </children>
+                                    </Pane>
+                                    <Pane layoutX="10.0" layoutY="201.0">
+                                       <children>
+                                          <Label layoutY="9.0" text="Ammunition" />
+                                          <ComboBox fx:id="comboAmmunition" editable="true" layoutX="73.0" layoutY="5.0" prefHeight="25.0" prefWidth="200.0" promptText="Ammunition Type" />
+                                       </children>
+                                    </Pane>
+                                    <Pane>
+                                       <children>
+                                          <Label layoutY="9.0" text="Group" />
+                                          <ComboBox fx:id="comboRangedGroup" editable="true" layoutX="55.0" layoutY="5.0" prefHeight="25.0" prefWidth="218.0" promptText="Weapon Group" />
+                                       </children>
+                                    </Pane>
+                                 </children>
+                              </FlowPane>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </TitledPane>
+              </panes>
+            </Accordion>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
