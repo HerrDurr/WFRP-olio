@@ -119,7 +119,7 @@ object SchemaWFRP {
     */
     //val nameProp = new StringProperty(this,"name",this.name.value)
     override def toString = this.name.value + " " + this.craftsmanship + ", Enc: " + this.encumbrance.value + ", Cost: " +
-      this.cost.getOrElse("-")
+      this.cost.getOrElse(Item.Cost("-")).value
   }
   object Item {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
