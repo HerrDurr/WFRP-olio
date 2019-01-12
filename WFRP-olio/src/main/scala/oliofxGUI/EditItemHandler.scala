@@ -1,13 +1,13 @@
 package oliofxGUI
 
-import scalafx.scene.control.{TextField, ComboBox, CheckBox, ListView, ToggleButton, Button}
+import scalafx.scene.control.{TextField, ComboBox, CheckBox, ListView, ToggleButton, Button, MenuButton,
+  TitledPane, CheckMenuItem}
 import olioIO.SchemaWFRP.{WeaponQuality, Item, Availability, WeaponMelee, WeaponRanged,
-  Craftsmanship}
+  Craftsmanship, Talent}
 import olioIO.SchemaWFRP.Item._
 import olioIO.DataHelperWFRP
 import olioIO.DataHelperWFRP._
 import scalafxml.core.macros.sfxml
-import scalafxml.core.FXMLLoader
 import scalafxml.core.FXMLLoader
 import scalafxml.core.DependenciesByType
 //import scalafx.scene.Scene
@@ -26,6 +26,8 @@ import scalafx.scene.control.Alert.AlertType
 import java.lang.Boolean
 import scalafx.scene.input.InputMethodEvent
 import dataUI.UtilsUI._
+import scala.collection.mutable.Map
+import dataWFRP.Resources._
 
 //import javafx.beans.value.ObservableValue
 
@@ -44,30 +46,36 @@ class EditItemHandler(
                          private val comboAvailability: ComboBox[Option[Availability]],
                          private val cbIsMelee: CheckBox,
                          private val cbIsRanged: CheckBox,
-                         private val cbMeleeSB: CheckBox,
+                         private val paneMelee: TitledPane,
+                         private val paneRanged: TitledPane,
+                         //private val cbMeleeSB: CheckBox,
                          private val editMeleeDmg: TextField,
-                         private val listMeleeQualities: ListView[WeaponQuality.Name],
-                         private val comboMeleeGroup: ComboBox[String],
+                         private val menuBtnMeleeQualities: MenuButton,
+                         //private val listMeleeQualities: ListView[WeaponQuality.Name],
+                         private val comboMeleeGroup: ComboBox[Talent],
                          private val toggleRangedDmg: ToggleButton,
                          private val cbRangedSB: CheckBox,
                          private val editRangedDmg: TextField,
                          private val editRangeShort: TextField,
                          private val editRangeLong: TextField,
                          private val comboReload: ComboBox[String],
-                         private val listRangedQualities: ListView[WeaponQuality.Name],
+                         private val menuBtnRangedQualities: MenuButton,
+                         //private val listRangedQualities: ListView[WeaponQuality.Name],
                          private val comboAmmunition: ComboBox[Item],
-                         private val comboRangedGroup: ComboBox[String],
+                         private val comboRangedGroup: ComboBox[Talent],
                          private val btnSave: Button,
                          private val btnSaveAs: Button) extends EditItemInterface {
   
   /*
    * Private stuff, e.g. current states.
    */
-  //private var currentItem: Option[Item] = None
-  private val currentItem: ObjectProperty[Option[Item]] = ObjectProperty(this, "item", None)
-  private var currentWeaponMelee: Option[WeaponMelee] = None
-  private var currentWeaponRanged: Option[WeaponRanged] = None
+  //private var fCurrentItem: Option[Item] = None
+  private val fCurrentItem: ObjectProperty[Option[Item]] = ObjectProperty(this, "item", None)
+  private var fCurrentWeaponMelee: ObjectProperty[Option[WeaponMelee]] = ObjectProperty(this, "melee", None)
+  private var fCurrentWeaponRanged: Option[WeaponRanged] = None
   
+  private val fMeleeQualityMapping : Map[WeaponQuality, CheckMenuItem] = Map()
+  private val fRangedQualityMapping : Map[WeaponQuality, CheckMenuItem] = Map()
   
   /*
    * init craftsmanship
@@ -85,6 +93,19 @@ class EditItemHandler(
   DataHelperWFRP.getAllAvailabilities.foreach(comboAvailability += Some(_))
   comboAvailability.getSelectionModel.selectFirst()
   
+  /*
+   * Init qualities: menus and mappings!
+   */
+  getAllWeaponQualities.foreach( createMenuItemsForQuality(_) )
+  
+  /*
+   * Init WeaponGroups
+   * TODO: prettify!
+   */
+  for (talent <- weaponGroupTalents) {
+    comboMeleeGroup += talent
+    comboRangedGroup += talent
+  }
   
   /*
    * Initialize listeners
@@ -99,50 +120,58 @@ class EditItemHandler(
    * For edits and such, add listeners for the focused property so we don't fire the event on every character typed.
    * Combos can work when changed, I think. 
    */
-  def initBindings = {
+  private def initBindings = {
     
-    // Name
+    // Basic
     this.editName.addFocusLostEvent(onChangedName)
     
-    // Craftsmanship
     /*
     val craftsListener = new jfxbv.ChangeListener[Craftsmanship.Craftsmanship] {
       def changed(observable: jfxbv.ObservableValue[_ <: Craftsmanship.Craftsmanship], oldValue: Craftsmanship.Craftsmanship, newValue: Craftsmanship.Craftsmanship) {
-        currentItem.value = Some( lCraft.set(currentItem.value.getOrElse(Item.createNew))(newValue) )
+        fCurrentItem.value = Some( lCraft.set(fCurrentItem.value.getOrElse(Item.createNew))(newValue) )
       }
     }
     this.comboCraftsmanship.value.delegate.addListener(craftsListener)
     */
     this.comboCraftsmanship.addOnChange(onChangeCraftsmanship)
-    
-    // Encumbrance
     this.editEnc.addFocusLostEvent(onChangedEnc)
-    
-    // Cost
-    /*val costListener = new jfxbv.ChangeListener[Boolean] {
-      def changed(observable: jfxbv.ObservableValue[_ <: Boolean], oldValue: Boolean, newValue: Boolean) {
-        if (!newValue)
-        {
-          val newCost = editCost.text.value
-          currentItem.value = Some( lCost.set(currentItem.value.getOrElse(Item.createNew))( Some( Cost(newCost) ) ) )
-        }
-      }
-    }
-    this.editCost.focused.delegate.addListener(costListener)*/
     this.editCost.addFocusLostEvent(onChangedCost)
+    
+    // Melee
+    this.cbIsMelee.addOnCheck(onChangeIsMelee)
+    this.editMeleeDmg.addFocusLostEvent(onChangedMeleeDmg)
+    
+    // Ranged
   }
   
   
+  /**
+   * Creates CheckMenuItems for both melee and ranged MenuButtons.
+   * Adds the Quality and the items to their respective mappings.
+   */
+  private def createMenuItemsForQuality(aVal : WeaponQuality) = {
+    val aMeleeItem = new CheckMenuItem(aVal.name.value)
+    // the contextMenu is javaFx's one... *rolls eyes*
+    menuBtnMeleeQualities.contextMenu.value.getItems.add(aMeleeItem)
+    fMeleeQualityMapping += (aVal -> aMeleeItem)
+    
+    val aRangedItem = new CheckMenuItem(aVal.name.value)
+    menuBtnRangedQualities.contextMenu.value.getItems.add(aRangedItem)
+    fRangedQualityMapping += (aVal -> aRangedItem)
+  }
   
-  def resetItem(aItem: Option[Item]) = {
-    this.currentItem.value = aItem
-    this.currentWeaponMelee = None
-    this.currentWeaponRanged = None
+  
+  private def resetItem(aItem: Option[Item]) = {
+    this.fCurrentItem.value = aItem
+    this.fCurrentWeaponMelee.value = None
+    this.fCurrentWeaponRanged = None
     if (aItem.isDefined)
     {
-      this.currentWeaponMelee = weaponMelee(aItem.get.id)
-      this.currentWeaponRanged = weaponRanged(aItem.get.id)
+      this.fCurrentWeaponMelee.value = aItem.get.weaponMelee
+      this.fCurrentWeaponRanged = aItem.get.weaponRanged
     }
+    cbIsRanged.setSelected(this.fCurrentWeaponRanged.isDefined)
+    cbIsMelee.setSelected(this.fCurrentWeaponMelee.value.isDefined)
   }
   
   
@@ -154,12 +183,12 @@ class EditItemHandler(
     editEnc.text = aItem.encumbrance.value.toString()
     if (aItem.availability.isDefined)
       comboAvailability.getSelectionModel.select( Some( byId(aItem.availability.getOrElse(Availability.avgId)) ) )
-    cbIsMelee.setSelected(this.currentWeaponMelee.isDefined)
-    cbIsRanged.setSelected(this.currentWeaponRanged.isDefined)
+    cbIsMelee.setSelected(this.fCurrentWeaponMelee.value.isDefined)
+    cbIsRanged.setSelected(this.fCurrentWeaponRanged.isDefined)
     
     if (cbIsMelee.isSelected())
     {
-      // not very much implemented yet
+      loadMeleeWeapon()
     }
     
     /*comboCraftsmanship.
@@ -180,34 +209,93 @@ class EditItemHandler(
                          */
   }
   
+  /**
+   * Creates a WeaponMelee object if current is None. Sets the melee control values according to fCurrentWeaponMelee.
+   */
+  private def loadMeleeWeapon() = {
+    import WeaponMelee._
+    if (this.fCurrentWeaponMelee.value.isEmpty)
+    {
+      this.fCurrentWeaponMelee.value = Some( WeaponMelee.createNew(this.fCurrentItem.value.getOrElse(Item.createNew)) )
+    }
+    val weap = this.fCurrentWeaponMelee.value.get
+    
+    editMeleeDmg.text = weap.damageModifier.getOrElse(DamageMod(0)).value.toString
+    getAllWeaponQualities.foreach( q => fMeleeQualityMapping.get(q).get.selected = ( weap.qualities.contains(q) ) )
+    if (weap.weaponGroupTalentId.isDefined)
+      comboMeleeGroup.getSelectionModel.select( weaponGroupTalents.find( _.id == weap.weaponGroupTalentId.get ).get )
+    else
+      comboMeleeGroup.getSelectionModel.clearSelection()
+  }
+  
+  /**
+   * Save Item, WeaponMelee, WeaponRanged.
+   */
   def onSave(): Unit = {
     println("Totally saved this!")
-    if (this.currentItem.value.isDefined)
-      println(this.currentItem.value.get.toString())
+    if (this.fCurrentItem.value.isDefined)
+      println(this.fCurrentItem.value.get.toString())
   }
   
-  def onChangedName = {
-    currentItem.value = Some( lName.set(currentItem.value.getOrElse(Item.createNew))( Name(editName.text.value) ) )
+  private def onChangedName() = {
+    fCurrentItem.value = Some( lName.set(fCurrentItem.value.getOrElse(Item.createNew))( Name(editName.text.value) ) )
   }
   
-  def onChangedEnc = {
+  private def onChangedEnc() = {
     val newEnc = editEnc.text.value
     if ( newEnc.isShort )
-      currentItem.value = Some( lEnc.set(currentItem.value.getOrElse(Item.createNew))( Encumbrance(newEnc.toShort) ) )
+      fCurrentItem.value = Some( lEnc.set(fCurrentItem.value.getOrElse(Item.createNew))( Encumbrance(newEnc.toShort) ) )
     else
     {
       new Alert(AlertType.Error, "Encumbrance needs to be a numeric value!").showAndWait()
-      editEnc.text.value = currentItem.value.getOrElse(Item.createNew).encumbrance.value.toString
+      editEnc.text.value = fCurrentItem.value.getOrElse(Item.createNew).encumbrance.value.toString
     }
   }
     
-  def onChangeCraftsmanship(observable: jfxbv.ObservableValue[_ <: Craftsmanship.Craftsmanship], oldValue: Craftsmanship.Craftsmanship, newValue: Craftsmanship.Craftsmanship) = {
-    currentItem.value = Some( lCraft.set(currentItem.value.getOrElse(Item.createNew))(newValue) )
+  private def onChangeCraftsmanship(observable: jfxbv.ObservableValue[_ <: Craftsmanship.Craftsmanship], oldValue: Craftsmanship.Craftsmanship, newValue: Craftsmanship.Craftsmanship) = {
+    fCurrentItem.value = Some( lCraft.set(fCurrentItem.value.getOrElse(Item.createNew))(newValue) )
   }
   
-  def onChangedCost = {
+  private def onChangedCost = {
     val newCost = editCost.text.value
-    currentItem.value = Some( lCost.set(currentItem.value.getOrElse(Item.createNew))( Some( Cost(newCost) ) ) )
+    fCurrentItem.value = Some( lCost.set(fCurrentItem.value.getOrElse(Item.createNew))( Some( Cost(newCost) ) ) )
+  }
+  
+  private def onChangeIsMelee(aChecked: Boolean) = {
+    paneMelee.disable = !aChecked
+    
+    if (aChecked)
+    {
+      this.loadMeleeWeapon()
+    }
+  }
+  
+  private def onChangedMeleeDmg = {
+    import WeaponMelee._
+    val newDmg = editMeleeDmg.text.value
+    if ( newDmg.isShort )
+      fCurrentWeaponMelee.value = Some( lDamageModifier.set(getCurrentWeaponMelee)( Some( DamageMod(newDmg.toShort) ) ) )
+    else
+    {
+      new Alert(AlertType.Error, "The damage modifier needs to be a numeric value!").showAndWait()
+      editMeleeDmg.text.value = getCurrentWeaponMelee.damageModifier.getOrElse(DamageMod(0)).value.toString
+    }
+  }
+  
+  def getCurrentItem: Item = {
+    if (this.fCurrentItem.value.isEmpty)
+    {
+      this.fCurrentItem.value = Some(Item.createNew)
+    }
+    this.fCurrentItem.value.get
+  }
+  
+  def getCurrentWeaponMelee: WeaponMelee = {
+    if (this.fCurrentWeaponMelee.value.isEmpty)
+    {
+      this.fCurrentWeaponMelee.value = Some( WeaponMelee.createNew(getCurrentItem) )
+    }
+    this.fCurrentWeaponMelee.value.get
   }
   
 }

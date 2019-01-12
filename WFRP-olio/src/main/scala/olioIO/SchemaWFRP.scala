@@ -73,6 +73,12 @@ object SchemaWFRP {
     }
     * 
     */
+    override def toString() = {
+      var res = name.value
+      if (weaponGroup.isDefined)
+        res += " (" + weaponGroup.get.value + ")"
+      res
+    }
   }
   object Talent {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
@@ -95,6 +101,12 @@ object SchemaWFRP {
     }
     * 
     */
+    override def toString() = {
+      var res = this.name.value
+      if (this.modifier.isDefined)
+        res += " (" + this.modifier.get.value.toString + ")"
+      res
+    }
   }
   object Availability {
     case class IdTag(val value: String) extends AnyVal //MappedTo[String]
@@ -219,7 +231,7 @@ object SchemaWFRP {
   
   
   case class WeaponMelee(id: Item.Id, twoHanded: WeaponMelee.TwoHanded, damageModifier: Option[WeaponMelee.DamageMod], 
-      qualities: Array[WeaponQuality.IdTag], /*qualitiesRaw: Option[String]*/ weaponGroupTalentId: Option[Talent.Id]) extends DataPropertyRow {
+      qualities: Array[WeaponQuality.IdTag], /*qualitiesRaw: Option[String]*/ weaponGroupTalentId: Option[Talent.Id]) {
     /*
     def initProperties =
     {
@@ -236,6 +248,19 @@ object SchemaWFRP {
     case class TwoHanded(val value: Boolean) extends AnyVal //MappedTo[Boolean]
     case class DamageMod(val value: Short) extends AnyVal //MappedTo[Short]
     //case class Qualities(val value: String) extends MappedTo[String]
+    
+    val lId = lens[WeaponMelee] >> 'id
+    val lTwoHanded = lens[WeaponMelee] >> 'twoHanded
+    val lDamageModifier = lens[WeaponMelee] >> 'damageModifier
+    val lQualities = lens[WeaponMelee] >> 'qualities
+    val lWeaponGroupTalentId = lens[WeaponMelee] >> 'weaponGroupTalentId
+    
+    def createNew(aItem: Item) = {
+      new WeaponMelee(aItem.id, TwoHanded(false), None, Array(), None)
+    }
+    def createNew = {
+      new WeaponMelee(Item.Id(-1), TwoHanded(false), None, Array(), None)
+    }
   }
   
   

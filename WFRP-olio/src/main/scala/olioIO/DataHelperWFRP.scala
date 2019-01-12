@@ -35,20 +35,6 @@ object DataHelperWFRP {
     dbContext.run(q).headOption//.getOrElse(throw new IllegalArgumentException(s"Unknown Item: $aId"))
   }
   
-  def weaponMelee(aId: Item.Id): Option[WeaponMelee] = {
-    val q = quote {
-      query[WeaponMelee].filter{ weapon: WeaponMelee => weapon.id == lift(aId) }
-    } 
-    dbContext.run(q).headOption
-  }
-  
-  def weaponRanged(aId: Item.Id): Option[WeaponRanged] = {
-    val q = quote {
-      query[WeaponRanged].filter{ weapon: WeaponRanged => weapon.id == lift(aId) }
-    } 
-    dbContext.run(q).headOption
-  }
-  
   def insertItem(aItem : Item) : Item.Id = {
     val q = quote {
       query[Item].insert(lift(aItem)).returning(_.id)
@@ -69,11 +55,29 @@ object DataHelperWFRP {
     itemList
   }
   
-  private var availabilities: Option[List[Availability]] = None
+  implicit class ItemOps(item: Item) {
+    
+    def weaponMelee: Option[WeaponMelee] = {
+      val q = quote {
+        query[WeaponMelee].filter{ weapon: WeaponMelee => weapon.id == lift(item.id) }
+      } 
+      dbContext.run(q).headOption
+    }
+  
+    def weaponRanged: Option[WeaponRanged] = {
+      val q = quote {
+        query[WeaponRanged].filter{ weapon: WeaponRanged => weapon.id == lift(item.id) }
+      } 
+      dbContext.run(q).headOption
+    } 
+    
+  }
+  
+  private var fAvailabilities: Option[List[Availability]] = None
   
   def getAllAvailabilities: List[Availability] =
   {
-    if (this.availabilities.isEmpty)
+    if (this.fAvailabilities.isEmpty)
     {
       val q = quote {
         for {
@@ -83,26 +87,30 @@ object DataHelperWFRP {
         }
       }
       val avs = dbContext.run(q)
-      this.availabilities = Some(avs)
+      this.fAvailabilities = Some(avs)
     }
     
-    this.availabilities.getOrElse(List())
+    this.fAvailabilities.getOrElse(List())
   }
   
+  private var fWeaponQualities: Option[List[WeaponQuality]] = None
   
-  implicit class AvailabilityHelper(avail: Availability) {
-    
-    /*def byId(aIdTag: Availability.IdTag) =
+  def getAllWeaponQualities: List[WeaponQuality] = {
+    if (this.fWeaponQualities.isEmpty)
     {
       val q = quote {
-        query[Availability].filter{ av: Availability => av.idTag == lift(aIdTag) }
+        for {
+          wq <- query[WeaponQuality]
+        } yield {
+          wq
+        }
       }
-      dbContext.run(q)
+      val wqs = dbContext.run(q)
+      this.fWeaponQualities = Some(wqs)
     }
-    * 
-    */
-    
+    this.fWeaponQualities.getOrElse(List())
   }
+  
   
   implicit class AttributeSetHelper(attrSet: AttributeSet) {
     

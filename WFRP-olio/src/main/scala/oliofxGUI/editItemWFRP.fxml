@@ -6,7 +6,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
 <AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="oliofxGUI.EditItemHandler">
    <children>
       <HBox prefHeight="374.0" prefWidth="598.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -61,7 +60,7 @@
             </BorderPane>
             <Accordion prefHeight="355.0" prefWidth="294.0">
               <panes>
-                <TitledPane animated="false" text="Melee">
+                <TitledPane fx:id="paneMelee" animated="false" disable="true" expanded="false" text="Melee">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -70,20 +69,20 @@
                                     <Pane>
                                        <children>
                                           <Label layoutY="6.0" text="Damage" />
-                                          <CheckBox fx:id="cbMeleeSB" layoutX="73.0" layoutY="6.0" mnemonicParsing="false" selected="true" text="SB" />
                                           <TextField fx:id="editMeleeDmg" layoutX="137.0" layoutY="2.0" prefHeight="25.0" prefWidth="37.0" text="0" />
+                                          <Label layoutX="105.0" layoutY="6.0" text="SB" />
                                        </children>
                                     </Pane>
-                                    <Pane prefHeight="96.0" prefWidth="273.0">
+                                    <Pane prefHeight="37.0" prefWidth="273.0">
                                        <children>
                                           <Label layoutY="9.0" text="Qualities" />
-                                          <ListView fx:id="listMeleeQualities" layoutX="67.0" layoutY="4.0" prefHeight="85.0" prefWidth="192.0" />
+                                          <MenuButton fx:id="menuBtnMeleeQualities" layoutX="56.0" layoutY="5.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="218.0" />
                                        </children>
                                     </Pane>
                                     <Pane>
                                        <children>
                                           <Label layoutY="9.0" text="Group" />
-                                          <ComboBox fx:id="comboMeleeGroup" editable="true" layoutX="55.0" layoutY="5.0" prefHeight="25.0" prefWidth="218.0" promptText="Weapon Group" />
+                                          <ComboBox fx:id="comboMeleeGroup" editable="true" layoutX="55.0" layoutY="5.0" prefHeight="25.0" prefWidth="218.0" promptText="Ordinary" />
                                        </children>
                                     </Pane>
                                  </children>
@@ -92,7 +91,7 @@
                         </AnchorPane>
                   </content>
                 </TitledPane>
-                <TitledPane animated="false" text="Ranged">
+                <TitledPane fx:id="paneRanged" animated="false" disable="true" expanded="false" text="Ranged">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -119,10 +118,10 @@
                                           <ComboBox fx:id="comboReload" editable="true" layoutX="55.0" layoutY="5.0" prefHeight="25.0" prefWidth="218.0" promptText="Reload rate" />
                                        </children>
                                     </Pane>
-                                    <Pane prefHeight="96.0" prefWidth="273.0">
+                                    <Pane prefHeight="31.0" prefWidth="273.0">
                                        <children>
-                                          <Label layoutY="9.0" text="Qualities" />
-                                          <ListView fx:id="listRangedQualities" layoutX="67.0" layoutY="4.0" prefHeight="85.0" prefWidth="192.0" />
+                                          <Label layoutY="10.0" text="Qualities" />
+                                          <MenuButton fx:id="menuBtnRangedQualities" layoutX="73.0" layoutY="5.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="201.0" />
                                        </children>
                                     </Pane>
                                     <Pane layoutX="10.0" layoutY="201.0">
@@ -134,7 +133,7 @@
                                     <Pane>
                                        <children>
                                           <Label layoutY="9.0" text="Group" />
-                                          <ComboBox fx:id="comboRangedGroup" editable="true" layoutX="55.0" layoutY="5.0" prefHeight="25.0" prefWidth="218.0" promptText="Weapon Group" />
+                                          <ComboBox fx:id="comboRangedGroup" editable="true" layoutX="73.0" layoutY="5.0" prefHeight="25.0" prefWidth="200.0" promptText="Ordinary" />
                                        </children>
                                     </Pane>
                                  </children>

@@ -1,6 +1,6 @@
 package dataUI
 
-import scalafx.scene.control.{TextField, ComboBox}
+import scalafx.scene.control.{TextField, ComboBox, CheckBox}
 import javafx.beans.{value => jfxbv}
 import java.lang.Boolean
 import scalafx.beans.value.ObservableValue
@@ -34,6 +34,18 @@ object UtilsUI {
       aCombo.value.delegate.addListener(listener)
     }
     
+  }
+  
+  implicit class CheckBoxOps(val aCheckBox: CheckBox) extends AnyVal {
+    
+    def addOnCheck(aFunc: Boolean => Unit) {
+      val listener = new jfxbv.ChangeListener[Boolean] {
+        def changed(observable: jfxbv.ObservableValue[_ <: Boolean], oldValue: Boolean, newValue: Boolean) {
+            aFunc(newValue)
+        }
+      }
+      aCheckBox.selected.delegate.addListener(listener)
+    }
   }
   
 }

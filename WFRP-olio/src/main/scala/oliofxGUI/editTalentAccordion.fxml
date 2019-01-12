@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<TitledPane animated="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="365.0" prefWidth="312.0" text="untitled" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="oliofxGUI.EditTalentAccordion">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+         <children>
+            <FlowPane layoutX="34.0" layoutY="83.0" prefHeight="365.0" prefWidth="310.0" vgap="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Pane prefHeight="66.0" prefWidth="291.0">
+                     <children>
+                        <TextField fx:id="editName" layoutX="48.0" layoutY="6.0" prefHeight="25.0" prefWidth="239.0" />
+                        <Label layoutY="10.0" text="Name" />
+                        <CheckBox fx:id="cbGroup" layoutX="14.0" layoutY="44.0" mnemonicParsing="false" text="Weapon Group" />
+                        <TextField fx:id="editGroup" disable="true" layoutX="128.0" layoutY="40.0" prefHeight="25.0" prefWidth="160.0" promptText="Weapon Group" />
+                     </children>
+                  </Pane>
+                  <ScrollPane prefHeight="236.0" prefWidth="290.0">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="234.0" prefWidth="288.0">
+                           <children>
+                              <TextArea fx:id="taDescription" prefHeight="200.0" prefWidth="200.0" promptText="Description" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </ScrollPane>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" top="5.0" />
+               </padding>
+            </FlowPane>
+         </children></AnchorPane>
+  </content>
+</TitledPane>
