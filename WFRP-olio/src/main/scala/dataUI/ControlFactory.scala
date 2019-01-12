@@ -12,6 +12,8 @@ import scalafx.beans.value.ObservableValue
 
 object ControlFactory {
   
+  
+  
   def tableColumn[A, B, Repr <: HList, Head](aTableObj: A, aProp: B)(
       implicit
       genB: Generic.Aux[B, Repr],
