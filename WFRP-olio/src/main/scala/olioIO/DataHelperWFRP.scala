@@ -28,6 +28,14 @@ object DataHelperWFRP {
     dbContext.run(q).headOption.getOrElse(throw new IllegalArgumentException(s"Unknown Availability: $aIdTag"))
   }
   
+  def talentById(aTalId: Talent.Id): Option[Talent] =
+  {
+    val q = quote {
+      query[Talent].filter{ tal: Talent => tal.id == lift(aTalId) }
+    } 
+    dbContext.run(q).headOption
+  }
+  
   def byId(aId: Item.Id): Option[Item] =
   {
     val q = quote {

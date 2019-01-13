@@ -87,7 +87,13 @@ object SchemaWFRP {
     case class SubTitle(val value: String) extends AnyVal
     case class Description(val value: String) extends AnyVal
     
-    def createNew: Talent = new Talent(Id(-1), Name(""), None, TalentExplain.Null, None)
+    val lId = lens[Talent] >> 'id
+    val lName = lens[Talent] >> 'name
+    val lSubTitle = lens[Talent] >> 'subTitle
+    val lSubType = lens[Talent] >> 'subType
+    val lDescription = lens[Talent] >> 'description
+    
+    def createNew: Talent = new Talent(Id(-1), Name(""), None, TalentExplain.-, None)
     /**
      * Commatext of Talent Ids
      */

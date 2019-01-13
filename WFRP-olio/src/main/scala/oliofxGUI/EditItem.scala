@@ -25,9 +25,9 @@ import dataUI.ControlFactory._
 import scalafxml.core.FXMLLoader
 import scalafxml.core.DependenciesByType
 import javafx.{scene => jfxs}
-//import scalafx.stage.Stage
+import scalafx.stage.Stage
 import javafx.scene.Scene
-import javafx.stage.Stage
+import javafx.stage.{Stage => jStage}
 
 //import scalafx.util.StringConverter
 
@@ -290,7 +290,8 @@ object EditItem {
     val root = loader.getRoot[jfxs.Parent]
     val ctrlr: EditItemInterface = loader.getController[EditItemInterface]
     ctrlr.editItem(item)
-    val stage: Stage = new Stage {
+    val stage: jStage = new jStage {
+      ctrlr.setStage(new Stage(this))
       setTitle("Edit Item")
       setScene(new Scene(root))
       show()

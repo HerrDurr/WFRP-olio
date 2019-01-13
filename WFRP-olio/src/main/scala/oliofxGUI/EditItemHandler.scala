@@ -14,7 +14,6 @@ import scalafxml.core.DependenciesByType
 import javafx.{scene => jfxs}
 //import scalafx.stage.Stage
 import javafx.scene.Scene
-import javafx.stage.Stage
 import javafx.beans.{value => jfxbv}
 import scalafx.beans.binding.Bindings._
 import scalafx.beans.property.ObjectProperty
@@ -28,12 +27,15 @@ import scalafx.scene.input.InputMethodEvent
 import dataUI.UtilsUI._
 import scala.collection.mutable.Map
 import dataWFRP.Resources._
+import scalafx.stage.Stage
 
 //import javafx.beans.value.ObservableValue
 
 trait EditItemInterface {
   
   def editItem(aItem: Item)
+  
+  def setStage(stage: Stage)
   
 }
 
@@ -76,6 +78,8 @@ class EditItemHandler(
   
   private val fMeleeQualityMapping : Map[WeaponQuality, CheckMenuItem] = Map()
   private val fRangedQualityMapping : Map[WeaponQuality, CheckMenuItem] = Map()
+  
+  private var fStage : Option[Stage] = None
   
   /*
    * init craftsmanship
@@ -236,6 +240,9 @@ class EditItemHandler(
     if (this.fCurrentItem.value.isDefined)
       println(this.fCurrentItem.value.get.toString())
   }
+  
+
+  def setStage(stage: Stage) = fStage = Some(stage)
   
   private def onChangedName() = {
     fCurrentItem.value = Some( lName.set(fCurrentItem.value.getOrElse(Item.createNew))( Name(editName.text.value) ) )
