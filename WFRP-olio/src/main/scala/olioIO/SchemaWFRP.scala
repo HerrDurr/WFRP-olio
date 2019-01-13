@@ -5,6 +5,8 @@ import dataElements.DataHelper._
 import scalafx.beans.property._
 import scalafx.collections._
 import shapeless._
+import dataWFRP.Types._
+
 //import io.getquill.{SqliteJdbcContext, SqliteDialect, CamelCase, MappedEncoding}
 //import io.getquill.context.Context
 
@@ -61,31 +63,23 @@ object SchemaWFRP {
   }
   
   
-  case class Talent(id: Talent.Id, name: Talent.Name, description: Option[Talent.Description], 
-      weaponGroup: Option[Talent.WeaponGroup]) extends DataPropertyRow {
-    /*
-    def initProperties =
-    {
-      Vector( new IntegerProperty(this, "talentId", id),
-              new StringProperty(this, "talentName", name),
-              new StringProperty(this, "talentDescription", description.getOrElse("")),
-              new StringProperty(this, "talentWeaponGroup", weaponGroup.getOrElse("")) )
-    }
-    * 
-    */
+  case class Talent(id: Talent.Id, name: Talent.Name, subTitle: Option[Talent.SubTitle],
+      subType: TalentExplain.TalentExplainType, description: Option[Talent.Description]) {
+    
     override def toString() = {
       var res = name.value
-      if (weaponGroup.isDefined)
-        res += " (" + weaponGroup.get.value + ")"
+      if (subTitle.isDefined)
+        res += " (" + subTitle.get.value + ")"
       res
     }
   }
   object Talent {
-    case class Id(val value: Int) extends AnyVal //MappedTo[Int]
-    case class Name(val value: String) extends AnyVal //MappedTo[String]
-    case class Description(val value: String) extends AnyVal //MappedTo[String]
-    case class WeaponGroup(val value: String) extends AnyVal //MappedTo[String]
+    case class Id(val value: Int) extends AnyVal
+    case class Name(val value: String) extends AnyVal
+    case class SubTitle(val value: String) extends AnyVal
+    case class Description(val value: String) extends AnyVal
     
+    def createNew: Talent = new Talent(Id(-1), Name(""), None, TalentExplain.Null, None)
     /**
      * Commatext of Talent Ids
      */

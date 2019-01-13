@@ -3,6 +3,7 @@ package olioIO
 import io.getquill.{SqliteJdbcContext, SqliteDialect, CamelCase}
 import SchemaWFRP._
 import dataElements.DataHelper._
+import dataWFRP.Types._
 
 class WFRPContext extends SqliteJdbcContext(CamelCase, "wfrpdb") {
   
@@ -31,6 +32,10 @@ class WFRPContext extends SqliteJdbcContext(CamelCase, "wfrpdb") {
   implicit val decodeCraftsmanship: MappedEncoding[String, Craftsmanship.Craftsmanship] =
       MappedEncoding[String, Craftsmanship.Craftsmanship]{ Craftsmanship.byEnumOrThrow(_) }
   
+  implicit val encodeTalentExplainType: MappedEncoding[TalentExplain.TalentExplainType, String] = 
+      MappedEncoding[TalentExplain.TalentExplainType, String]{ tet: TalentExplain.TalentExplainType => TalentExplain.enum(tet) }
+  implicit val decodeTalentExplainType: MappedEncoding[String, TalentExplain.TalentExplainType] =
+      MappedEncoding[String, TalentExplain.TalentExplainType]{ TalentExplain.byEnumOrThrow(_) }
   
   implicit val encodeWeaponQualities: MappedEncoding[Array[WeaponQuality.IdTag], String] = 
       MappedEncoding[Array[WeaponQuality.IdTag], String]{ aQuals: Array[WeaponQuality.IdTag] => ArrayToCommaTextOpt( aQuals.map(_.value) ).getOrElse("") }
@@ -54,6 +59,9 @@ class WFRPContext extends SqliteJdbcContext(CamelCase, "wfrpdb") {
    * certain columns on updates/inserts. So that means mostly the
    * primary key values.
    */
+  implicit val talentInsertMeta = insertMeta[Talent](_.id)
+  implicit val talentUpdateMeta = updateMeta[Talent](_.id)
+  
   // Never insert or update self-made ids
   implicit val attributeSetInsertMeta = insertMeta[AttributeSet](_.id)
   implicit val attributeSetUpdateMeta = updateMeta[AttributeSet](_.id)

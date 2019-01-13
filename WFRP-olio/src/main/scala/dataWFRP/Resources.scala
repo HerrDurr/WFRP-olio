@@ -1,9 +1,9 @@
 package dataWFRP
 
 import olioIO.SchemaWFRP._
+import Types._
 
 object Resources {
-  
   import dbContext._
   
   private var fTalents: Option[List[Talent]] = None
@@ -25,12 +25,13 @@ object Resources {
   }
   
   def weaponGroupTalents : List[Talent] = {
+    import TalentExplain._
     val all = this.allTalents
-    all.filter(_.weaponGroup.isDefined)
+    all.filter(_.subType == WeaponGroup)
   }
   
-  def weaponGroups : List[Talent.WeaponGroup] = {
-    this.weaponGroupTalents.map(_.weaponGroup.get)
+  def weaponGroups : List[Talent.SubTitle] = {
+    this.weaponGroupTalents.map(_.subTitle.getOrElse(Talent.SubTitle("")))
   }
   
 }

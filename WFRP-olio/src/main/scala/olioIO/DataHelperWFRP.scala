@@ -2,6 +2,7 @@ package olioIO
 
 import SchemaWFRP._
 import shapeless.Generic
+//import olioMain.{Olio => deprOlio}
 
 object DataHelperWFRP {
   
@@ -177,5 +178,26 @@ object DataHelperWFRP {
     */
     
   }
+  
+  /*
+   * Do not run, already ran this!
+  def copyOldTalentDataToDB(dummy: deprOlio) = {
+    import Talent._
+    try
+    {
+      val aNewTalents = dummy.allTalents.map( aOld => new Talent( Id(-1), Name(aOld.name), Some(Description( aOld.description )), None ) )
+      val insertQ = quote {
+        //for (tal <- aNewTalents) {
+        //  query[Talent].insert( lift(tal) )
+        //}
+        liftQuery(aNewTalents).foreach( tal => query[Talent].insert(tal) )
+      }
+      dbContext.run(insertQ)
+    } finally println("Talents copied to db!")
+    
+  }
+  * 
+  */
+  
   
 }

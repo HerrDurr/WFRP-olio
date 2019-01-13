@@ -3,7 +3,7 @@ import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.Scene
 import scalafx.scene.layout.BorderPane
-import olioMain.Olio
+import olioMain.{Olio => oldOlio}
 //import slickTester.SlickTest
 //import slick.driver.SQLiteDriver.api._
 import scalafx.scene.layout.BorderPane.sfxBorderPane2jfx
@@ -12,6 +12,7 @@ import scalafx.scene.layout.BorderPane.sfxBorderPane2jfx
 import olioIO.SchemaWFRP._
 import scala.concurrent.ExecutionContext.Implicits.global
 import EditItem._
+//import olioIO.DataHelperWFRP
 
 
 object WFRPOlioMain extends JFXApp {
@@ -26,10 +27,10 @@ object WFRPOlioMain extends JFXApp {
     scene = new Scene
     {
       maximized = true
+      val placeHolderOlio = new oldOlio
+          
       val borderPane = new BorderPane
       {
-        val placeHolderOlio = new Olio
-          
         placeHolderOlio.setName("Seppo")
         placeHolderOlio.setRace("Human")
         placeHolderOlio.career.change("Dung Shoveler")
@@ -43,7 +44,10 @@ object WFRPOlioMain extends JFXApp {
       //testDB
       //testDB2()
       
+      //DataHelperWFRP.copyOldTalentDataToDB(placeHolderOlio)
+      //Thread.sleep(5000)
       testEditItem()
+      
       
     }
       
