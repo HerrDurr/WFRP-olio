@@ -2,6 +2,7 @@ package dataWFRP
 
 import olioIO.SchemaWFRP._
 import Types._
+import dataWFRP.Types.TalentExplain
 
 object Resources {
   import dbContext._
@@ -33,5 +34,7 @@ object Resources {
   def weaponGroups : List[Talent.SubTitle] = {
     this.weaponGroupTalents.map(_.subTitle.getOrElse(Talent.SubTitle("")))
   }
+  
+  
   
 }

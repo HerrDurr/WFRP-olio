@@ -112,7 +112,6 @@ object DataHelperWFRP {
     this.fWeaponQualities.getOrElse(List())
   }
   
-  
   implicit class AttributeSetHelper(attrSet: AttributeSet) {
     
     def queryById(aId: AttributeSet.Id) =

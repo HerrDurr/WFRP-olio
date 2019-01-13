@@ -1,6 +1,30 @@
 package dataWFRP
 
+import olioIO.SchemaWFRP._
+
 object Types {
+  
+  /*object EffectType extends Enumeration {
+    type EffectType = Value
+    val SkillBonus, AttributeBonus, NullifyEffect, FortunePoint, DamageBonus = Value
+    
+    val enums = this.values.zip( Vector(
+        "SB", //SkillBonus
+        "AB", //AttributeBonus
+        "NE", //NullifyEffect
+        "FP", //FortunePoint
+        "DB", //DamageBonus
+        )
+    )
+  }
+  * 
+  */
+  trait EffectType {
+    
+  }
+  case class SkillBonus(val skill: Skill, val bonus: Int) extends EffectType {
+    
+  }
   
   object TalentExplain extends Enumeration {
     type TalentExplainType = Value

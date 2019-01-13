@@ -15,6 +15,14 @@ import dataWFRP.Types._
 
 object SchemaWFRP {
   
+  case class Effect(id: Effect.Id, name: Effect.Name) {
+    
+  }
+  object Effect {
+    case class Id(val value: Int) extends AnyVal
+    case class Name(val value: String) extends AnyVal
+  }
+  
   case class Attribute(val idTag: Attribute.IdTag, val name: Attribute.Name/*idTag: String, name: String*/) extends DataPropertyRow {
     
     //def tupled = (idTag, name)
