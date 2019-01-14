@@ -4,7 +4,8 @@ import scalafxml.core.macros.sfxml
 import scalafx.scene.control.ComboBox
 import scalafx.scene.control.TextArea
 import scalafx.scene.control.TextField
-import olioIO.SchemaWFRP.Talent
+import olioIO.SchemaWFRP
+import olioIO.SchemaWFRP.{Talent}
 import Talent._
 import dataWFRP.Types.TalentExplain
 import dataWFRP.Types.TalentExplain.TalentExplainType
@@ -13,6 +14,9 @@ import javafx.beans.{value => jfxbv}
 import scalafx.scene.control.Alert
 import scalafx.scene.control.Alert.AlertType
 import scalafx.stage.Stage
+import commonUI.UILib._
+import scalafx.scene.control.ButtonType
+import scala.util.Try
 
 trait EditTalentInterface {
   
@@ -103,21 +107,50 @@ class EditTalentHandler(
   def newTalent = loadTalent(Talent.createNew)
   
   //TODO: finish
-  def onSave = {
+  def onSave: Id = {
     // id = -1 => not new
     import olioIO.DataHelperWFRP
     
     if (getTalent.id.value >= 0)
     {
       val old = DataHelperWFRP.talentById(getTalent.id)
-      val isUpdate = old.isDefined
-      val confirm = new Alert(AlertType.Confirmation) {
-        if (fStage.value.isDefined)
-          initOwner(fStage.value.get)
-          title = "Overwrite Save"
-          headerText = "Overwrite Save?"
-          contentText = "Are you sure you want to overwrite talent " + old.getOrElse(getTalent).name.value + "?"
+      if (old.isDefined)
+      {
+        val overwrite = overwriteDialog( old.getOrElse(getTalent).name.value, fStage.value ).showAndWait()
+        overwrite match {
+          case Some(ButtonType.Yes) => doSave(true)
+          case Some(ButtonType.No) => Id(-1)
+          case Some(ButtonTypeCreateNew) => doSave(false)
+          case _ => Id(-1)
+        }
       }
+      else
+        doSave(false)
+    }
+    else
+      doSave(false)
+  }
+  
+  private def doSave(aIsUpdate: Boolean): Id = {
+    import SchemaWFRP.dbContext._
+    import olioIO.WFRPContext
+    
+    if (aIsUpdate)
+    {
+      val updateQ = quote {
+        query[Talent].update(lift(getTalent))
+      }
+      SchemaWFRP.dbContext.run(updateQ)
+      getTalent.id
+    }
+    else
+    {
+      val insertQ = quote {
+        query[Talent].insert(lift(getTalent)).returning(_.id)
+      }
+      val res = SchemaWFRP.dbContext.run(insertQ)
+      fTalent.value = Some( lId.set(getTalent)(res) )
+      res
     }
   }
   
