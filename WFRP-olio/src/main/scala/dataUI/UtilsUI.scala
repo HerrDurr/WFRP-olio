@@ -4,6 +4,7 @@ import scalafx.scene.control.{TextField, ComboBox, CheckBox, TextArea}
 import javafx.beans.{value => jfxbv}
 import java.lang.Boolean
 import scalafx.beans.value.ObservableValue
+import dataElements.DataHelper._
 
 object UtilsUI {
   
@@ -39,12 +40,15 @@ object UtilsUI {
   implicit class ComboBoxOps[R](val aCombo: ComboBox[R]) extends AnyVal {
     
     def addOnChange(aFunc: (jfxbv.ObservableValue[_ <: R], R, R) => Unit) {
-      val listener = new jfxbv.ChangeListener[R] {
+      /*val listener = new jfxbv.ChangeListener[R] {
         def changed(observable: jfxbv.ObservableValue[_ <: R], oldValue: R, newValue: R) {
           aFunc(observable, oldValue, newValue)
         }
       }
       aCombo.value.delegate.addListener(listener)
+      * 
+      */
+      aCombo.value.delegate.addOnChange(aFunc)
     }
     
   }

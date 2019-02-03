@@ -18,8 +18,28 @@ import scalafx.util.StringConverter
 import scalafx.util.converter._
 import shapeless.ops.record._
 import shapeless.syntax.singleton._
+import javafx.beans.{property => jfxProp}
+import javafx.beans.{value => jfxbv}
 
 object DataHelper {
+  
+  object RowStatus extends Enumeration {
+    type RowStatus = Value
+    val Unchanged, Changed, New, Deleted = Value
+  }
+  
+  implicit class JPropertyOps[R](val aProp : jfxProp.Property[R]) {
+    
+    def addOnChange(aFunc : (jfxbv.ObservableValue[_ <: R], R, R) => Unit) {
+      val listener = new jfxbv.ChangeListener[R] {
+        def changed(observable: jfxbv.ObservableValue[_ <: R], oldValue: R, newValue: R) {
+          aFunc(observable, oldValue, newValue)
+        }
+      }
+      aProp.addListener(listener)
+    }
+    
+  }
   
   /*
   trait DataProperty[+T, +J] extends Property[Any, Any] {

@@ -4,8 +4,9 @@ import io.getquill.{SqliteJdbcContext, SqliteDialect, CamelCase}
 import SchemaWFRP._
 import dataElements.DataHelper._
 import dataWFRP.Types._
+import dataElements.SQLiteQuerier
 
-class WFRPContext extends SqliteJdbcContext(CamelCase, "wfrpdb") {
+class WFRPContext extends SqliteJdbcContext(CamelCase, "wfrpdb") with SQLiteQuerier {
   
   /*
    * Encodings and decodings for IDs and/or classes! Because while AnyVals

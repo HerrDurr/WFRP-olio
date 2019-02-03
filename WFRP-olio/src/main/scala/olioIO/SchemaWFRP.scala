@@ -306,7 +306,7 @@ object SchemaWFRP {
   }
   
   /**
-   * Career Entries not stored in db. If a Career has no other that exits to it, it can be taken by anyone
+   * Career Entries not stored in db, only Exits. If a Career has no other that exits to it, it can be taken by anyone
    * (of course with any other restrictions still applicable).
    */
   case class Career(id: Career.Id, name: Career.Name, description: Option[Career.Description], attributes: AttributeSet,

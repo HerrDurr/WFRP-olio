@@ -51,6 +51,10 @@ object DataHelperWFRP {
     dbContext.run(q)
   }
   
+  def insertOrUpdateItem(aItem : Item) : Unit = {
+    dbContext.insertOrUpdate(aItem, (i : Item) => i.id == lift(aItem.id) )
+  }
+  
   def getAllItems: List[Item] =
   {
     val q = quote {

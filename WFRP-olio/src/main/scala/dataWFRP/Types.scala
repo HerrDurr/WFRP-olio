@@ -19,6 +19,9 @@ object Types {
   }
   * 
   */
+  /*
+   * Still sketching these...
+   */
   trait EffectType {
     
   }
