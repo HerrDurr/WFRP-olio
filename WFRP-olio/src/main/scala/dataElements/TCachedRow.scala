@@ -5,9 +5,9 @@ import DataHelper._
 import RowStatus._
 import javafx.beans.{value => jfxbv}
 
-class TCachedRow[D](aObject : D) {
+class TCachedRow/*[D]*/(aObject : TRowTrait) {
   
-  private val fObjProperty : ObjectProperty[D] = ObjectProperty(aObject)
+  private val fObjProperty : ObjectProperty[TRowTrait] = ObjectProperty(aObject)
   private var fStatus : RowStatus = Unchanged
   this.init()
   
@@ -15,25 +15,36 @@ class TCachedRow[D](aObject : D) {
     this.fObjProperty.delegate.addOnChange(onChangeRow)
   }
   
-  def onChangeRow(aObservable: jfxbv.ObservableValue[_ <: D], aOldVal: D, aNewVal: D) = {
+  def onChangeRow(
+      aObservable: jfxbv.ObservableValue[_ <: TRowTrait],
+      aOldVal: TRowTrait,
+      aNewVal: TRowTrait) = {
     if (this.fStatus != New)
       this.updateStatus(Changed)
   }
   
   def updateStatus(aStatus : RowStatus) = this.fStatus = aStatus
   
-  def data: D = this.fObjProperty.value
+  def data: TRowTrait = this.fObjProperty.value
   
-  def apply(): D = this.data
+  def apply(): TRowTrait = this.data
   
-  def update(aObject : D) = {
+  def update(aObject : TRowTrait) = {
     this.fObjProperty.update(aObject)
+  }
+  
+  def save(): Unit = {
+    this.fStatus match {
+      case Deleted => this.data.deleteFromDB
+      case Unchanged => // nanimo shinai
+      case _ => this.data.saveToDB
+    }
   }
   
 }
 object TCachedRow {
   
-  def createNew[D](aObject : D): TCachedRow[D] = {
+  def createNew(aObject : TRowTrait): TCachedRow = {
     val aRow = new TCachedRow(aObject)
     aRow.updateStatus(New)
     aRow

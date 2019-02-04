@@ -33,4 +33,27 @@ class SQLiteMacros(val c: MacroContext) {
       ()
     """
   
+  def deleteRow[T](entity: Tree, filter: Tree)(implicit t: WeakTypeTag[T]): Tree =
+    q"""
+      import ${c.prefix}._
+      val deleteQuery = ${c.prefix}.quote {
+        ${c.prefix}.query[$t].filter($filter).delete
+      }
+      run(${c.prefix}.query[$t].filter($filter)).size match {
+          case 1 => run(deleteQuery)
+          case _ => 
+      }
+      ()
+    """
+      
+  def loadAll[T](implicit t: WeakTypeTag[T]): Tree =
+    q"""
+      import ${c.prefix}._
+      val loadQuery = ${c.prefix}.quote {
+        ${c.prefix}.query[$t]
+      }
+      run(loadQuery)
+    """
+      
+      
 }

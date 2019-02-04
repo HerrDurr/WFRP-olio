@@ -6,6 +6,8 @@ import scalafx.beans.property._
 import scalafx.collections._
 import shapeless._
 import dataWFRP.Types._
+import dataElements.TAbstractRow
+import shapeless.Generic
 
 //import io.getquill.{SqliteJdbcContext, SqliteDialect, CamelCase, MappedEncoding}
 //import io.getquill.context.Context
@@ -100,7 +102,9 @@ object SchemaWFRP {
     case class Talents(val value: String) extends AnyVal
   }
   
-  case class Availability(idTag: Availability.IdTag, name: Availability.Name, modifier: Option[Availability.Modifier]) extends DataPropertyRow {
+  case class Availability(idTag: Availability.IdTag, name: Availability.Name,
+      modifier: Option[Availability.Modifier]) 
+      extends TAbstractRow(idTag :: HNil) {
     /*def initProperties =
     {
       Vector( new StringProperty(this, "availabilityId", idTag),
@@ -109,11 +113,21 @@ object SchemaWFRP {
     }
     * 
     */
+    
     override def toString() = {
       var res = this.name.value
       if (this.modifier.isDefined)
         res += " (" + this.modifier.get.value.toString + ")"
       res
+    }
+    
+    def saveToDB: Unit = {
+      import dbContext._
+      insertOrUpdate( this, (av : Availability) => av.idTag == lift(this.idTag) )
+    }
+    def deleteFromDB : Unit = {
+      import dbContext._
+      deleteRow( this, (av : Availability) => av.idTag == lift(this.idTag) )
     }
   }
   object Availability {
