@@ -45,7 +45,7 @@ object Sheet extends SimpleSwingApplication {
         
         if (clickEvent.source == exitButton)
         {
-          val quitChoice = Dialog.showConfirmation(this,
+          val quitChoice = Dialog.showConfirmation(masterPanel,
               "Are you sure you want to quit?\nAny unsaved changes to open character sheets will be lost.",
               "Quit?", Dialog.Options.OkCancel, Dialog.Message.Warning)
           if (quitChoice == Dialog.Result.Ok) quit()
@@ -195,9 +195,9 @@ object Sheet extends SimpleSwingApplication {
     
     def newOlioSetup(olioPanel: OlioPanel) = {
       val olio = olioPanel.olio
-      val name = Dialog.showInput(this, "Enter a name for your character/NPC", "Name", initial = "")
-      val race = Dialog.showInput(this, "Enter your character's/NPC's race (or species)", "Race", initial = "Human")
-      val career = Dialog.showInput(this, "Enter your character's/NPC's career", "Career", initial = "")
+      val name = Dialog.showInput(masterPanel, "Enter a name for your character/NPC", "Name", initial = "")
+      val race = Dialog.showInput(masterPanel, "Enter your character's/NPC's race (or species)", "Race", initial = "Human")
+      val career = Dialog.showInput(masterPanel, "Enter your character's/NPC's career", "Career", initial = "")
       
       new AttributeDialog(olioPanel)
       
