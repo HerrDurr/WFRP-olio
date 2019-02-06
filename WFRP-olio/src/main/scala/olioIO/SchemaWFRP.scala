@@ -70,7 +70,7 @@ object SchemaWFRP {
     import dbContext._
     def saveToDB: Unit = insertOrUpdate(this, (s: Skill) => s.id == lift(this.id))
     def deleteFromDB: Unit = deleteRow(this, (s: Skill) => s.id == lift(this.id))
-    def companion = Skill
+    //def companion = Skill
   }
   object Skill extends TCachableRowCompanion[Skill] {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
@@ -97,7 +97,7 @@ object SchemaWFRP {
     import dbContext._
     def saveToDB: Unit = insertOrUpdate(this, (t: Talent) => t.id == lift(this.id))
     def deleteFromDB: Unit = deleteRow(this, (t: Talent) => t.id == lift(this.id))
-    def companion = Talent
+    //def companion = Talent
   }
   object Talent extends TCachableRowCompanion[Talent] {
     case class Id(val value: Int) extends AnyVal
@@ -116,7 +116,7 @@ object SchemaWFRP {
      * Commatext of Talent Ids
      */
     case class Talents(val value: String) extends AnyVal
-    def loadRows[Talent] = {
+    def loadRows: List[Talent] = {
       import dbContext._
       loadAll[Talent]
     }
@@ -359,7 +359,7 @@ object SchemaWFRP {
     import dbContext._
     def saveToDB: Unit = insertOrUpdate(this, (c : Career) => c.id == lift(this.id))
     def deleteFromDB : Unit = deleteRow(this, (c : Career) => c.id == lift(this.id))
-    def companion = Career
+    //def companion = Career
   }
   object Career extends TCachableRowCompanion[Career] {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
@@ -370,7 +370,7 @@ object SchemaWFRP {
      */
     case class Careers(val value: String) extends AnyVal
     
-    def loadAll : List[Career] = dbContext.loadRows[Career]
+    def loadRows : List[Career] = dbContext.loadAll[Career]
   }
   
   
@@ -496,6 +496,13 @@ object SchemaWFRP {
     }
     def createEmpty: AttributeSet = {
       this.createEmpty(AttributeSet.Id(-1))
+    }
+    def byId(aId: Id): AttributeSet = {
+      import dbContext._
+      val q = quote {
+        query[AttributeSet].filter{ aSet: AttributeSet => aSet.id == lift(aId) }
+      } 
+      dbContext.run(q).headOption.getOrElse(createEmpty)
     }
   }
   

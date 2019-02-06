@@ -8,6 +8,6 @@ trait TRowTrait {
   
   def deleteFromDB: Unit
   
-  def primaryKeys: HList
+  //def primaryKeys: HList
   
 }

@@ -51,6 +51,29 @@ object DataHelperWFRP {
     dbContext.run(q)
   }
   
+  def attributeSetById(aId: AttributeSet.Id): Option[AttributeSet] = 
+  {
+    val q = quote {
+      query[AttributeSet].filter{ aSet: AttributeSet => aSet.id == lift(aId) }
+    } 
+    dbContext.run(q).headOption
+  }
+  
+  def careerById(aId: Career.Id): Option[Career] =
+  {
+    val q = quote {
+      query[Career].filter{ career: Career => career.id == lift(aId) }
+    } 
+    dbContext.run(q).headOption
+  }
+  
+  def insertCareer(aCareer : Career) : Career.Id = {
+    val q = quote {
+      query[Career].insert(lift(aCareer)).returning(_.id)
+    }
+    dbContext.run(q)
+  }
+  
   def insertOrUpdateItem(aItem : Item) : Unit = {
     dbContext.insertOrUpdate(aItem, (i : Item) => i.id == lift(aItem.id) )
   }

@@ -16,8 +16,29 @@ class WFRPContext extends SqliteJdbcContext(CamelCase, "wfrpdb") with SQLiteQuer
   implicit val encodeAttributeSetId = MappedEncoding[AttributeSet.Id, Int](_.value)
   implicit val decodeAttributeSetId = MappedEncoding[Int, AttributeSet.Id](AttributeSet.Id(_))
   
-  //implicit val encodeAttributeSet = MappedEncoding[AttributeSet, Int](_.id.value)
-  //implicit val decodeAttributeSet = MappedEncoding[Int, AttributeSet](value: Int => AttributeSet.createEmpty(AttributeSet.Id(value))))
+  implicit val encodeAttributeSet = MappedEncoding[AttributeSet, Int](_.id.value)
+  implicit val decodeAttributeSet = MappedEncoding[Int, AttributeSet]{ value: Int => AttributeSet.byId(AttributeSet.Id(value)) }
+  
+  implicit val encodeSkillListWithOptionals = MappedEncoding[Array[Array[Skill.Id]], Option[String]] { 
+    skills : Array[Array[Skill.Id]] => ArrayedIntOpsToCommaOps( skills.map( _.map(_.value) ) )//.getOrElse("") 
+  }
+  implicit val decodeSkillListWithOptionals = MappedEncoding[Option[String], Array[Array[Skill.Id]]] {
+    GetCommaOpsArrayedInt(_).map(_.map(Skill.Id(_)))
+  }
+  
+  implicit val encodeTalentListWithOptionals = MappedEncoding[Array[Array[Talent.Id]], Option[String]] { 
+    tals : Array[Array[Talent.Id]] => ArrayedIntOpsToCommaOps( tals.map( _.map(_.value) ) )//.getOrElse("") 
+  }
+  implicit val decodeTalentListWithOptionals = MappedEncoding[Option[String], Array[Array[Talent.Id]]] {
+    GetCommaOpsArrayedInt(_).map(_.map(Talent.Id(_)))
+  }
+  
+  implicit val encodeCareerList = MappedEncoding[Array[Career.Id], Option[String]] { 
+    cars : Array[Career.Id] => IntArrayToCommaTextOpt( cars.map(_.value) )//.getOrElse("") 
+  }
+  implicit val decodeCareerList = MappedEncoding[Option[String], Array[Career.Id]] {
+    GetCommaOpsInt(_).map( Career.Id(_) )
+  }
   
   /*
    * Item

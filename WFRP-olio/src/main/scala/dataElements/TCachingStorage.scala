@@ -5,12 +5,13 @@ import dataElements.{TCachedRow, SQLiteQuerier}
 import TCachedRow._
 import io.getquill.{SqliteJdbcContext, CamelCase}
 import dataElements.TRowTrait
+import dataElements.CachableObjects._
 
-class TCachingStorage/*[D]*/(aContext : SqliteJdbcContext[CamelCase] with SQLiteQuerier) {
+class TCachingStorage[D <: TCachableRowObject](aContext : SqliteJdbcContext[CamelCase] with SQLiteQuerier) {
   
   import aContext._
   
-  private val fRows: Buffer[TCachedRow] = Buffer()
+  private val fRows: Buffer[TCachedRow[D]] = Buffer()
   
   /*def loadRows(
       implicit

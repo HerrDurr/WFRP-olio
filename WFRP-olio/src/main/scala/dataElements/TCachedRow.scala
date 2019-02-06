@@ -4,10 +4,11 @@ import scalafx.beans.property.ObjectProperty
 import DataHelper._
 import RowStatus._
 import javafx.beans.{value => jfxbv}
+import dataElements.CachableObjects._
 
-class TCachedRow/*[D]*/(aObject : TCachableRowObject) {
+class TCachedRow/*[D]*/[A <: TCachableRowObject](aObject : A, aCompanion : TCachableRowCompanion[A]) {
   
-  private val fObjProperty : ObjectProperty[TRowTrait] = ObjectProperty(aObject)
+  private val fObjProperty : ObjectProperty[TCachableRowObject] = ObjectProperty(aObject)
   private var fStatus : RowStatus = Unchanged
   this.init()
   
@@ -29,7 +30,7 @@ class TCachedRow/*[D]*/(aObject : TCachableRowObject) {
   
   def apply(): TRowTrait = this.data
   
-  def update(aObject : TRowTrait) = {
+  def update(aObject : TCachableRowObject) = {
     this.fObjProperty.update(aObject)
   }
   
@@ -44,8 +45,8 @@ class TCachedRow/*[D]*/(aObject : TCachableRowObject) {
 }
 object TCachedRow {
   
-  def createNew(aObject : TRowTrait): TCachedRow = {
-    val aRow = new TCachedRow(aObject)
+  def createNew[A <: TCachableRowObject](aObject : A, aCompanion : TCachableRowCompanion[A]): TCachedRow[A] = {
+    val aRow = new TCachedRow(aObject, aCompanion)
     aRow.updateStatus(New)
     aRow
   }
