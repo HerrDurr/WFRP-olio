@@ -6,8 +6,8 @@ import scalafx.beans.property._
 import scalafx.collections._
 import shapeless._
 import dataWFRP.Types._
-import dataElements.TAbstractRow
 import shapeless.Generic
+import dataElements.CachableObjects.{TCachableRowObject, TCachableRowCompanion}
 
 //import io.getquill.{SqliteJdbcContext, SqliteDialect, CamelCase, MappedEncoding}
 //import io.getquill.context.Context
@@ -25,16 +25,18 @@ object SchemaWFRP {
     case class Name(val value: String) extends AnyVal
   }
   
-  case class Attribute(val idTag: Attribute.IdTag, val name: Attribute.Name/*idTag: String, name: String*/) extends DataPropertyRow {
+  case class Attribute(val idTag: Attribute.IdTag, val name: Attribute.Name/*idTag: String, name: String*/) /*extends DataPropertyRow*/ {
     
     //def tupled = (idTag, name)
     //val genericRow = Generic[AttributeRow] 
     
-    override def initProps: HList = 
+    /*override def initProps: HList = 
     {
       //genericRow.to(this).map(_.value).map(MapToProperty)
       (idTag.value :: name.value :: HNil).map(MapToProperty)
     }
+    * 
+    */
     
   }
   object Attribute {
@@ -55,7 +57,7 @@ object SchemaWFRP {
   
   
   case class Skill(id: Skill.Id, name: Skill.Name, attribute: Attribute.IdTag, 
-      isBasic: Skill.Basic) /*extends DataPropertyRow*/ {
+      isBasic: Skill.Basic) /*extends DataPropertyRow*/ extends TCachableRowObject {
     /*def initProperties =
     {
       Vector(new IntegerProperty(this, "skillId", id),
@@ -65,16 +67,25 @@ object SchemaWFRP {
     }
     * 
     */
+    import dbContext._
+    def saveToDB: Unit = insertOrUpdate(this, (s: Skill) => s.id == lift(this.id))
+    def deleteFromDB: Unit = deleteRow(this, (s: Skill) => s.id == lift(this.id))
+    def companion = Skill
   }
-  object Skill {
+  object Skill extends TCachableRowCompanion[Skill] {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
     case class Basic(val value: Boolean) extends AnyVal //MappedTo[Boolean]
+    def loadRows: List[Skill] = {
+      dbContext.loadAll[Skill]
+    }
   }
   
   
   case class Talent(id: Talent.Id, name: Talent.Name, subTitle: Option[Talent.SubTitle],
-      subType: TalentExplain.TalentExplainType, description: Option[Talent.Description]) {
+      subType: TalentExplain.TalentExplainType, description: Option[Talent.Description]) 
+      //extends TAbstractRow(id :: HNil) {
+      extends TCachableRowObject {
     
     override def toString() = {
       var res = name.value
@@ -82,8 +93,13 @@ object SchemaWFRP {
         res += " (" + subTitle.get.value + ")"
       res
     }
+    
+    import dbContext._
+    def saveToDB: Unit = insertOrUpdate(this, (t: Talent) => t.id == lift(this.id))
+    def deleteFromDB: Unit = deleteRow(this, (t: Talent) => t.id == lift(this.id))
+    def companion = Talent
   }
-  object Talent {
+  object Talent extends TCachableRowCompanion[Talent] {
     case class Id(val value: Int) extends AnyVal
     case class Name(val value: String) extends AnyVal
     case class SubTitle(val value: String) extends AnyVal
@@ -100,11 +116,16 @@ object SchemaWFRP {
      * Commatext of Talent Ids
      */
     case class Talents(val value: String) extends AnyVal
+    def loadRows[Talent] = {
+      import dbContext._
+      loadAll[Talent]
+    }
   }
   
   case class Availability(idTag: Availability.IdTag, name: Availability.Name,
       modifier: Option[Availability.Modifier]) 
-      extends TAbstractRow(idTag :: HNil) {
+      //extends TAbstractRow(idTag :: HNil) {
+      extends TCachableRowObject {
     /*def initProperties =
     {
       Vector( new StringProperty(this, "availabilityId", idTag),
@@ -129,13 +150,18 @@ object SchemaWFRP {
       import dbContext._
       deleteRow( this, (av : Availability) => av.idTag == lift(this.idTag) )
     }
+    def companion = Availability
   }
-  object Availability {
+  object Availability extends TCachableRowCompanion[Availability] {
     case class IdTag(val value: String) extends AnyVal //MappedTo[String]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
     case class Modifier(val value: Short) extends AnyVal //MappedTo[Short]
     
     def avgId = IdTag("Av")
+    def loadRows : List[Availability] = {
+      import dbContext._
+      loadAll[Availability]
+    }
   }
   
   case class Item(id: Item.Id, name: Item.Name, craftsmanship: Craftsmanship.Craftsmanship, encumbrance: Item.Encumbrance, 
@@ -328,8 +354,14 @@ object SchemaWFRP {
       careerExits: Array[Career.Id])
   // attributes in different table
   // trappings maybe don't need to be implemented (yet)
-  
-  object Career {
+      extends TCachableRowObject {
+    
+    import dbContext._
+    def saveToDB: Unit = insertOrUpdate(this, (c : Career) => c.id == lift(this.id))
+    def deleteFromDB : Unit = deleteRow(this, (c : Career) => c.id == lift(this.id))
+    def companion = Career
+  }
+  object Career extends TCachableRowCompanion[Career] {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
     case class Description(val value: String) extends AnyVal //MappedTo[String]
@@ -337,6 +369,8 @@ object SchemaWFRP {
      * Commatext of Career Ids
      */
     case class Careers(val value: String) extends AnyVal
+    
+    def loadAll : List[Career] = dbContext.loadRows[Career]
   }
   
   

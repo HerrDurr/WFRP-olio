@@ -5,7 +5,7 @@ import DataHelper._
 import RowStatus._
 import javafx.beans.{value => jfxbv}
 
-class TCachedRow/*[D]*/(aObject : TRowTrait) {
+class TCachedRow/*[D]*/(aObject : TCachableRowObject) {
   
   private val fObjProperty : ObjectProperty[TRowTrait] = ObjectProperty(aObject)
   private var fStatus : RowStatus = Unchanged
