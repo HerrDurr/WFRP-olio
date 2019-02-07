@@ -8,6 +8,8 @@ import dataElements.SQLiteQuerier
 
 class WFRPContext extends SqliteJdbcContext(CamelCase, "wfrpdb") with SQLiteQuerier {
   
+  
+  
   /*
    * Encodings and decodings for IDs and/or classes! Because while AnyVals
    * are supported by Quill from the shelf, it seems there's still something

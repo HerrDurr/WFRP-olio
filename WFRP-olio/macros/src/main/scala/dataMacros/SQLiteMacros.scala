@@ -32,6 +32,26 @@ class SQLiteMacros(val c: MacroContext) {
       }
       ()
     """
+      
+  def insOrUpdate[T](entity: Tree, filterQuote: Tree)(implicit t: WeakTypeTag[T]): Tree =
+    q"""
+      import ${c.prefix}._
+      val q = ${c.prefix}.quote {
+        ${c.prefix}.query[$t]
+      } 
+      val filter = $filterQuote(q)
+      val updateQuery = ${c.prefix}.quote {
+        ${c.prefix}.query[$t].filter.update(lift($entity))
+      }
+      val insertQuery = quote {
+        query[$t].insert(lift($entity))
+      }
+      run(${c.prefix}.query[$t].filter).size match {
+          case 1 => run(updateQuery)
+          case _ => run(insertQuery)
+      }
+      ()
+    """
   
   def deleteRow[T](entity: Tree, filter: Tree)(implicit t: WeakTypeTag[T]): Tree =
     q"""

@@ -19,7 +19,7 @@ class TCachingStorage[D <: TCachableRowObject](aCompanion : TCachableRowCompanio
   
   
   private def init(): Unit = {
-    this.fRows ++= aCompanion.loadRows.map(TCachedRow(_)) 
+    this.fRows ++= aCompanion.loadRows.map(TCachedRow( _, this )) 
   }
   
   /*def loadRows(

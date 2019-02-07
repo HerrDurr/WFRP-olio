@@ -273,8 +273,12 @@ object SchemaWFRP {
     * 
     */
     
-    def saveToDB: Unit = dbContext.insertOrUpdate(this, (wQ: WeaponQuality) => wQ.idTag == lift(this.idTag))
-    def deleteFromDB: Unit = dbContext.deleteRow(this, (wQ: WeaponQuality) => wQ.idTag == lift(this.idTag))
+    
+    
+    import dbContext._
+    val test = quote {lift(idTag)}
+    def saveToDB: Unit = insertOrUpdate(this, (wQ: WeaponQuality) => wQ.idTag == lift(this.idTag))
+    def deleteFromDB: Unit = deleteRow(this, (wQ: WeaponQuality) => wQ.idTag == lift(this.idTag))
     
   }
   object WeaponQuality extends TCachableRowCompanion[WeaponQuality] {
