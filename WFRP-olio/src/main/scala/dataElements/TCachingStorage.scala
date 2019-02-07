@@ -7,11 +7,20 @@ import io.getquill.{SqliteJdbcContext, CamelCase}
 import dataElements.TRowTrait
 import dataElements.CachableObjects._
 
-class TCachingStorage[D <: TCachableRowObject](aContext : SqliteJdbcContext[CamelCase] with SQLiteQuerier) {
+class TCachingStorage[D <: TCachableRowObject](aCompanion : TCachableRowCompanion[D],
+    aContext : SqliteJdbcContext[CamelCase] with SQLiteQuerier) {
   
   import aContext._
   
   private val fRows: Buffer[TCachedRow[D]] = Buffer()
+  
+  
+  init()
+  
+  
+  private def init(): Unit = {
+    this.fRows ++= aCompanion.loadRows.map(TCachedRow(_)) 
+  }
   
   /*def loadRows(
       implicit
@@ -48,6 +57,8 @@ class TCachingStorage[D <: TCachableRowObject](aContext : SqliteJdbcContext[Came
       this.fRows.foreach { _.save() }
       //this.fRows.foreach( this.saveRow(_) )
   }
+  
+  def getRows = this.fRows.toVector
 
   // discard changes? no need yet, but good to implement maybe 
   
@@ -57,6 +68,18 @@ class TCachingStorage[D <: TCachableRowObject](aContext : SqliteJdbcContext[Came
   
   // match keys (or smth) to get one row
   
-  // def deleteRow
+  def deleteRow(aRow : D): Unit = {
+    ???
+  }
+  
+  
+  def addAsNew(aRow : D): Unit = {
+    this.fRows += TCachedRow.createNewRow(aRow, this)
+  }
+  
+}
+object TCachingStorage {
+  
+  
   
 }

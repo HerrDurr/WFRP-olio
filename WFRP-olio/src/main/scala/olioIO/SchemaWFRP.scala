@@ -8,6 +8,7 @@ import shapeless._
 import dataWFRP.Types._
 import shapeless.Generic
 import dataElements.CachableObjects.{TCachableRowObject, TCachableRowCompanion}
+import dataElements.CachableObjects.TCachableRowCompanion
 
 //import io.getquill.{SqliteJdbcContext, SqliteDialect, CamelCase, MappedEncoding}
 //import io.getquill.context.Context
@@ -263,7 +264,7 @@ object SchemaWFRP {
   * 
   */
   
-  case class WeaponQuality(idTag: WeaponQuality.IdTag, name: WeaponQuality.Name) extends DataPropertyRow {
+  case class WeaponQuality(idTag: WeaponQuality.IdTag, name: WeaponQuality.Name) extends TCachableRowObject {
     /*def initProperties =
     {
       Vector( new StringProperty(this, "quality", idTag),
@@ -271,10 +272,23 @@ object SchemaWFRP {
     }
     * 
     */
+    
+    def saveToDB: Unit = dbContext.insertOrUpdate(this, (wQ: WeaponQuality) => wQ.idTag == lift(this.idTag))
+    def deleteFromDB: Unit = dbContext.deleteRow(this, (wQ: WeaponQuality) => wQ.idTag == lift(this.idTag))
+    
   }
-  object WeaponQuality {
+  object WeaponQuality extends TCachableRowCompanion[WeaponQuality] {
     case class IdTag(val value: String) extends AnyVal //MappedTo[String]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
+    
+    def loadRows: List[WeaponQuality] = dbContext.loadAll[WeaponQuality]
+    def byId(aIdTag : IdTag): Option[WeaponQuality] = {
+      import dbContext._
+      val q = quote {
+        query[WeaponQuality].filter{ wq: WeaponQuality => wq.idTag == lift(aIdTag) }
+      }
+      run(q).headOption
+    }
   }
   
   
