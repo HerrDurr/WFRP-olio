@@ -17,6 +17,10 @@ trait SQLiteQuerier {
     def filterByKeys(aFilter : String) = quote(infix"$q WHERE #aFilter".as[Query[T]])
   }
   
-  def testInsOrUpd[T](entity: T, filterQuote: (Query[T]) => AnyRef with Quoted[Query[T]]): Unit = macro SQLiteMacros.insOrUpdate[T]
+  def testInsOrUpd[T](entity: T, filterQuote: (Query[T]) => AnyRef with Quoted[Query[T]]): Unit =
+    macro SQLiteMacros.insOrUpdate[T]
+  
+  def deleteRowGeneric[T](entity: T, filterFunc: (Query[T]) => AnyRef with Quoted[Query[T]]): Unit =
+    macro SQLiteMacros.deleteRowGeneric[T]
   
 }

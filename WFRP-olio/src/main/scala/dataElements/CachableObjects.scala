@@ -10,16 +10,24 @@ object CachableObjects {
     
   }
   
-  abstract class TCachableRowObject(implicit ctx : JdbcContext[_, _] with SQLiteQuerier) extends TRowTrait {
+  abstract class TCachableRowObject(implicit ctx : JdbcContext[_, _] with SQLiteQuerier) extends TAbstractRow {
+  /* extends TRowTrait {
     
     import ctx._
     
-    def insOrUpdTest(
+    def saveToDB(
       implicit
       schema : SchemaMeta[TCachableRowObject]
     ): Unit = {
       ctx.testInsOrUpd(this, (q: Query[TCachableRowObject]) => q.filterByKeys(this.filterString))
     }
+    
+    def deleteFromDB(
+      implicit
+      schema : SchemaMeta[TCachableRowObject]
+    ): Unit = {
+      ctx.deleteRowGeneric(this, (q: Query[TCachableRowObject]) => q.filterByKeys(this.filterString))
+    }*/
     
   }
 }

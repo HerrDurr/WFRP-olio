@@ -41,12 +41,12 @@ class SQLiteMacros(val c: MacroContext) {
       } 
       val filter = $filterQuote(q)
       val updateQuery = ${c.prefix}.quote {
-        ${c.prefix}.query[$t].filter.update(lift($entity))
+        filter.update(lift($entity))
       }
       val insertQuery = quote {
         query[$t].insert(lift($entity))
       }
-      run(${c.prefix}.query[$t].filter).size match {
+      run(filter).size match {
           case 1 => run(updateQuery)
           case _ => run(insertQuery)
       }
@@ -65,6 +65,23 @@ class SQLiteMacros(val c: MacroContext) {
       }
       ()
     """
+  
+  def deleteRowGeneric[T](entity: Tree, filterFunc: Tree)(implicit t: WeakTypeTag[T]): Tree =
+    q"""
+      import ${c.prefix}._
+      val q = ${c.prefix}.quote {
+        ${c.prefix}.query[$t]
+      }
+      val filtered = $filterFunc(q)
+      val deleteQuery = ${c.prefix}.quote {
+        filtered.delete
+      }
+      run(filtered).size match {
+          case 1 => run(deleteQuery)
+          case _ => 
+      }
+      ()
+    """    
       
   def loadAll[T](implicit t: WeakTypeTag[T]): Tree =
     q"""

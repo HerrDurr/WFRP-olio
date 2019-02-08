@@ -9,6 +9,8 @@ import dataWFRP.Types._
 import shapeless.Generic
 import dataElements.CachableObjects.{TCachableRowObject, TCachableRowCompanion}
 import dataElements.CachableObjects.TCachableRowCompanion
+import io.getquill.context.jdbc.JdbcContext
+import dataElements.SQLiteQuerier
 
 //import io.getquill.{SqliteJdbcContext, SqliteDialect, CamelCase, MappedEncoding}
 //import io.getquill.context.Context
@@ -58,7 +60,8 @@ object SchemaWFRP {
   
   
   case class Skill(id: Skill.Id, name: Skill.Name, attribute: Attribute.IdTag, 
-      isBasic: Skill.Basic) /*extends DataPropertyRow*/ extends TCachableRowObject {
+      isBasic: Skill.Basic) /*extends DataPropertyRow*/
+    (implicit ctx : WFRPContext) extends TCachableRowObject {
     /*def initProperties =
     {
       Vector(new IntegerProperty(this, "skillId", id),
@@ -68,10 +71,11 @@ object SchemaWFRP {
     }
     * 
     */
-    import dbContext._
-    def saveToDB: Unit = insertOrUpdate(this, (s: Skill) => s.id == lift(this.id))
-    def deleteFromDB: Unit = deleteRow(this, (s: Skill) => s.id == lift(this.id))
+    //import ctx._
+    //def saveToDB: Unit = insertOrUpdate(this, (s: Skill) => s.id == lift(this.id))
+    //def deleteFromDB: Unit = deleteRow(this, (s: Skill) => s.id == lift(this.id))
     //def companion = Skill
+    def filterString: String = "Id = " + this.id.value
   }
   object Skill extends TCachableRowCompanion[Skill] {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
@@ -86,6 +90,7 @@ object SchemaWFRP {
   case class Talent(id: Talent.Id, name: Talent.Name, subTitle: Option[Talent.SubTitle],
       subType: TalentExplain.TalentExplainType, description: Option[Talent.Description]) 
       //extends TAbstractRow(id :: HNil) {
+      (implicit ctx : WFRPContext)
       extends TCachableRowObject {
     
     override def toString() = {
@@ -126,6 +131,7 @@ object SchemaWFRP {
   case class Availability(idTag: Availability.IdTag, name: Availability.Name,
       modifier: Option[Availability.Modifier]) 
       //extends TAbstractRow(idTag :: HNil) {
+      (implicit ctx : WFRPContext)
       extends TCachableRowObject {
     /*def initProperties =
     {
@@ -143,7 +149,7 @@ object SchemaWFRP {
       res
     }
     
-    def saveToDB: Unit = {
+    /*def saveToDB: Unit = {
       import dbContext._
       insertOrUpdate( this, (av : Availability) => av.idTag == lift(this.idTag) )
     }
@@ -151,7 +157,8 @@ object SchemaWFRP {
       import dbContext._
       deleteRow( this, (av : Availability) => av.idTag == lift(this.idTag) )
     }
-    def companion = Availability
+    def companion = Availability*/
+    def filterString: String = "IdTag = '" + this.idTag.value + "'"
   }
   object Availability extends TCachableRowCompanion[Availability] {
     case class IdTag(val value: String) extends AnyVal //MappedTo[String]
@@ -264,7 +271,9 @@ object SchemaWFRP {
   * 
   */
   
-  case class WeaponQuality(idTag: WeaponQuality.IdTag, name: WeaponQuality.Name) extends TCachableRowObject {
+  case class WeaponQuality(idTag: WeaponQuality.IdTag, name: WeaponQuality.Name)
+    (implicit ctx : WFRPContext)
+    extends TCachableRowObject {
     /*def initProperties =
     {
       Vector( new StringProperty(this, "quality", idTag),
@@ -275,10 +284,11 @@ object SchemaWFRP {
     
     
     
-    import dbContext._
-    val test = quote {lift(idTag)}
-    def saveToDB: Unit = insertOrUpdate(this, (wQ: WeaponQuality) => wQ.idTag == lift(this.idTag))
-    def deleteFromDB: Unit = deleteRow(this, (wQ: WeaponQuality) => wQ.idTag == lift(this.idTag))
+    import ctx._
+    //val test = quote {lift(idTag)}
+    //def saveToDB: Unit = insertOrUpdate(this, (wQ: WeaponQuality) => wQ.idTag == lift(this.idTag))
+    //def deleteFromDB: Unit = deleteRow(this, (wQ: WeaponQuality) => wQ.idTag == lift(this.idTag))
+    def filterString : String = "IdTag = '" + this.idTag.value + "'"
     
   }
   object WeaponQuality extends TCachableRowCompanion[WeaponQuality] {
@@ -372,12 +382,14 @@ object SchemaWFRP {
       careerExits: Array[Career.Id])
   // attributes in different table
   // trappings maybe don't need to be implemented (yet)
+      (implicit ctx : WFRPContext)
       extends TCachableRowObject {
     
-    import dbContext._
-    def saveToDB: Unit = insertOrUpdate(this, (c : Career) => c.id == lift(this.id))
-    def deleteFromDB : Unit = deleteRow(this, (c : Career) => c.id == lift(this.id))
+    //import dbContext._
+    //def saveToDB: Unit = insertOrUpdate(this, (c : Career) => c.id == lift(this.id))
+    //def deleteFromDB : Unit = deleteRow(this, (c : Career) => c.id == lift(this.id))
     //def companion = Career
+    def filterString: String = "Id = " + this.id.value
   }
   object Career extends TCachableRowCompanion[Career] {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
