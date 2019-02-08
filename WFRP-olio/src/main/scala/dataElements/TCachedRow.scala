@@ -25,11 +25,13 @@ class TCachedRow/*[D]*/[A <: TCachableRowObject](aObject : A, aCache : TCachingS
       this.updateStatus(Changed)
   }
   
-  def updateStatus(aStatus : RowStatus) = this.fStatus = aStatus
+  private def updateStatus(aStatus : RowStatus) = this.fStatus = aStatus
+  
+  def delete = this.updateStatus(Deleted)
   
   def data: TCachableRowObject = this.fObjProperty.value
   
-  def apply(): TCachableRowObject = this.data
+  def apply(): ObjectProperty[TCachableRowObject] = this.fObjProperty
   
   def update(aObject : TCachableRowObject) = {
     this.fObjProperty.update(aObject)
@@ -37,9 +39,15 @@ class TCachedRow/*[D]*/[A <: TCachableRowObject](aObject : A, aCache : TCachingS
   
   def save(): Unit = {
     this.fStatus match {
-      case Deleted => this.data.deleteFromDB
+      case Deleted => {
+        this.data.deleteFromDB
+        aCache.removeFromCache(this)
+      }
       case Unchanged => // nanimo shinai
-      case _ => this.data.saveToDB
+      case _ => {
+        this.data.saveToDB
+        this.updateStatus(Unchanged)
+      }
     }
   }
   

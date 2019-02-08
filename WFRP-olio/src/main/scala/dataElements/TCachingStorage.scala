@@ -69,9 +69,14 @@ class TCachingStorage[D <: TCachableRowObject](aCompanion : TCachableRowCompanio
   // match keys (or smth) to get one row
   
   def deleteRow(aRow : D): Unit = {
-    ???
+    val aRowOpt = this.fRows.find(_.data == aRow)
+    if (aRowOpt.isDefined)
+      aRowOpt.get.delete
   }
   
+  def removeFromCache(aRow : TCachedRow[D]): Unit = {
+    this.fRows -= aRow
+  }
   
   def addAsNew(aRow : D): Unit = {
     this.fRows += TCachedRow.createNewRow(aRow, this)
