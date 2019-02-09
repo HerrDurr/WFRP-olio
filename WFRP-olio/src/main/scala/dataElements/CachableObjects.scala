@@ -8,9 +8,19 @@ object CachableObjects {
     
     def loadRows: List[A]
     
+    def cache : TCachingStorage[A]
+    
+    def getCachedRow(forRow : A): TCachedRow[A] = {
+      cache.getRows.find{ cRow: TCachedRow[A] => forRow.filterFunc(cRow.data) }
+                   .getOrElse( cache.addAsNew(forRow) )
+    }
+    
   }
   
-  abstract class TCachableRowObject(implicit ctx : JdbcContext[_, _] with SQLiteQuerier) extends TAbstractRow {
+  abstract class TCachableRowObject/*(implicit ctx : JdbcContext[_, _] with SQLiteQuerier)*/ extends TAbstractRow {
+    
+    def filterFunc(aRow: TCachableRowObject): Boolean//[A <: TCachableRowObject](aRow : A): Boolean
+    
   /* extends TRowTrait {
     
     import ctx._

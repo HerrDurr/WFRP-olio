@@ -11,6 +11,7 @@ import dataElements.CachableObjects.{TCachableRowObject, TCachableRowCompanion}
 import dataElements.CachableObjects.TCachableRowCompanion
 import io.getquill.context.jdbc.JdbcContext
 import dataElements.SQLiteQuerier
+import dataElements.TCachingStorage
 
 //import io.getquill.{SqliteJdbcContext, SqliteDialect, CamelCase, MappedEncoding}
 //import io.getquill.context.Context
@@ -61,7 +62,8 @@ object SchemaWFRP {
   
   case class Skill(id: Skill.Id, name: Skill.Name, attribute: Attribute.IdTag, 
       isBasic: Skill.Basic) /*extends DataPropertyRow*/
-    (implicit ctx : WFRPContext) extends TCachableRowObject {
+    //(implicit ctx : WFRPContext) 
+    extends TCachableRowObject {
     /*def initProperties =
     {
       Vector(new IntegerProperty(this, "skillId", id),
@@ -71,11 +73,22 @@ object SchemaWFRP {
     }
     * 
     */
-    //import ctx._
-    //def saveToDB: Unit = insertOrUpdate(this, (s: Skill) => s.id == lift(this.id))
-    //def deleteFromDB: Unit = deleteRow(this, (s: Skill) => s.id == lift(this.id))
+    
+    
+    
+    
+    def filterFunc(aRow : TCachableRowObject): Boolean = {
+      if (aRow.isInstanceOf[Skill])
+        aRow.asInstanceOf[Skill].id == (this.id)
+      else
+        false
+    }
+    
+    import dbContext._ //ctx._
+    def saveToDB: Unit = insertOrUpdate(this, (s: Skill) => s.id == lift(this.id))
+    def deleteFromDB: Unit = deleteRow(this, (s: Skill) => s.id == lift(this.id))
     //def companion = Skill
-    def filterString: String = "Id = " + this.id.value
+    //def filterString: String = "Id = " + this.id.value
   }
   object Skill extends TCachableRowCompanion[Skill] {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
@@ -84,13 +97,16 @@ object SchemaWFRP {
     def loadRows: List[Skill] = {
       dbContext.loadAll[Skill]
     }
+    
+    private lazy val fCache = new TCachingStorage[Skill](this, dbContext)
+    def cache: TCachingStorage[Skill] = this.fCache
   }
   
   
   case class Talent(id: Talent.Id, name: Talent.Name, subTitle: Option[Talent.SubTitle],
       subType: TalentExplain.TalentExplainType, description: Option[Talent.Description]) 
       //extends TAbstractRow(id :: HNil) {
-      (implicit ctx : WFRPContext)
+      //(implicit ctx : WFRPContext)
       extends TCachableRowObject {
     
     override def toString() = {
@@ -100,7 +116,14 @@ object SchemaWFRP {
       res
     }
     
-    import dbContext._
+    def filterFunc(aRow : TCachableRowObject): Boolean = {
+      if (aRow.isInstanceOf[Talent])
+        aRow.asInstanceOf[Talent].id == (this.id)
+      else
+        false
+    }
+    
+    import dbContext._ //ctx._
     def saveToDB: Unit = insertOrUpdate(this, (t: Talent) => t.id == lift(this.id))
     def deleteFromDB: Unit = deleteRow(this, (t: Talent) => t.id == lift(this.id))
     //def companion = Talent
@@ -126,12 +149,15 @@ object SchemaWFRP {
       import dbContext._
       loadAll[Talent]
     }
+    
+    private lazy val fCache = new TCachingStorage[Talent](this, dbContext)
+    def cache: TCachingStorage[Talent] = this.fCache
   }
   
   case class Availability(idTag: Availability.IdTag, name: Availability.Name,
       modifier: Option[Availability.Modifier]) 
       //extends TAbstractRow(idTag :: HNil) {
-      (implicit ctx : WFRPContext)
+      //(implicit ctx : WFRPContext)
       extends TCachableRowObject {
     /*def initProperties =
     {
@@ -149,7 +175,20 @@ object SchemaWFRP {
       res
     }
     
-    /*def saveToDB: Unit = {
+    /*def filterFunc[A <: TCachableRowObject](aRow : A): Boolean = {
+      if (aRow.isInstanceOf[Availability])
+        aRow.asInstanceOf[Availability].idTag == (this.idTag)
+      else
+        false
+    }*/
+    def filterFunc(aRow : TCachableRowObject): Boolean = {
+      if (aRow.isInstanceOf[Availability])
+        aRow.asInstanceOf[Availability].idTag == (this.idTag)
+      else
+        false
+    }
+    
+    def saveToDB: Unit = {
       import dbContext._
       insertOrUpdate( this, (av : Availability) => av.idTag == lift(this.idTag) )
     }
@@ -157,8 +196,8 @@ object SchemaWFRP {
       import dbContext._
       deleteRow( this, (av : Availability) => av.idTag == lift(this.idTag) )
     }
-    def companion = Availability*/
-    def filterString: String = "IdTag = '" + this.idTag.value + "'"
+    //def companion = Availability
+    //def filterString: String = "IdTag = '" + this.idTag.value + "'"
   }
   object Availability extends TCachableRowCompanion[Availability] {
     case class IdTag(val value: String) extends AnyVal //MappedTo[String]
@@ -170,10 +209,14 @@ object SchemaWFRP {
       import dbContext._
       loadAll[Availability]
     }
+    
+    private lazy val fCache = new TCachingStorage[Availability](this, dbContext)
+    def cache: TCachingStorage[Availability] = this.fCache
   }
   
   case class Item(id: Item.Id, name: Item.Name, craftsmanship: Craftsmanship.Craftsmanship, encumbrance: Item.Encumbrance, 
-      cost: Option[Item.Cost], availability: Option[Availability.IdTag]) {
+      cost: Option[Item.Cost], availability: Option[Availability.IdTag]) 
+      extends TCachableRowObject {
     /*def initProperties =
     {
       Vector( new IntegerProperty(this, "itemId", id),
@@ -186,10 +229,22 @@ object SchemaWFRP {
     * 
     */
     //val nameProp = new StringProperty(this,"name",this.name.value)
+    
     override def toString = this.name.value + " " + this.craftsmanship + ", Enc: " + this.encumbrance.value + ", Cost: " +
       this.cost.getOrElse(Item.Cost("-")).value
+    
+    def filterFunc(aRow : TCachableRowObject): Boolean = {
+      if (aRow.isInstanceOf[Item])
+        aRow.asInstanceOf[Item].id == (this.id)
+      else
+        false
+    }
+    
+    import dbContext._ //ctx._
+    def saveToDB: Unit = insertOrUpdate(this, (s: Item) => s.id == lift(this.id))
+    def deleteFromDB: Unit = deleteRow(this, (s: Item) => s.id == lift(this.id))
   }
-  object Item {
+  object Item extends TCachableRowCompanion[Item] {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
     //case class Craftsmanship(val value: Char) extends AnyVal //MappedTo[Char]
@@ -206,6 +261,11 @@ object SchemaWFRP {
     def createNew: Item = {
       new Item(Id(-1), Name(""), Craftsmanship.byEnumOrThrow("N"), Encumbrance(0), Some(Cost("")), Some(Availability.avgId))
     }
+    
+    def loadRows: List[Item] = dbContext.loadAll[Item]
+    
+    private lazy val fCache = new TCachingStorage[Item](this, dbContext)
+    def cache: TCachingStorage[Item] = this.fCache
   }
   //case class Craftsmanship(val value: String) extends AnyVal //MappedTo[Char]
   
@@ -272,7 +332,7 @@ object SchemaWFRP {
   */
   
   case class WeaponQuality(idTag: WeaponQuality.IdTag, name: WeaponQuality.Name)
-    (implicit ctx : WFRPContext)
+    //(implicit ctx : WFRPContext)
     extends TCachableRowObject {
     /*def initProperties =
     {
@@ -283,12 +343,18 @@ object SchemaWFRP {
     */
     
     
+    def filterFunc(aRow : TCachableRowObject): Boolean = {
+      if (aRow.isInstanceOf[WeaponQuality])
+        aRow.asInstanceOf[WeaponQuality].idTag == (this.idTag)
+      else
+        false
+    }
     
-    import ctx._
+    import dbContext._ //ctx.__
     //val test = quote {lift(idTag)}
-    //def saveToDB: Unit = insertOrUpdate(this, (wQ: WeaponQuality) => wQ.idTag == lift(this.idTag))
-    //def deleteFromDB: Unit = deleteRow(this, (wQ: WeaponQuality) => wQ.idTag == lift(this.idTag))
-    def filterString : String = "IdTag = '" + this.idTag.value + "'"
+    def saveToDB: Unit = insertOrUpdate(this, (wQ: WeaponQuality) => wQ.idTag == lift(this.idTag))
+    def deleteFromDB: Unit = deleteRow(this, (wQ: WeaponQuality) => wQ.idTag == lift(this.idTag))
+    //def filterString : String = "IdTag = '" + this.idTag.value + "'"
     
   }
   object WeaponQuality extends TCachableRowCompanion[WeaponQuality] {
@@ -303,6 +369,9 @@ object SchemaWFRP {
       }
       run(q).headOption
     }
+    
+    private lazy val fCache = new TCachingStorage[WeaponQuality](this, dbContext)
+    def cache: TCachingStorage[WeaponQuality] = this.fCache
   }
   
   
@@ -382,14 +451,22 @@ object SchemaWFRP {
       careerExits: Array[Career.Id])
   // attributes in different table
   // trappings maybe don't need to be implemented (yet)
-      (implicit ctx : WFRPContext)
+      //(implicit ctx : WFRPContext)
       extends TCachableRowObject {
     
-    //import dbContext._
-    //def saveToDB: Unit = insertOrUpdate(this, (c : Career) => c.id == lift(this.id))
-    //def deleteFromDB : Unit = deleteRow(this, (c : Career) => c.id == lift(this.id))
+    
+    def filterFunc(aRow : TCachableRowObject): Boolean = {
+      if (aRow.isInstanceOf[Career])
+        aRow.asInstanceOf[Career].id == (this.id)
+      else
+        false
+    }
+    
+    import dbContext._ //ctx._
+    def saveToDB: Unit = insertOrUpdate(this, (c : Career) => c.id == lift(this.id))
+    def deleteFromDB : Unit = deleteRow(this, (c : Career) => c.id == lift(this.id))
     //def companion = Career
-    def filterString: String = "Id = " + this.id.value
+    //def filterString: String = "Id = " + this.id.value
   }
   object Career extends TCachableRowCompanion[Career] {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
@@ -401,6 +478,9 @@ object SchemaWFRP {
     case class Careers(val value: String) extends AnyVal
     
     def loadRows : List[Career] = dbContext.loadAll[Career]
+    
+    private lazy val fCache = new TCachingStorage[Career](this, dbContext)
+    def cache: TCachingStorage[Career] = this.fCache
   }
   
   

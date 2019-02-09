@@ -2,8 +2,7 @@ package oliofxGUI
 
 import scalafx.scene.control.{TextField, ComboBox, CheckBox, ListView, ToggleButton, Button, MenuButton,
   TitledPane, CheckMenuItem}
-import olioIO.SchemaWFRP.{WeaponQuality, Item, Availability, WeaponMelee, WeaponRanged,
-  Craftsmanship, Talent}
+import olioIO.SchemaWFRP._
 import olioIO.SchemaWFRP.Item._
 import olioIO.DataHelperWFRP
 import olioIO.DataHelperWFRP._
@@ -94,13 +93,15 @@ class EditItemHandler(
    * TODO: prettify!
    */
   comboAvailability += None
-  DataHelperWFRP.getAllAvailabilities.foreach(comboAvailability += Some(_))
+  //DataHelperWFRP.getAllAvailabilities.foreach(comboAvailability += Some(_))
+  Availability.cache.getRows.map(_.data).foreach( comboAvailability += Some(_) )
   comboAvailability.getSelectionModel.selectFirst()
   
   /*
    * Init qualities: menus and mappings!
    */
-  getAllWeaponQualities.foreach( createMenuItemsForQuality(_) )
+  //getAllWeaponQualities.foreach( createMenuItemsForQuality(_) )
+  WeaponQuality.cache.getRows.map(_.data).foreach( createMenuItemsForQuality(_) )
   
   /*
    * Init WeaponGroups
@@ -195,22 +196,6 @@ class EditItemHandler(
       loadMeleeWeapon()
     }
     
-    /*comboCraftsmanship.
-                         private val cbMeleeSB: CheckBox,
-                         private val editMeleeDmg: TextField,
-                         private val listMeleeQualities: ListView[WeaponQuality.Name],
-                         private val comboMeleeGroup: ComboBox[String],
-                         private val toggleRangedDmg: ToggleButton,
-                         private val cbRangedSB: CheckBox,
-                         private val editRangedDmg: TextField,
-                         private val editRangeShort: TextField,
-                         private val editRangeLong: TextField,
-                         private val comboReload: ComboBox[String],
-                         private val listRangedQualities: ListView[WeaponQuality.Name],
-                         private val comboAmmunition: ComboBox[Item],
-                         private val comboRangedGroup
-                         * 
-                         */
   }
   
   /**

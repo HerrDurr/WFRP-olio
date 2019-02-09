@@ -23,30 +23,10 @@ class SQLiteMacros(val c: MacroContext) {
       val updateQuery = ${c.prefix}.quote {
         ${c.prefix}.query[$t].filter($filter).update(lift($entity))
       }
-      val insertQuery = quote {
-        query[$t].insert(lift($entity))
+      val insertQuery = ${c.prefix}.quote {
+        ${c.prefix}.query[$t].insert(lift($entity))
       }
       run(${c.prefix}.query[$t].filter($filter)).size match {
-          case 1 => run(updateQuery)
-          case _ => run(insertQuery)
-      }
-      ()
-    """
-      
-  def insOrUpdate[T](entity: Tree, filterQuote: Tree)(implicit t: WeakTypeTag[T]): Tree =
-    q"""
-      import ${c.prefix}._
-      val q = ${c.prefix}.quote {
-        ${c.prefix}.query[$t]
-      } 
-      val filter = $filterQuote(q)
-      val updateQuery = ${c.prefix}.quote {
-        filter.update(lift($entity))
-      }
-      val insertQuery = quote {
-        query[$t].insert(lift($entity))
-      }
-      run(filter).size match {
           case 1 => run(updateQuery)
           case _ => run(insertQuery)
       }
@@ -65,8 +45,75 @@ class SQLiteMacros(val c: MacroContext) {
       }
       ()
     """
+        
+  def loadAll[T](implicit t: WeakTypeTag[T]): Tree =
+    q"""
+      import ${c.prefix}._
+      val loadQuery = ${c.prefix}.quote {
+        ${c.prefix}.query[$t]
+      }
+      run(loadQuery)
+    """
+      
+  /*def insOrUpdate[T](entity: Tree, filterQuote: Tree)(implicit t: WeakTypeTag[T]): Tree =
+    q"""
+      import ${c.prefix}._
+      val q = ${c.prefix}.quote {
+        ${c.prefix}.query[$t]
+      } 
+      val filter = $filterQuote(q)
+      val updateQuery = ${c.prefix}.quote {
+        filter.update(lift($entity))
+      }
+      val insertQuery = quote {
+        query[$t].insert(lift($entity))
+      }
+      run(filter).size match {
+          case 1 => run(updateQuery)
+          case _ => run(insertQuery)
+      }
+      ()
+    """
+    * 
+    */
+  /*    
+  def genericDeleteById[T](id: Tree)(implicit t: WeakTypeTag[T]): Tree =
+    q"""
+      import ${c.prefix}._
+      val filteredQ = ${c.prefix}.quote {
+        for {
+          e <- $t if (e.id == ${c.prefix}.lift($id))
+        } yield {
+          (e)
+        }
+      }
+      run(filteredQ).size match {
+          case 1 => run(filteredQ.delete)
+          case _ => 
+      }
+      ()
+    """
+          
+  def genericDeleteByTag[T](idTag: Tree)(implicit t: WeakTypeTag[T]): Tree =
+    q"""
+      import ${c.prefix}._
+      val filteredQ = ${c.prefix}.quote {
+        for {
+          e <- $t if (e.idTag == ${c.prefix}.lift(idTag))
+        } yield {
+          (e)
+        }
+      }
+      run(filteredQ).size match {
+          case 1 => run(filteredQ.delete)
+          case _ => 
+      }
+      ()
+    """
+    * 
+    */
   
-  def deleteRowGeneric[T](entity: Tree, filterFunc: Tree)(implicit t: WeakTypeTag[T]): Tree =
+  /*def deleteRowGeneric[T](entity: Tree, filterFunc: Tree)(implicit t: WeakTypeTag[T]): Tree =
     q"""
       import ${c.prefix}._
       val q = ${c.prefix}.quote {
@@ -81,16 +128,56 @@ class SQLiteMacros(val c: MacroContext) {
           case _ => 
       }
       ()
-    """    
-      
-  def loadAll[T](implicit t: WeakTypeTag[T]): Tree =
+    """  */  
+  /*
+  def genericFilter[T](filterStr: Tree)(implicit t: WeakTypeTag[T]): Tree =
     q"""
       import ${c.prefix}._
-      val loadQuery = ${c.prefix}.quote {
+      (q: Query[$t]) => q.filterByKeys($filterStr)
+      """
+      * 
+      */
+   
+  /*def deleteRowGeneric2[T](entity: Tree, filterStr: Tree)(implicit t: WeakTypeTag[T]): Tree =
+    q"""
+      import ${c.prefix}._
+      val q = ${c.prefix}.quote {
         ${c.prefix}.query[$t]
       }
-      run(loadQuery)
-    """
+      def genFilter(q: Query[$t]) = q.filterByKeys($filterStr)
+      val filtered = genFilter(q)
+      val deleteQuery = ${c.prefix}.quote {
+        filtered.delete
+      }
+      run(filtered).size match {
+          case 1 => run(deleteQuery)
+          case _ => 
+      }
+      ()
+    """      
+        
+  def deleteRowGeneric4[T]()
+        
+  def deleteRowGeneric3[T](filterStr: Tree)(implicit t: WeakTypeTag[T]): Tree =
+    q"""
+      import ${c.prefix}._
+      val q = ${c.prefix}.quote {
+        for {
+          e <- $t if (${c.prefix}.infix"e.$$filterStr")
+        }
+        ${c.prefix}.query[$t]
+      }
+      def genFilter(q: Query[$t]) = q.filterByKeys($filterStr)
+      val filtered = genFilter(q)
+      val deleteQuery = ${c.prefix}.quote {
+        filtered.delete
+      }
+      run(filtered).size match {
+          case 1 => run(deleteQuery)
+          case _ => 
+      }
+      ()
+    """ */ 
       
       
 }

@@ -8,7 +8,7 @@ import dataElements.CachableObjects._
 
 class TCachedRow/*[D]*/[A <: TCachableRowObject](aObject : A, aCache : TCachingStorage[A]) {
   
-  private val fObjProperty : ObjectProperty[TCachableRowObject] = ObjectProperty(aObject)
+  private val fObjProperty : ObjectProperty[A] = ObjectProperty(aObject)
   private var fStatus : RowStatus = Unchanged
   this.init()
   // add to aCache
@@ -29,11 +29,11 @@ class TCachedRow/*[D]*/[A <: TCachableRowObject](aObject : A, aCache : TCachingS
   
   def delete = this.updateStatus(Deleted)
   
-  def data: TCachableRowObject = this.fObjProperty.value
+  def data: A = this.fObjProperty.value
   
-  def apply(): ObjectProperty[TCachableRowObject] = this.fObjProperty
+  def apply(): ObjectProperty[A] = this.fObjProperty
   
-  def update(aObject : TCachableRowObject) = {
+  def update(aObject : A) = {
     this.fObjProperty.update(aObject)
   }
   

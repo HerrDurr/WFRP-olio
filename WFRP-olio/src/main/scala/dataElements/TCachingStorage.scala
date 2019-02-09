@@ -3,12 +3,12 @@ package dataElements
 import scala.collection.mutable.Buffer
 import dataElements.{TCachedRow, SQLiteQuerier}
 import TCachedRow._
-import io.getquill.{SqliteJdbcContext, CamelCase}
+import io.getquill.context.jdbc.JdbcContext
 import dataElements.TRowTrait
 import dataElements.CachableObjects._
 
 class TCachingStorage[D <: TCachableRowObject](aCompanion : TCachableRowCompanion[D],
-    aContext : SqliteJdbcContext[CamelCase] with SQLiteQuerier) {
+    aContext : JdbcContext[_,_] with SQLiteQuerier) {
   
   import aContext._
   
@@ -78,8 +78,10 @@ class TCachingStorage[D <: TCachableRowObject](aCompanion : TCachableRowCompanio
     this.fRows -= aRow
   }
   
-  def addAsNew(aRow : D): Unit = {
-    this.fRows += TCachedRow.createNewRow(aRow, this)
+  def addAsNew(aRow : D): TCachedRow[D] = {
+     val newCachedRow = TCachedRow.createNewRow(aRow, this)
+     this.fRows += newCachedRow
+     newCachedRow
   }
   
 }

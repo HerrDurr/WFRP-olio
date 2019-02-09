@@ -28,6 +28,7 @@ import javafx.{scene => jfxs}
 import scalafx.stage.Stage
 import javafx.scene.Scene
 import javafx.stage.{Stage => jStage}
+import dataElements.TCachedRow
 
 //import scalafx.util.StringConverter
 
@@ -285,7 +286,8 @@ object EditItem {
   
   def testEditItem(): Unit = {
     //println(path)
-    val item = byId(Item.Id(1)).getOrElse(Item.createNew)
+    import Item._
+    val item = Item.cache.getRows.find{ cR : TCachedRow[Item] => cR.data.id == Id(1) }.map(_.data).getOrElse(Item.createNew) //byId(Item.Id(1)).getOrElse(Item.createNew)
     loader.load()
     val root = loader.getRoot[jfxs.Parent]
     val ctrlr: EditItemInterface = loader.getController[EditItemInterface]
