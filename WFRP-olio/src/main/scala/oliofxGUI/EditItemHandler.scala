@@ -27,6 +27,8 @@ import dataUI.UtilsUI._
 import scala.collection.mutable.Map
 import dataWFRP.Resources._
 import scalafx.stage.Stage
+import dataElements.CachableObjects._
+import dataElements.TCachedRow
 
 //import javafx.beans.value.ObservableValue
 
@@ -71,7 +73,7 @@ class EditItemHandler(
    * Private stuff, e.g. current states.
    */
   //private var fCurrentItem: Option[Item] = None
-  private val fCurrentItem: ObjectProperty[Option[Item]] = ObjectProperty(this, "item", None)
+  private var fCurrentItem: Option[TCachedRow[Item]] = None //ObjectProperty[Option[Item]] = ObjectProperty(this, "item", None)
   private var fCurrentWeaponMelee: ObjectProperty[Option[WeaponMelee]] = ObjectProperty(this, "melee", None)
   private var fCurrentWeaponRanged: Option[WeaponRanged] = None
   
@@ -165,27 +167,31 @@ class EditItemHandler(
     fRangedQualityMapping += (aVal -> aRangedItem)
   }
   
-  
-  private def resetItem(aItem: Option[Item]) = {
-    this.fCurrentItem.value = aItem
+  // TODO: check
+  private def resetItem(aItem: Item) = {
     this.fCurrentWeaponMelee.value = None
     this.fCurrentWeaponRanged = None
-    if (aItem.isDefined)
-    {
-      this.fCurrentWeaponMelee.value = aItem.get.weaponMelee
-      this.fCurrentWeaponRanged = aItem.get.weaponRanged
-    }
+    //if (aItem.isDefined)
+    //{
+      this.fCurrentItem = Some(Item.cache.getCachedRow(aItem))
+      this.fCurrentWeaponMelee.value = aItem.weaponMelee
+      this.fCurrentWeaponRanged = aItem.weaponRanged
+    //}
+    //else
+      //this.fCurrentItem = Some(Item.cache.getCachedRow( Item.createNew ))
     cbIsRanged.setSelected(this.fCurrentWeaponRanged.isDefined)
     cbIsMelee.setSelected(this.fCurrentWeaponMelee.value.isDefined)
   }
   
   
   def editItem(aItem: Item) = {
-    this.resetItem( Some(aItem) )
+    this.resetItem( aItem )
     
     editName.text = aItem.name.value
     editCost.text = aItem.cost.getOrElse( Item.Cost("-") ).value
     editEnc.text = aItem.encumbrance.value.toString()
+    
+    comboCraftsmanship.getSelectionModel.select(aItem.craftsmanship)
     if (aItem.availability.isDefined)
       comboAvailability.getSelectionModel.select( Some( byId(aItem.availability.getOrElse(Availability.avgId)) ) )
     cbIsMelee.setSelected(this.fCurrentWeaponMelee.value.isDefined)
@@ -203,54 +209,66 @@ class EditItemHandler(
    */
   private def loadMeleeWeapon() = {
     import WeaponMelee._
-    if (this.fCurrentWeaponMelee.value.isEmpty)
+    if (this.fCurrentWeaponMelee.value.isEmpty && this.fCurrentItem.isDefined)
     {
-      this.fCurrentWeaponMelee.value = Some( WeaponMelee.createNew(this.fCurrentItem.value.getOrElse(Item.createNew)) )
+      this.fCurrentWeaponMelee.value = Some( WeaponMelee.createNew(this.fCurrentItem.map(_.data).get) )
     }
-    val weap = this.fCurrentWeaponMelee.value.get
-    
-    editMeleeDmg.text = weap.damageModifier.getOrElse(DamageMod(0)).value.toString
-    getAllWeaponQualities.foreach( q => fMeleeQualityMapping.get(q).get.selected = ( weap.qualities.contains(q) ) )
-    if (weap.weaponGroupTalentId.isDefined)
-      comboMeleeGroup.getSelectionModel.select( weaponGroupTalents.find( _.id == weap.weaponGroupTalentId.get ).get )
-    else
-      comboMeleeGroup.getSelectionModel.clearSelection()
+    if (this.fCurrentWeaponMelee.value.isDefined)
+    {
+      val weap = this.fCurrentWeaponMelee.value.get
+        
+      editMeleeDmg.text = weap.damageModifier.getOrElse(DamageMod(0)).value.toString
+      getAllWeaponQualities.foreach( q => fMeleeQualityMapping.get(q).get.selected = ( weap.qualities.contains(q) ) )
+      if (weap.weaponGroupTalentId.isDefined)
+        comboMeleeGroup.getSelectionModel.select( weaponGroupTalents.find( _.id == weap.weaponGroupTalentId.get ).get )
+      else
+        comboMeleeGroup.getSelectionModel.clearSelection()
+    }
   }
   
   /**
    * Save Item, WeaponMelee, WeaponRanged.
    */
   def onSave(): Unit = {
-    println("Totally saved this!")
-    if (this.fCurrentItem.value.isDefined)
-      println(this.fCurrentItem.value.get.toString())
+    if (this.fCurrentItem.isDefined)
+    {
+      this.fCurrentItem.get.save()
+      println("Totally saved this!")
+      println(this.fCurrentItem.get.data.toString())
+    }
   }
   
 
   def setStage(stage: Stage) = fStage = Some(stage)
   
   private def onChangedName() = {
-    fCurrentItem.value = Some( lName.set(fCurrentItem.value.getOrElse(Item.createNew))( Name(editName.text.value) ) )
+    if (this.fCurrentItem.isDefined)
+      fCurrentItem.get.update( lName.set(fCurrentItem.get.data)( Name(editName.text.value) ) )
   }
   
   private def onChangedEnc() = {
-    val newEnc = editEnc.text.value
-    if ( newEnc.isShort )
-      fCurrentItem.value = Some( lEnc.set(fCurrentItem.value.getOrElse(Item.createNew))( Encumbrance(newEnc.toShort) ) )
-    else
+    if (this.fCurrentItem.isDefined)
     {
-      new Alert(AlertType.Error, "Encumbrance needs to be a numeric value!").showAndWait()
-      editEnc.text.value = fCurrentItem.value.getOrElse(Item.createNew).encumbrance.value.toString
+      val newEnc = editEnc.text.value
+      if ( newEnc.isShort )
+        fCurrentItem.get.update( lEnc.set(fCurrentItem.get.data)( Encumbrance(newEnc.toShort) ) )
+      else
+      {
+        new Alert(AlertType.Error, "Encumbrance needs to be a numeric value!").showAndWait()
+        editEnc.text.value = fCurrentItem.map(_.data).getOrElse(Item.createNew).encumbrance.value.toString
+      }
     }
   }
     
   private def onChangeCraftsmanship(observable: jfxbv.ObservableValue[_ <: Craftsmanship.Craftsmanship], oldValue: Craftsmanship.Craftsmanship, newValue: Craftsmanship.Craftsmanship) = {
-    fCurrentItem.value = Some( lCraft.set(fCurrentItem.value.getOrElse(Item.createNew))(newValue) )
+    if (this.fCurrentItem.isDefined)
+      fCurrentItem.get.update( lCraft.set(fCurrentItem.get.data)(newValue) )
   }
   
   private def onChangedCost = {
     val newCost = editCost.text.value
-    fCurrentItem.value = Some( lCost.set(fCurrentItem.value.getOrElse(Item.createNew))( Some( Cost(newCost) ) ) )
+    if (this.fCurrentItem.isDefined)
+      fCurrentItem.get.update( lCost.set(fCurrentItem.get.data)( Some( Cost(newCost) ) ) )
   }
   
   private def onChangeIsMelee(aChecked: Boolean) = {
@@ -275,11 +293,11 @@ class EditItemHandler(
   }
   
   def getCurrentItem: Item = {
-    if (this.fCurrentItem.value.isEmpty)
+    if (this.fCurrentItem.isEmpty)
     {
-      this.fCurrentItem.value = Some(Item.createNew)
+      this.fCurrentItem = Some(Item.cache.getCachedRow( Item.createNew ))
     }
-    this.fCurrentItem.value.get
+    this.fCurrentItem.get.data
   }
   
   def getCurrentWeaponMelee: WeaponMelee = {

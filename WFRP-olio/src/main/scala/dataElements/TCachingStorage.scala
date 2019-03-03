@@ -4,7 +4,7 @@ import scala.collection.mutable.Buffer
 import dataElements.{TCachedRow, SQLiteQuerier}
 import TCachedRow._
 import io.getquill.context.jdbc.JdbcContext
-import dataElements.TRowTrait
+//import dataElements.TRowTrait
 import dataElements.CachableObjects._
 
 class TCachingStorage[D <: TCachableRowObject](aCompanion : TCachableRowCompanion[D],
@@ -76,6 +76,14 @@ class TCachingStorage[D <: TCachableRowObject](aCompanion : TCachableRowCompanio
   
   def removeFromCache(aRow : TCachedRow[D]): Unit = {
     this.fRows -= aRow
+  }
+  
+  def find(aRowItem : D): Option[TCachedRow[D]] = {
+    this.fRows.find{ r: TCachedRow[D] => aRowItem.asInstanceOf[TCachableRowObject].filterFunc(r.data) }
+  }
+  
+  def getCachedRow(aRowItem : D): TCachedRow[D] = {
+    this.find(aRowItem).getOrElse(addAsNew(aRowItem))
   }
   
   def addAsNew(aRow : D): TCachedRow[D] = {

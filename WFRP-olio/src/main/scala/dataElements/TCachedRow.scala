@@ -21,8 +21,12 @@ class TCachedRow/*[D]*/[A <: TCachableRowObject](aObject : A, aCache : TCachingS
       aObservable: jfxbv.ObservableValue[_ <: TCachableRowObject],
       aOldVal: TCachableRowObject,
       aNewVal: TCachableRowObject) = {
-    if (this.fStatus != New)
+    println("Status before change: " + this.fStatus)
+    if (this.fStatus != New) {
       this.updateStatus(Changed)
+      println( "Changed to: " + aNewVal.toString() )
+    }
+    println("Status after change: " + this.fStatus)
   }
   
   private def updateStatus(aStatus : RowStatus) = this.fStatus = aStatus
