@@ -104,6 +104,55 @@ object ControlFactory {
     res
   }
   
+  
+  
+  /**
+   * MAGICK FUCKEN POPSICKELS! Reduced version, slightly clearer
+   */
+  def tableColumnNew[A, B, ReprB <: HList, Head, J1 >: Head,
+                     AtoB <: A => B,
+                     SetA <: A => Unit,
+                     NewB <: Head => B
+                     ]
+                    (
+                    aPropDummy: B,
+                    aPropFromObjFunc: AtoB,
+                    aSetCurrentFunc: SetA,
+                    aLens: Lens[A, B],
+                    aNewBFunc: NewB
+                    )(
+      implicit
+      genB: Generic.Aux[B, ReprB],
+      //genA: Generic.Aux[A, ReprA],
+      isHCons: IsHCons.Aux[ReprB, Head, HNil],
+      strConvFactory: StrConverterFactory[Head]
+  ): TableColumn[A, Head] = 
+  {
+    val aDummy : Head = genB.to(aPropDummy).head
+    val strConverter = strConvFactory.strConverter(aDummy)
+    //val genericA = lGenA.to(aTableItem)
+    val res = new TableColumn[A, Head] {
+      cellValueFactory = cdf => 
+      {
+        val prop = ObjectProperty( genB.to(aPropFromObjFunc(cdf.value)).head )
+        prop.onChange{
+          (_, _, aNew) => {
+            aSetCurrentFunc( aLens.set(cdf.value)(aNewBFunc(aNew)) )
+          }
+        }
+        prop
+      }
+    }
+    res.cellFactory = {
+      aCol: TableColumn[A, Head] => {
+        new TextFieldTableCell[A, Head]( strConverter )
+      }
+    }
+    res
+  }
+  
+  
+  
   /*
   def addCellFactory[A, B, C <: TableColumn[A, B]](aTableItem: A, aItem: B, aCol: C)(
       //implicit

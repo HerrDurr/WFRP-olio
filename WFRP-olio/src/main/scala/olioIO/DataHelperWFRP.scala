@@ -31,7 +31,7 @@ object DataHelperWFRP {
    * byId could (and should!) be done using Shapeless Magick! Use LabelledGeneric and
    * common names for case class parameters.
    */
-  def byId(aIdTag: Availability.IdTag): Availability =
+  def byAvId(aIdTag: Availability.IdTag): Availability =
   {
     val q = quote {
       query[Availability].filter{ av: Availability => av.idTag == lift(aIdTag) }
@@ -47,7 +47,7 @@ object DataHelperWFRP {
     dbContext.run(q).headOption
   }
   
-  def byId(aId: Item.Id): Option[Item] =
+  def byItemId(aId: Item.Id): Option[Item] =
   {
     val q = quote {
       query[Item].filter{ item: Item => item.id == lift(aId) }

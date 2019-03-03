@@ -28,7 +28,7 @@ import scala.collection.mutable.Map
 import dataWFRP.Resources._
 import scalafx.stage.Stage
 import dataElements.CachableObjects._
-import dataElements.TCachedRow
+import dataElements.TStorageRow
 
 //import javafx.beans.value.ObservableValue
 
@@ -73,7 +73,7 @@ class EditItemHandler(
    * Private stuff, e.g. current states.
    */
   //private var fCurrentItem: Option[Item] = None
-  private var fCurrentItem: Option[TCachedRow[Item]] = None //ObjectProperty[Option[Item]] = ObjectProperty(this, "item", None)
+  private var fCurrentItem: Option[TStorageRow[Item]] = None //ObjectProperty[Option[Item]] = ObjectProperty(this, "item", None)
   private var fCurrentWeaponMelee: ObjectProperty[Option[WeaponMelee]] = ObjectProperty(this, "melee", None)
   private var fCurrentWeaponRanged: Option[WeaponRanged] = None
   
@@ -173,7 +173,7 @@ class EditItemHandler(
     this.fCurrentWeaponRanged = None
     //if (aItem.isDefined)
     //{
-      this.fCurrentItem = Some(Item.cache.getCachedRow(aItem))
+      this.fCurrentItem = Some(Item.cache.getStorageRow(aItem))
       this.fCurrentWeaponMelee.value = aItem.weaponMelee
       this.fCurrentWeaponRanged = aItem.weaponRanged
     //}
@@ -192,8 +192,9 @@ class EditItemHandler(
     editEnc.text = aItem.encumbrance.value.toString()
     
     comboCraftsmanship.getSelectionModel.select(aItem.craftsmanship)
+    import Availability._
     if (aItem.availability.isDefined)
-      comboAvailability.getSelectionModel.select( Some( byId(aItem.availability.getOrElse(Availability.avgId)) ) )
+      comboAvailability.getSelectionModel.select( Availability.byTag( aItem.availability.map(_.value).getOrElse(avgId.value) ).map(_.asInstanceOf[Availability]) )
     cbIsMelee.setSelected(this.fCurrentWeaponMelee.value.isDefined)
     cbIsRanged.setSelected(this.fCurrentWeaponRanged.isDefined)
     
@@ -295,7 +296,7 @@ class EditItemHandler(
   def getCurrentItem: Item = {
     if (this.fCurrentItem.isEmpty)
     {
-      this.fCurrentItem = Some(Item.cache.getCachedRow( Item.createNew ))
+      this.fCurrentItem = Some(Item.cache.getStorageRow( Item.createNew ))
     }
     this.fCurrentItem.get.data
   }

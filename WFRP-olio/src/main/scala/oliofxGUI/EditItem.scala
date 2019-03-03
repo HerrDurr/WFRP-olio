@@ -28,7 +28,7 @@ import javafx.{scene => jfxs}
 import scalafx.stage.Stage
 import javafx.scene.Scene
 import javafx.stage.{Stage => jStage}
-import dataElements.TCachedRow
+import dataElements.TStorageRow
 
 //import scalafx.util.StringConverter
 
@@ -101,7 +101,7 @@ class EditItem/*[Repr <: HList]*/(val aItem: Item)/*(implicit genAux: LabelledGe
     
     if (itemId.value >= 0)
     {
-      val opt = byId(itemId)
+      val opt = Item.byId(itemId.value)
       if (opt.isDefined)
       {
         // update
@@ -273,7 +273,7 @@ object EditItem {
   */
   
   def testItem2[Repr <: HList](implicit gen: LabelledGeneric.Aux[Item, Repr]): EditItem = {
-    val item = byId(Item.Id(1)).getOrElse(this.newItem)
+    val item : Item = Item.byId(1).map(_.asInstanceOf[Item]).getOrElse(this.newItem)
     //val gen = LabelledGeneric[Item]
     //val itemHList = gen.to(item)
     new EditItem(item)
@@ -287,7 +287,7 @@ object EditItem {
   def testEditItem(): Unit = {
     //println(path)
     import Item._
-    val item = Item.cache.getRows.find{ cR : TCachedRow[Item] => cR.data.id == Id(1) }.map(_.data).getOrElse(Item.createNew) //byId(Item.Id(1)).getOrElse(Item.createNew)
+    val item = Item.cache.getRows.find{ cR : TStorageRow[Item] => cR.data.id == Id(1) }.map(_.data).getOrElse(Item.createNew) //byId(Item.Id(1)).getOrElse(Item.createNew)
     loader.load()
     val root = loader.getRoot[jfxs.Parent]
     val ctrlr: EditItemInterface = loader.getController[EditItemInterface]

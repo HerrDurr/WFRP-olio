@@ -6,6 +6,8 @@ import scalafx.scene.control.{TextField, ListView, TableView}
 import olioIO.SchemaWFRP.{Olio, Career, Race, AttributeSet, Skill, Talent}
 import olioIO.SchemaWFRP.Olio._
 import scalafx.beans.property.ObjectProperty
+import scalafx.scene.control.TableColumn
+import dataUI.ControlFactory._
 
 trait EditOlioInterface {
   
@@ -41,7 +43,6 @@ class EditOlioWFRPHandler(
   
   
   
-  
   def editOlio(aOlio: Olio) = {
     resetOlio(aOlio)
     resetUI
@@ -49,16 +50,40 @@ class EditOlioWFRPHandler(
   
   private def resetOlio(aOlio : Olio) = {
     this.fCurrentOlio.value = Some(aOlio)
-    this.fStartingAttributes.value = Some(aOlio.baseAttributes)
+    //this.fStartingAttributes.value = Some(aOlio.baseAttributes)
   }
   
   private def resetUI = {
-    ???
+    
     this.edName.text = this.fCurrentOlio.value.map(_.name.value).getOrElse("")
     this.edRace.text = Race.byId( this.fCurrentOlio.value.map(_.race)
                                                          .map(_.value) //{ o: Olio => o.race.value }
-                                                         .getOrElse(-1) )
-                                                                         .map(_.name.value).getOrElse("")
+                                                         .get )
+                                                                         .map(_.asInstanceOf[Race].name.value).getOrElse("")
+  }
+  
+  /**
+   * Initialize the columns of the Main Profile
+   */
+  private def initMainProfileTable: Unit = {
+    import AttributeSet._
+    //val colWS = new TableColumn[AttributeSet, Int] {
+    //}
+    //val setToWS = {aSet : AttributeSet => aSet.weaponSkill}
+    
+    /*val colWS: TableColumn[AttributeSet, Short] = tableColumnNew(
+        WS(0),
+        { aSet : AttributeSet => aSet.weaponSkil }
+        { aNewSet : AttributeSet => fItemCurrent = aNewItem },
+        lWS,
+        { aVal: Short => WS(aVal) }
+    )
+    
+    with tblMainProfile {
+      
+      
+      
+    }*/
   }
   
 }

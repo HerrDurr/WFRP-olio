@@ -1,25 +1,27 @@
 package dataElements
 
 import scala.collection.mutable.Buffer
-import dataElements.{TCachedRow, SQLiteQuerier}
-import TCachedRow._
+//import dataElements.{TCachedRow, SQLiteQuerier}
+//import TCachedRow._
 import io.getquill.context.jdbc.JdbcContext
 //import dataElements.TRowTrait
 import dataElements.CachableObjects._
 
-class TCachingStorage[D <: TCachableRowObject](aCompanion : TCachableRowCompanion[D],
-    aContext : JdbcContext[_,_] with SQLiteQuerier) {
+class TCachingStorage[D <: TAbstractRow](aCompanion : TCachableRowCompanion[D],
+    aContext : JdbcContext[_,_] with SQLiteQuerier) extends TStorage[D](aCompanion, aContext) {
   
-  import aContext._
+  /*import aContext._
   
   private val fRows: Buffer[TCachedRow[D]] = Buffer()
+  * 
+  */
   
   
   init()
   
   
   private def init(): Unit = {
-    this.fRows ++= aCompanion.loadRows.map(TCachedRow( _, this )) 
+    aCompanion.loadRows.map(TStorageRow[D]( _, this )) 
   }
   
   /*def loadRows(
@@ -46,14 +48,10 @@ class TCachingStorage[D <: TCachableRowObject](aCompanion : TCachableRowCompanio
     aContext.insertOrUpdate(aRow.data, aFilterByKeys)
   }*/
   
+  /*
+  
   // save all rows (check what's new, changed, deleted?)
-  def saveChanges = {/*(
-      implicit
-      aSchema : SchemaMeta[D],
-      aEncoder : Encoder[D],
-      aFilterByKeys : D => Boolean
-    ) = {
-    this.fRows.foreach( saveRow(_) )*/
+  def saveChanges = {
       this.fRows.foreach { _.save() }
       //this.fRows.foreach( this.saveRow(_) )
   }
@@ -86,15 +84,19 @@ class TCachingStorage[D <: TCachableRowObject](aCompanion : TCachableRowCompanio
     this.find(aRowItem).getOrElse(addAsNew(aRowItem))
   }
   
-  def addAsNew(aRow : D): TCachedRow[D] = {
-     val newCachedRow = TCachedRow.createNewRow(aRow, this)
-     this.fRows += newCachedRow
-     newCachedRow
+  def addToStorage(aStorageRow : TCachedRow[D]): Unit = {
+    if ( this.find(aStorageRow.data).isEmpty )
+      this.fRows += aRow
+    else
+      throw new Exception(s"Row $aStorageRow already in Storage!")
   }
   
-}
-object TCachingStorage {
-  
-  
+  def addAsNew(aRow : D): TCachedRow[D] = {
+     val newCachedRow = TCachedRow.createNewRow(aRow, this)
+     this.addToStorage( newCachedRow )
+     newCachedRow
+  }
+  * 
+  */
   
 }

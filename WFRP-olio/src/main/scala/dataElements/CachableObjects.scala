@@ -1,25 +1,26 @@
 package dataElements
 
-import io.getquill.context.jdbc.JdbcContext
+//import io.getquill.context.jdbc.JdbcContext
+import Rows._
 
 object CachableObjects {
   
-  trait TCachableRowCompanion[A <: TCachableRowObject] {
+  trait TCachableRowCompanion[A <: TAbstractRow] extends TRowCompanion[A] {
     
     def loadRows: List[A]
     
     def cache : TCachingStorage[A]
     
-    def getCachedRow(forRow : A): TCachedRow[A] = {
-      cache.getRows.find{ cRow: TCachedRow[A] => forRow.filterFunc(cRow.data) }
-                   .getOrElse( cache.addAsNew(forRow) )
+    def getCachedRow(forRow : A): TStorageRow[A] = {
+      cache.getRows.find{ cRow: TStorageRow[A] => forRow.filterFunc(cRow.data) }
+                   .getOrElse( TStorageRow.createNewRow(forRow, cache) )
     }
     
   }
   
-  abstract class TCachableRowObject/*(implicit ctx : JdbcContext[_, _] with SQLiteQuerier)*/ extends TAbstractRow {
+  trait TCachableRowObject/*(implicit ctx : JdbcContext[_, _] with SQLiteQuerier)*/ {
     
-    def filterFunc(aRow: TCachableRowObject): Boolean//[A <: TCachableRowObject](aRow : A): Boolean
+    //[A <: TCachableRowObject](aRow : A): Boolean
     
   /* extends TRowTrait {
     
@@ -41,37 +42,41 @@ object CachableObjects {
     
   }
   
-  trait TCachableRowCompanionWithId[A <: TCachableRowObjectWithId] extends TCachableRowCompanion[A] {
+  trait TCachableRowCompanionWithId[A <: TCachableRowObjectWithId] extends TCachableRowCompanion[A] with TCommonRowCompanionWithId[A] {
     
-    def byId(id : Integer): Option[TCachableRowObjectWithId] = this.cache.getRows.find(_.data.rowId == id).map( _.data.asInstanceOf[TCachableRowObjectWithId] )
+    def byId(id : Integer): Option[TCachableRowObjectWithId] = this.byId(id, this.cache).map( _.asInstanceOf[TCachableRowObjectWithId] ) //this.cache.getRows.find(_.data.rowId == id).map( _.data.asInstanceOf[TCachableRowObjectWithId] )
     
   }
   
-  abstract class TCachableRowObjectWithId(val rowId: Int) extends TCachableRowObject {
+  abstract class TCachableRowObjectWithId(rowId: Int) extends TCommonRowWithId(rowId) with TCachableRowObject {
     
-    def filterFunc(aRow: TCachableRowObject): Boolean = {
+    /*def filterFunc(aRow: TCachableRowObjectWithId): Boolean = {
       if (aRow.isInstanceOf[TCachableRowObjectWithId])
         aRow.asInstanceOf[TCachableRowObjectWithId].rowId == (this.rowId)
       else
         false
     }
+    * 
+    */
     
   }
   
-  trait TCachableRowCompanionWithTag[A <: TCachableRowObjectWithTag] extends TCachableRowCompanion[A] {
+  trait TCachableRowCompanionWithTag[A <: TCachableRowObjectWithTag] extends TCachableRowCompanion[A] with TCommonRowCompanionWithTag[A] {
     
-    def byTag(tag : String): Option[TCachableRowObjectWithTag] = this.cache.getRows.find(_.data.rowTag == tag).map( _.data.asInstanceOf[TCachableRowObjectWithTag] )
+    def byTag(tag : String): Option[TCachableRowObjectWithTag] = this.byTag(tag, this.cache).map( _.asInstanceOf[TCachableRowObjectWithTag] ) //this.cache.getRows.find(_.data.rowTag == tag).map( _.data.asInstanceOf[TCachableRowObjectWithTag] )
     
   }
   
-  abstract class TCachableRowObjectWithTag(val rowTag: String) extends TCachableRowObject {
+  abstract class TCachableRowObjectWithTag(rowTag: String) extends TCommonRowWithTag(rowTag) with TCachableRowObject {
     
-    def filterFunc(aRow: TCachableRowObject): Boolean = {
+    /*def filterFunc(aRow: TCachableRowObject): Boolean = {
       if (aRow.isInstanceOf[TCachableRowObjectWithTag])
         aRow.asInstanceOf[TCachableRowObjectWithTag].rowTag == (this.rowTag)
       else
         false
     }
+    * 
+    */
     
   }
   

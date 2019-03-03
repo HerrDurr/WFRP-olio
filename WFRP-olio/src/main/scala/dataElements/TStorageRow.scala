@@ -6,22 +6,22 @@ import RowStatus._
 import javafx.beans.{value => jfxbv}
 import dataElements.CachableObjects._
 
-class TCachedRow/*[D]*/[A <: TAbstractRow](aObject : A, aCache : TCachingStorage[A]) extends TStorageRow[A](aObject, aCache) {
-  /*
+class TStorageRow[A <: TAbstractRow](aObject : A, aStorage : TStorage[A]) {
+  
   private val fObjProperty : ObjectProperty[A] = ObjectProperty(aObject)
   private var fStatus : RowStatus = Unchanged
   this.init()
   // add to aCache
-  aCache.addToStorage(this)
+  aStorage.addToStorage(this)
   
   private def init(): Unit = {
     this.fObjProperty.delegate.addOnChange(onChangeRow)
   }
   
   private def onChangeRow(
-      aObservable: jfxbv.ObservableValue[_ <: TCachableRowObject],
-      aOldVal: TCachableRowObject,
-      aNewVal: TCachableRowObject) = {
+      aObservable: jfxbv.ObservableValue[_ <: TAbstractRow],
+      aOldVal: TAbstractRow,
+      aNewVal: TAbstractRow) = {
     println("Status before change: " + this.fStatus)
     if (this.fStatus != New) {
       this.updateStatus(Changed)
@@ -32,6 +32,9 @@ class TCachedRow/*[D]*/[A <: TAbstractRow](aObject : A, aCache : TCachingStorage
   
   private def updateStatus(aStatus : RowStatus) = this.fStatus = aStatus
   
+  /**
+   * Requires saving for this to be committed to the db.
+   */
   def delete = this.updateStatus(Deleted)
   
   def data: A = this.fObjProperty.value
@@ -46,7 +49,7 @@ class TCachedRow/*[D]*/[A <: TAbstractRow](aObject : A, aCache : TCachingStorage
     this.fStatus match {
       case Deleted => {
         this.data.deleteFromDB
-        aCache.removeFromCache(this)
+        aStorage.removeFromStorage(this)
       }
       case Unchanged => // nanimo shinai
       case _ => {
@@ -55,17 +58,17 @@ class TCachedRow/*[D]*/[A <: TAbstractRow](aObject : A, aCache : TCachingStorage
       }
     }
   }
-  */
-}
-/*
-object TCachedRow {
-  def apply[A <: TCachableRowObject](aObject : A, aCache: TCachingStorage[A]) = new TCachedRow(aObject, aCache)
   
-  def createNewRow[A <: TCachableRowObject](aObject : A, aCache: TCachingStorage[A]): TCachedRow[A] = {
-    val aRow = new TCachedRow(aObject, aCache)
-    aRow.updateStatus(New)
-    aRow
+}
+object TStorageRow {
+  
+  def apply[A <: TAbstractRow](aObject : A, aStorage: TStorage[A]) = new TStorageRow(aObject, aStorage)
+  
+  def createNewRow[A <: TAbstractRow](aObject : A, aStorage: TStorage[A]): TStorageRow[A] = {
+    //aStorage.addAsNew(A)
+    val aStorRow = TStorageRow(aObject, aStorage)
+    aStorRow.updateStatus(New)
+    aStorRow
   }
   
 }
-*/

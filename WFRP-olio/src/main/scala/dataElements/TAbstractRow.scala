@@ -1,11 +1,11 @@
 package dataElements
 
-import io.getquill.context.jdbc.JdbcContext
+//import io.getquill.context.jdbc.JdbcContext
 
 abstract class TAbstractRow/*(implicit ctx : JdbcContext[_, _] with SQLiteQuerier)*/ extends TRowTrait {
     
     //import ctx._
-    
+    def filterFunc(aRow: TAbstractRow): Boolean
     
     /*def saveToDB(
       implicit

@@ -62,20 +62,22 @@ object SchemaWFRP {
   
   
   case class Skill(id: Skill.Id, name: Skill.Name, attribute: Attribute.IdTag, 
-      isBasic: Skill.Basic) extends TCachableRowObject {
+      isBasic: Skill.Basic) extends TCachableRowObjectWithId(id.value) {
     
-    def filterFunc(aRow : TCachableRowObject): Boolean = {
+    /*def filterFunc(aRow : TCachableRowObject): Boolean = {
       if (aRow.isInstanceOf[Skill])
         aRow.asInstanceOf[Skill].id == (this.id)
       else
         false
     }
+    * 
+    */
     
     import dbContext._ 
     def saveToDB: Unit = insertOrUpdate(this, (s: Skill) => s.id == lift(this.id))
     def deleteFromDB: Unit = deleteRow(this, (s: Skill) => s.id == lift(this.id))
   }
-  object Skill extends TCachableRowCompanion[Skill] {
+  object Skill extends TCachableRowCompanionWithId[Skill] {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
     case class Basic(val value: Boolean) extends AnyVal //MappedTo[Boolean]
@@ -426,7 +428,7 @@ object SchemaWFRP {
    * (of course with any other restrictions still applicable).
    */
   case class Career(id: Career.Id, name: Career.Name, description: Option[Career.Description], attributes: AttributeSet,
-      skills: /*Array[Skill.Id], skillOptions:*/ Array[Array[Skill.Id]], talents: /*Array[Talent.Id], talentOptions:*/ Array[Array[Talent.Id]],
+      skills: Array[Array[Skill.Id]], talents: Array[Array[Talent.Id]],
       careerExits: Array[Career.Id])
   // trappings maybe don't need to be implemented (yet)
       extends TCachableRowObjectWithId(id.value) {
@@ -461,13 +463,10 @@ object SchemaWFRP {
   }
   
   case class Race(id: Race.Id, name: Race.Name) extends TCachableRowObjectWithId(id.value) {
-    
-    /*def filterFunc(aRow: TCachableRowObject): Boolean = {
-      if (aRow.isInstanceOf[Race])
-        aRow.asInstanceOf[Race].id == (this.id)
-      else
-        false
-    }*/
+     
+    import dbContext._ 
+    def saveToDB: Unit = insertOrUpdate(this, (r : Race) => r.id == lift(this.id))
+    def deleteFromDB : Unit = deleteRow(this, (r : Race) => r.id == lift(this.id))
     
   }
   object Race extends TCachableRowCompanionWithId[Race] {
@@ -495,13 +494,7 @@ object SchemaWFRP {
   /**
    * DEPRECATED - or is it?
    */
-  case class OlioAttributes(olioId: Olio.Id, attribute: Attribute.IdTag, baseVal: OlioAttributes.BaseVal) extends DataPropertyRow {
-    /*def initProperties =
-    {
-      Vector( new IntegerProperty(this, "olioId", olio),
-              new StringProperty(this, "attributeId", attribute.value),
-              new IntegerProperty(this, "olioAttributeBaseVal", baseVal.asInstanceOf[Int]) )
-    }*/
+  case class OlioAttributes(olioId: Olio.Id, attribute: Attribute.IdTag, baseVal: OlioAttributes.BaseVal) {
   }
   object OlioAttributes {
     case class BaseVal(val value: Short) extends AnyVal //MappedTo[Short]
@@ -510,13 +503,7 @@ object SchemaWFRP {
   /**
    * DEPRECATED
    */
-  case class OlioSkills(olioId: Olio.Id, skillId: Skill.Id, skillTrained: OlioSkills.Trained) extends DataPropertyRow {
-    /*def initProperties =
-    {
-      Vector( new IntegerProperty(this, "olioId", olio),
-              new IntegerProperty(this, "skillId", skill.value),
-              new IntegerProperty(this, "olioSkillTrained", skillTrained.asInstanceOf[Int]) )
-    }*/
+  case class OlioSkills(olioId: Olio.Id, skillId: Skill.Id, skillTrained: OlioSkills.Trained) {
   }
   object OlioSkills {
     case class Trained(val value: Short) extends AnyVal //MappedTo[Short]
@@ -588,6 +575,20 @@ object SchemaWFRP {
     case class FP(val value: Short) extends AnyVal {
       def name = "Fate Points"
     }*/
+    
+    val lId  = lens[AttributeSet] >> 'id
+    val lWS  = lens[AttributeSet] >> 'weaponSkill
+    val lBS  = lens[AttributeSet] >> 'ballisticSkill
+    val lS   = lens[AttributeSet] >> 'strength
+    val lT   = lens[AttributeSet] >> 'toughness
+    val lAg  = lens[AttributeSet] >> 'agility
+    val lInt = lens[AttributeSet] >> 'intelligence
+    val lWP  = lens[AttributeSet] >> 'willPower
+    val lFel = lens[AttributeSet] >> 'fellowship
+    val lA   = lens[AttributeSet] >> 'attacks
+    val lW   = lens[AttributeSet] >> 'wounds
+    val lMag = lens[AttributeSet] >> 'magic
+    
     def createEmpty(id: Id): AttributeSet = {
       new AttributeSet( id, WS(0), BS(0), S(0), T(0), Ag(0), Int(0), WP(0), Fel(0),
                         A(0), W(0), Mag(0) )//M(0), , IP(0), FP(0) )
