@@ -3,7 +3,7 @@ package oliofxGUI
 import scalafxml.core.macros.sfxml
 import scalafxml.core.FXMLLoader
 import scalafx.scene.control.{TextField, ListView, TableView}
-import olioIO.SchemaWFRP.{Olio, Career, AttributeSet, Skill, Talent}
+import olioIO.SchemaWFRP.{Olio, Career, Race, AttributeSet, Skill, Talent}
 import olioIO.SchemaWFRP.Olio._
 import scalafx.beans.property.ObjectProperty
 
@@ -18,21 +18,26 @@ class EditOlioWFRPHandler(
     private val edName: TextField,
     private val edRace: TextField,
     private val edCareer: TextField,
-    private val lvExCareers: ListView,
-    private val tblMainProfile: TableView,
-    private val tblSecondaryProfile: TableView
+    private val lvExCareers: ListView[Career],
+    private val tblMainProfile: TableView[AttributeSet],
+    private val tblSecondaryProfile: TableView[AttributeSet]
   ) extends EditOlioInterface {
   
   
   private var fCurrentOlio : ObjectProperty[Option[Olio]] = ObjectProperty(this, "Olio", None)
   
-  private var fStartingAttributesMain : ObjectProperty[Option[AttributeSet]] = ObjectProperty(this, "Starting Main", None)
+  /*private var fStartingAttributesMain : ObjectProperty[Option[AttributeSet]] = ObjectProperty(this, "Starting Main", None)
   private var fAdvanceAttributesMain : ObjectProperty[Option[AttributeSet]] = ObjectProperty(this, "Advance Main", None)
   private var fTotalAttributesMain : ObjectProperty[Option[AttributeSet]] = ObjectProperty(this, "Total Main", None)
   
   private var fStartingAttributesSecondary : ObjectProperty[Option[AttributeSet]] = ObjectProperty(this, "Starting Secondary", None)
   private var fAdvanceAttributesSecondary : ObjectProperty[Option[AttributeSet]] = ObjectProperty(this, "Advance Secondary", None)
   private var fTotalAttributesSecondary : ObjectProperty[Option[AttributeSet]] = ObjectProperty(this, "Total Secondary", None)
+  * 
+  */
+  private var fStartingAttributes : ObjectProperty[Option[AttributeSet]] = ObjectProperty(this, "Starting", None)
+  private var fAdvanceAttributes : ObjectProperty[Option[AttributeSet]] = ObjectProperty(this, "Advance", None)
+  private var fTotalAttributes : ObjectProperty[Option[AttributeSet]] = ObjectProperty(this, "Total", None)
   
   
   
@@ -43,13 +48,17 @@ class EditOlioWFRPHandler(
   }
   
   private def resetOlio(aOlio : Olio) = {
-    this.fCurrentOlio.value = aOlio
+    this.fCurrentOlio.value = Some(aOlio)
+    this.fStartingAttributes.value = Some(aOlio.baseAttributes)
   }
   
   private def resetUI = {
     ???
-    this.edName.text = this.fCurrentOlio.value.map(_.name).getOrElse("")
-    this.edRace.text = this.fCurrentOlio.value.map(_.race).getOrElse("")
+    this.edName.text = this.fCurrentOlio.value.map(_.name.value).getOrElse("")
+    this.edRace.text = Race.byId( this.fCurrentOlio.value.map(_.race)
+                                                         .map(_.value) //{ o: Olio => o.race.value }
+                                                         .getOrElse(-1) )
+                                                                         .map(_.name.value).getOrElse("")
   }
   
 }

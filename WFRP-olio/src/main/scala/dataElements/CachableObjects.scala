@@ -40,4 +40,41 @@ object CachableObjects {
     }*/
     
   }
+  
+  trait TCachableRowCompanionWithId[A <: TCachableRowObjectWithId] extends TCachableRowCompanion[A] {
+    
+    def byId(id : Integer): Option[TCachableRowObjectWithId] = this.cache.getRows.find(_.data.rowId == id).map( _.data.asInstanceOf[TCachableRowObjectWithId] )
+    
+  }
+  
+  abstract class TCachableRowObjectWithId(val rowId: Int) extends TCachableRowObject {
+    
+    def filterFunc(aRow: TCachableRowObject): Boolean = {
+      if (aRow.isInstanceOf[TCachableRowObjectWithId])
+        aRow.asInstanceOf[TCachableRowObjectWithId].rowId == (this.rowId)
+      else
+        false
+    }
+    
+  }
+  
+  trait TCachableRowCompanionWithTag[A <: TCachableRowObjectWithTag] extends TCachableRowCompanion[A] {
+    
+    def byTag(tag : String): Option[TCachableRowObjectWithTag] = this.cache.getRows.find(_.data.rowTag == tag).map( _.data.asInstanceOf[TCachableRowObjectWithTag] )
+    
+  }
+  
+  abstract class TCachableRowObjectWithTag(val rowTag: String) extends TCachableRowObject {
+    
+    def filterFunc(aRow: TCachableRowObject): Boolean = {
+      if (aRow.isInstanceOf[TCachableRowObjectWithTag])
+        aRow.asInstanceOf[TCachableRowObjectWithTag].rowTag == (this.rowTag)
+      else
+        false
+    }
+    
+  }
+  
+  
+  
 }

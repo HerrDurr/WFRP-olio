@@ -12,8 +12,7 @@ import dataElements.CachableObjects.TCachableRowCompanion
 import io.getquill.context.jdbc.JdbcContext
 import dataElements.SQLiteQuerier
 import dataElements.TCachingStorage
-import dataElements.CachableObjects.TCachableRowObject
-import dataElements.CachableObjects.TCachableRowCompanion
+import dataElements.CachableObjects._
 
 //import io.getquill.{SqliteJdbcContext, SqliteDialect, CamelCase, MappedEncoding}
 //import io.getquill.context.Context
@@ -91,9 +90,7 @@ object SchemaWFRP {
   
   case class Talent(id: Talent.Id, name: Talent.Name, subTitle: Option[Talent.SubTitle],
       subType: TalentExplain.TalentExplainType, description: Option[Talent.Description]) 
-      //extends TAbstractRow(id :: HNil) {
-      //(implicit ctx : WFRPContext)
-      extends TCachableRowObject {
+      extends TCachableRowObjectWithId(id.value) {
     
     override def toString() = {
       var res = name.value
@@ -102,19 +99,19 @@ object SchemaWFRP {
       res
     }
     
-    def filterFunc(aRow : TCachableRowObject): Boolean = {
+    /*def filterFunc(aRow : TCachableRowObject): Boolean = {
       if (aRow.isInstanceOf[Talent])
         aRow.asInstanceOf[Talent].id == (this.id)
       else
         false
-    }
+    }*/
     
     import dbContext._ //ctx._
     def saveToDB: Unit = insertOrUpdate(this, (t: Talent) => t.id == lift(this.id))
     def deleteFromDB: Unit = deleteRow(this, (t: Talent) => t.id == lift(this.id))
     //def companion = Talent
   }
-  object Talent extends TCachableRowCompanion[Talent] {
+  object Talent extends TCachableRowCompanionWithId[Talent] {
     case class Id(val value: Int) extends AnyVal
     case class Name(val value: String) extends AnyVal
     case class SubTitle(val value: String) extends AnyVal
@@ -144,7 +141,7 @@ object SchemaWFRP {
       modifier: Option[Availability.Modifier]) 
       //extends TAbstractRow(idTag :: HNil) {
       //(implicit ctx : WFRPContext)
-      extends TCachableRowObject {
+      extends TCachableRowObjectWithTag(idTag.value) {
     /*def initProperties =
     {
       Vector( new StringProperty(this, "availabilityId", idTag),
@@ -161,18 +158,12 @@ object SchemaWFRP {
       res
     }
     
-    /*def filterFunc[A <: TCachableRowObject](aRow : A): Boolean = {
+    /*def filterFunc(aRow : TCachableRowObject): Boolean = {
       if (aRow.isInstanceOf[Availability])
         aRow.asInstanceOf[Availability].idTag == (this.idTag)
       else
         false
     }*/
-    def filterFunc(aRow : TCachableRowObject): Boolean = {
-      if (aRow.isInstanceOf[Availability])
-        aRow.asInstanceOf[Availability].idTag == (this.idTag)
-      else
-        false
-    }
     
     def saveToDB: Unit = {
       import dbContext._
@@ -185,7 +176,7 @@ object SchemaWFRP {
     //def companion = Availability
     //def filterString: String = "IdTag = '" + this.idTag.value + "'"
   }
-  object Availability extends TCachableRowCompanion[Availability] {
+  object Availability extends TCachableRowCompanionWithTag[Availability] {
     case class IdTag(val value: String) extends AnyVal //MappedTo[String]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
     case class Modifier(val value: Short) extends AnyVal //MappedTo[Short]
@@ -202,7 +193,7 @@ object SchemaWFRP {
   
   case class Item(id: Item.Id, name: Item.Name, craftsmanship: Craftsmanship.Craftsmanship, encumbrance: Item.Encumbrance, 
       cost: Option[Item.Cost], availability: Option[Availability.IdTag]) 
-      extends TCachableRowObject {
+      extends TCachableRowObjectWithId(id.value) {
     /*def initProperties =
     {
       Vector( new IntegerProperty(this, "itemId", id),
@@ -219,18 +210,20 @@ object SchemaWFRP {
     override def toString = this.name.value + " " + this.craftsmanship + ", Enc: " + this.encumbrance.value + ", Cost: " +
       this.cost.getOrElse(Item.Cost("-")).value
     
-    def filterFunc(aRow : TCachableRowObject): Boolean = {
+    /*def filterFunc(aRow : TCachableRowObject): Boolean = {
       if (aRow.isInstanceOf[Item])
         aRow.asInstanceOf[Item].id == (this.id)
       else
         false
     }
+    * 
+    */
     
     import dbContext._ //ctx._
     def saveToDB: Unit = insertOrUpdate(this, (s: Item) => s.id == lift(this.id))
     def deleteFromDB: Unit = deleteRow(this, (s: Item) => s.id == lift(this.id))
   }
-  object Item extends TCachableRowCompanion[Item] {
+  object Item extends TCachableRowCompanionWithId[Item] {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
     //case class Craftsmanship(val value: Char) extends AnyVal //MappedTo[Char]
@@ -319,7 +312,7 @@ object SchemaWFRP {
   
   case class WeaponQuality(idTag: WeaponQuality.IdTag, name: WeaponQuality.Name)
     //(implicit ctx : WFRPContext)
-    extends TCachableRowObject {
+    extends TCachableRowObjectWithTag(idTag.value) {
     /*def initProperties =
     {
       Vector( new StringProperty(this, "quality", idTag),
@@ -329,12 +322,12 @@ object SchemaWFRP {
     */
     
     
-    def filterFunc(aRow : TCachableRowObject): Boolean = {
+    /*def filterFunc(aRow : TCachableRowObject): Boolean = {
       if (aRow.isInstanceOf[WeaponQuality])
         aRow.asInstanceOf[WeaponQuality].idTag == (this.idTag)
       else
         false
-    }
+    }*/
     
     import dbContext._ //ctx.__
     //val test = quote {lift(idTag)}
@@ -343,7 +336,7 @@ object SchemaWFRP {
     //def filterString : String = "IdTag = '" + this.idTag.value + "'"
     
   }
-  object WeaponQuality extends TCachableRowCompanion[WeaponQuality] {
+  object WeaponQuality extends TCachableRowCompanionWithTag[WeaponQuality] {
     case class IdTag(val value: String) extends AnyVal //MappedTo[String]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
     
@@ -435,18 +428,16 @@ object SchemaWFRP {
   case class Career(id: Career.Id, name: Career.Name, description: Option[Career.Description], attributes: AttributeSet,
       skills: /*Array[Skill.Id], skillOptions:*/ Array[Array[Skill.Id]], talents: /*Array[Talent.Id], talentOptions:*/ Array[Array[Talent.Id]],
       careerExits: Array[Career.Id])
-  // attributes in different table
   // trappings maybe don't need to be implemented (yet)
-      //(implicit ctx : WFRPContext)
-      extends TCachableRowObject {
+      extends TCachableRowObjectWithId(id.value) {
     
     
-    def filterFunc(aRow : TCachableRowObject): Boolean = {
+    /*def filterFunc(aRow : TCachableRowObject): Boolean = {
       if (aRow.isInstanceOf[Career])
         aRow.asInstanceOf[Career].id == (this.id)
       else
         false
-    }
+    }*/
     
     import dbContext._ //ctx._
     def saveToDB: Unit = insertOrUpdate(this, (c : Career) => c.id == lift(this.id))
@@ -454,7 +445,7 @@ object SchemaWFRP {
     //def companion = Career
     //def filterString: String = "Id = " + this.id.value
   }
-  object Career extends TCachableRowCompanion[Career] {
+  object Career extends TCachableRowCompanionWithId[Career] {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
     case class Description(val value: String) extends AnyVal //MappedTo[String]
@@ -469,17 +460,17 @@ object SchemaWFRP {
     def cache: TCachingStorage[Career] = this.fCache
   }
   
-  case class Race(id: Race.Id, name: Race.Name) extends TCachableRowObject {
+  case class Race(id: Race.Id, name: Race.Name) extends TCachableRowObjectWithId(id.value) {
     
-    def filterFunc(aRow: TCachableRowObject): Boolean = {
+    /*def filterFunc(aRow: TCachableRowObject): Boolean = {
       if (aRow.isInstanceOf[Race])
         aRow.asInstanceOf[Race].id == (this.id)
       else
         false
-    }
+    }*/
     
   }
-  object Race extends TCachableRowCompanion[Race] {
+  object Race extends TCachableRowCompanionWithId[Race] {
     case class Id(val value: Int) extends AnyVal
     case class Name(val value: String) extends AnyVal
     
@@ -492,17 +483,8 @@ object SchemaWFRP {
   
   // TODO: Career Table and flesh out Olio Table
   case class Olio(id: Olio.Id, name: Olio.Name, race: Race.Id, baseAttributes: AttributeSet.Id,
-      advancedAttributes: Option[AttributeSet.Id], careers: Option[Career.Careers] /*Array[Career.Id]*/, talents: Option[Talent.Talents],
-      skills: Option[TrainedSkill.TrainedSkills] /*Array[TrainedSkill.Id]*/) extends DataPropertyRow {
-    /*def initProperties =
-    {
-      Vector( new IntegerProperty(this, "olioId", id),
-              new StringProperty(this, "olioName", name),
-              new ObjectProperty(this, "olioCareers", careersRaw.getOrElse("").split(',').toVector),
-              new ObjectProperty(this, "olioTalents", talentsRaw.getOrElse("").split(',').toVector) )
-    }
-    * 
-    */
+      advancedAttributes: Option[AttributeSet.Id], careers: Option[Career.Careers], talents: Option[Talent.Talents],
+      skills: Option[TrainedSkill.TrainedSkills]) {
   }
   object Olio {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
