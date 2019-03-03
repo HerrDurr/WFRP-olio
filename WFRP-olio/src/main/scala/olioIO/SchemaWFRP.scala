@@ -12,6 +12,8 @@ import dataElements.CachableObjects.TCachableRowCompanion
 import io.getquill.context.jdbc.JdbcContext
 import dataElements.SQLiteQuerier
 import dataElements.TCachingStorage
+import dataElements.CachableObjects.TCachableRowObject
+import dataElements.CachableObjects.TCachableRowCompanion
 
 //import io.getquill.{SqliteJdbcContext, SqliteDialect, CamelCase, MappedEncoding}
 //import io.getquill.context.Context
@@ -467,9 +469,29 @@ object SchemaWFRP {
     def cache: TCachingStorage[Career] = this.fCache
   }
   
+  case class Race(id: Race.Id, name: Race.Name) extends TCachableRowObject {
+    
+    def filterFunc(aRow: TCachableRowObject): Boolean = {
+      if (aRow.isInstanceOf[Race])
+        aRow.asInstanceOf[Race].id == (this.id)
+      else
+        false
+    }
+    
+  }
+  object Race extends TCachableRowCompanion[Race] {
+    case class Id(val value: Int) extends AnyVal
+    case class Name(val value: String) extends AnyVal
+    
+    def loadRows: List[Race] = dbContext.loadAll[Race]
+    
+    private lazy val fCache = new TCachingStorage[Race](this, dbContext)
+    def cache: TCachingStorage[Race] = this.fCache
+  }
+  
   
   // TODO: Career Table and flesh out Olio Table
-  case class Olio(id: Olio.Id, name: Olio.Name, baseAttributes: AttributeSet.Id,
+  case class Olio(id: Olio.Id, name: Olio.Name, race: Race.Id, baseAttributes: AttributeSet.Id,
       advancedAttributes: Option[AttributeSet.Id], careers: Option[Career.Careers] /*Array[Career.Id]*/, talents: Option[Talent.Talents],
       skills: Option[TrainedSkill.TrainedSkills] /*Array[TrainedSkill.Id]*/) extends DataPropertyRow {
     /*def initProperties =

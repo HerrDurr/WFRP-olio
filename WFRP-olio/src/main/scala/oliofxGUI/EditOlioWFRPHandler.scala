@@ -48,6 +48,8 @@ class EditOlioWFRPHandler(
   
   private def resetUI = {
     ???
+    this.edName.text = this.fCurrentOlio.value.map(_.name).getOrElse("")
+    this.edRace.text = this.fCurrentOlio.value.map(_.race).getOrElse("")
   }
   
 }
