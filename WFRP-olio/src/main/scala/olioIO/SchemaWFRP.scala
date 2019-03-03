@@ -61,21 +61,7 @@ object SchemaWFRP {
   
   
   case class Skill(id: Skill.Id, name: Skill.Name, attribute: Attribute.IdTag, 
-      isBasic: Skill.Basic) /*extends DataPropertyRow*/
-    //(implicit ctx : WFRPContext) 
-    extends TCachableRowObject {
-    /*def initProperties =
-    {
-      Vector(new IntegerProperty(this, "skillId", id),
-             new StringProperty(this, "skillName", name),
-             new StringProperty(this, "skillAttribute", attribute.value),
-             new BooleanProperty(this, "skillIsBasic", isBasic))
-    }
-    * 
-    */
-    
-    
-    
+      isBasic: Skill.Basic) extends TCachableRowObject {
     
     def filterFunc(aRow : TCachableRowObject): Boolean = {
       if (aRow.isInstanceOf[Skill])
@@ -84,11 +70,9 @@ object SchemaWFRP {
         false
     }
     
-    import dbContext._ //ctx._
+    import dbContext._ 
     def saveToDB: Unit = insertOrUpdate(this, (s: Skill) => s.id == lift(this.id))
     def deleteFromDB: Unit = deleteRow(this, (s: Skill) => s.id == lift(this.id))
-    //def companion = Skill
-    //def filterString: String = "Id = " + this.id.value
   }
   object Skill extends TCachableRowCompanion[Skill] {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
