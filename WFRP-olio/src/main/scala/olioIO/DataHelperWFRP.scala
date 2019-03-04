@@ -160,20 +160,12 @@ object DataHelperWFRP {
   
   implicit class AttributeSetHelper(attrSet: AttributeSet) {
     
-    def queryById(aId: AttributeSet.Id) =
-    {
-      // Eclipse's compiler ain't happy about this, but it seems fine?
-      val q = quote {
-        query[AttributeSet].filter{ aSet: AttributeSet => aSet.id == lift(aId) }
-      }
-      dbContext.run(q)
-    }
     
     /**
      * Fetch from db by the Id.
      */
     def apply(aId: AttributeSet.Id): Option[AttributeSet] = {
-      val queried = queryById(aId)
+      val queried = AttributeSet.queryById(aId)
       if (!queried.isEmpty)
         Some(queried.head)
       else

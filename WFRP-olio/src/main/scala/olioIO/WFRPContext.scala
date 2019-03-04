@@ -19,7 +19,8 @@ class WFRPContext extends SqliteJdbcContext(CamelCase, "wfrpdb") with SQLiteQuer
   implicit val decodeAttributeSetId = MappedEncoding[Int, AttributeSet.Id](AttributeSet.Id(_))
   
   implicit val encodeAttributeSet = MappedEncoding[AttributeSet, Int](_.id.value)
-  implicit val decodeAttributeSet = MappedEncoding[Int, AttributeSet]{ value: Int => AttributeSet.byId(AttributeSet.Id(value)) }
+  implicit val decodeAttributeSet: MappedEncoding[Int, AttributeSet] =
+      MappedEncoding[Int, AttributeSet]{ value: Int => AttributeSet.queryById(AttributeSet.Id(value)).getOrElse(AttributeSet.createEmpty) }
   
   implicit val encodeSkillListWithOptionals = MappedEncoding[Array[Array[Skill.Id]], Option[String]] { 
     skills : Array[Array[Skill.Id]] => ArrayedIntOpsToCommaOps( skills.map( _.map(_.value) ) )//.getOrElse("") 
@@ -66,6 +67,31 @@ class WFRPContext extends SqliteJdbcContext(CamelCase, "wfrpdb") with SQLiteQuer
   implicit val decodeWeaponQualities: MappedEncoding[String, Array[WeaponQuality.IdTag]] =
       MappedEncoding[String, Array[WeaponQuality.IdTag]]{ aStr: String => CommaTextOptToArray( Some(aStr) ).map(WeaponQuality.IdTag(_)) }
   
+  implicit val encodeTrainedSkillId = MappedEncoding[TrainedSkill.Id, Int](_.value)
+  implicit val decodeTrainedSkillId = MappedEncoding[Int, TrainedSkill.Id](TrainedSkill.Id(_))
+  
+  implicit val encodeSkill: MappedEncoding[Skill, Int] =
+      MappedEncoding[Skill, Int]{ s: Skill => s.id.value }
+  // TODO: do something about that .get call...
+  implicit val decodeSkill: MappedEncoding[Int, Skill] =
+      MappedEncoding[Int, Skill]{ id: Int => Skill.byId(id).map(_.asInstanceOf[Skill]).get }
+  
+  implicit val encodeCareer: MappedEncoding[Career, Int] =
+      MappedEncoding[Career, Int]{ c: Career => c.id.value }
+  implicit val decodeCareer: MappedEncoding[Int, Career] =
+      MappedEncoding[Int, Career]{ id: Int => Career.byId(id).map(_.asInstanceOf[Career]).get }
+  
+  /*implicit val encodeCareerOption: MappedEncoding[Option[Career], Option[Int]] =
+      MappedEncoding[Option[Career], Option[Int]]{ c: Option[Career] => c.map(_.id.value) }
+  implicit val decodeCareerOption: MappedEncoding[Option[Int], Option[Career]] =
+      MappedEncoding[Option[Int], Option[Career]]{
+        id: Option[Int] =>
+          if(id.isDefined)
+            Career.byId(id.get).map(_.asInstanceOf[Career])
+          else
+            None
+      }*/
+  
   /*
    * OLIO
    */
@@ -95,5 +121,8 @@ class WFRPContext extends SqliteJdbcContext(CamelCase, "wfrpdb") with SQLiteQuer
   
   implicit val olioInsertMeta = insertMeta[Olio](_.id)
   implicit val olioUpdateMeta = updateMeta[Olio](_.id)
+  
+  implicit val trainedSkillInsertMeta = insertMeta[TrainedSkill](_.id)
+  implicit val trainedSkillUpdateMeta = updateMeta[TrainedSkill](_.id)
   
 }

@@ -13,6 +13,7 @@ import io.getquill.context.jdbc.JdbcContext
 import dataElements.SQLiteQuerier
 import dataElements.TCachingStorage
 import dataElements.CachableObjects._
+import dataElements.Rows._
 
 //import io.getquill.{SqliteJdbcContext, SqliteDialect, CamelCase, MappedEncoding}
 //import io.getquill.context.Context
@@ -483,11 +484,17 @@ object SchemaWFRP {
   // TODO: Career Table and flesh out Olio Table
   case class Olio(id: Olio.Id, name: Olio.Name, race: Race.Id, baseAttributes: AttributeSet.Id,
       advancedAttributes: Option[AttributeSet.Id], careers: Option[Career.Careers], talents: Option[Talent.Talents],
-      skills: Option[TrainedSkill.TrainedSkills]) {
+      skills: Option[TrainedSkill.TrainedSkills]) extends TCommonRowWithId(id.value) {
+     
+    import dbContext._ 
+    def saveToDB: Unit = insertOrUpdate(this, (o : Olio) => o.id == lift(this.id))
+    def deleteFromDB : Unit = deleteRow(this, (o : Olio) => o.id == lift(this.id))
   }
-  object Olio {
+  object Olio extends TCommonRowCompanionWithId[Olio] {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
+    
+    def loadRows: List[Olio] = dbContext.loadAll[Olio]
   }
   
   
@@ -512,26 +519,15 @@ object SchemaWFRP {
   case class AttributeSet(id: AttributeSet.Id, weaponSkill: AttributeSet.WS, ballisticSkill: AttributeSet.BS,
       strength: AttributeSet.S, toughness: AttributeSet.T, agility: AttributeSet.Ag, intelligence: AttributeSet.Int,
       willPower: AttributeSet.WP, fellowship: AttributeSet.Fel, attacks: AttributeSet.A, wounds: AttributeSet.W,
-      /*movement: AttributeSet.M,*/ magic: AttributeSet.Mag/*, insanityPoints: AttributeSet.IP, fatePoints: AttributeSet.FP*/) {
-    
-    /*def apply(id: AttributeSet.Id) = 
-    {
-      import dbContext._
-      import AttributeSet._
-      val flat = id.value
-      val qAS = quote {
-        query[AttributeSet].filter(_.id == lift(id))
-      }
-      val res = dbContext.run(qAS)
-      AttributeSet.createEmpty(id)
-    }
-    * 
-    */
-  
+      /*movement: AttributeSet.M,*/ magic: AttributeSet.Mag/*, insanityPoints: AttributeSet.IP, fatePoints: AttributeSet.FP*/)
+      extends TCommonRowWithId(id.value) {
+     
+    import dbContext._ 
+    def saveToDB: Unit = insertOrUpdate(this, (a : AttributeSet) => a.id == lift(this.id))
+    def deleteFromDB : Unit = deleteRow(this, (a : AttributeSet) => a.id == lift(this.id))
   }
   
-  //case class AttributeSetId(val value: Integer) extends AnyVal
-  object AttributeSet {
+  object AttributeSet extends TCommonRowCompanionWithId[AttributeSet] {
     case class Id(val value: Integer) extends AnyVal
     case class WS(val value: Short) extends AnyVal {
       def name = "Weapon Skill"
@@ -596,20 +592,38 @@ object SchemaWFRP {
     def createEmpty: AttributeSet = {
       this.createEmpty(AttributeSet.Id(-1))
     }
-    def byId(aId: Id): AttributeSet = {
+    /*def byId(aId: Id): AttributeSet = {
       import dbContext._
       val q = quote {
         query[AttributeSet].filter{ aSet: AttributeSet => aSet.id == lift(aId) }
       } 
       dbContext.run(q).headOption.getOrElse(createEmpty)
+    }*/
+    def loadRows: List[AttributeSet] = dbContext.loadAll[AttributeSet]
+  
+    def queryById(aId: AttributeSet.Id) =
+    {
+      import dbContext._
+      // Eclipse's compiler ain't happy about this, but it seems fine?
+      val q = quote {
+        query[AttributeSet].filter{ aSet: AttributeSet => aSet.id == lift(aId) }
+      }
+      dbContext.run(q).headOption
     }
   }
   
   case class TrainedSkill(id: TrainedSkill.Id, skill: Skill, level: TrainedSkill.Level,
-      trainedCareer: Option[Career])
-  object TrainedSkill {
+      trainedCareer: Option[Career]) extends TCommonRowWithId(id.value) {
+     
+    import dbContext._ 
+    def saveToDB: Unit = insertOrUpdate(this, (tS : TrainedSkill) => tS.id == lift(this.id))
+    def deleteFromDB : Unit = deleteRow(this, (tS : TrainedSkill) => tS.id == lift(this.id))
+  }
+  object TrainedSkill extends TCommonRowCompanionWithId[TrainedSkill] {
     case class Id(val value: Integer) extends AnyVal
     case class Level(val value: Short) extends AnyVal
+    
+    def loadRows: List[TrainedSkill] = dbContext.loadAll[TrainedSkill]
     
     /**
      * Commatext

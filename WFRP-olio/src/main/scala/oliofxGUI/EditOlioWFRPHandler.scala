@@ -59,7 +59,7 @@ class EditOlioWFRPHandler(
     this.edRace.text = Race.byId( this.fCurrentOlio.value.map(_.race)
                                                          .map(_.value) //{ o: Olio => o.race.value }
                                                          .get )
-                                                                         .map(_.asInstanceOf[Race].name.value).getOrElse("")
+                                                               .map(_.asInstanceOf[Race].name.value).getOrElse("")
   }
   
   /**
