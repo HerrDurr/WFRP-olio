@@ -23,6 +23,9 @@ object WFRPOlioMain extends JFXApp {
     // trippy this here
     // fullScreen = true
     title = "Oliosheetz 2.0"
+    
+    // Fill caches here
+    //initCaches
      
     scene = new Scene
     {
@@ -53,6 +56,17 @@ object WFRPOlioMain extends JFXApp {
       
     
     
+  }
+  
+  /*
+   * Doesn't work
+   */
+  def initCaches(): Unit = {
+    Availability.cache
+    WeaponQuality.cache
+    Item.cache
+    Skill.cache
+    Talent.cache
   }
 
   def quillTest() = {

@@ -185,7 +185,7 @@ object SchemaWFRP {
     case class Modifier(val value: Short) extends AnyVal //MappedTo[Short]
     
     def avgId = IdTag("Av")
-    def avg : Option[Availability] = this.byTag(this.avgId).map(_.asInstanceOf[Availability])
+    def avg : Option[Availability] = this.byTag(this.avgId.value).map(_.asInstanceOf[Availability])
     def loadRows : List[Availability] = {
       import dbContext._
       loadAll[Availability]
@@ -196,7 +196,7 @@ object SchemaWFRP {
   }
   
   case class Item(id: Item.Id, name: Item.Name, craftsmanship: Craftsmanship.Craftsmanship, encumbrance: Item.Encumbrance, 
-      cost: Option[Item.Cost], availability: Option[Availability]) 
+      cost: Option[Item.Cost], availability: Option[Availability.IdTag]) 
       extends TCachableRowObjectWithId(id.value) {
     /*def initProperties =
     {

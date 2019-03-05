@@ -195,7 +195,7 @@ class EditItemHandler(
     comboCraftsmanship.getSelectionModel.select(aItem.craftsmanship)
     import Availability._
     if (aItem.availability.isDefined)
-      comboAvailability.getSelectionModel.select( aItem.availability.getOrElse(avg) )
+      comboAvailability.getSelectionModel.select( byTag( aItem.availability.map(_.value).getOrElse(avgId.value) ).map(_.asInstanceOf[Availability]) )
     cbIsMelee.setSelected(this.fCurrentWeaponMelee.value.isDefined)
     cbIsRanged.setSelected(this.fCurrentWeaponRanged.isDefined)
     
@@ -249,7 +249,7 @@ class EditItemHandler(
       newValue: Option[Availability]
       ) = {
     if (this.fCurrentItem.isDefined)
-      fCurrentItem.get.update( lAvail.set(fCurrentItem.get.data)(newValue) )
+      fCurrentItem.get.update( lAvail.set(fCurrentItem.get.data)( newValue.map(_.idTag) ) )
   }
   
   private def onChangedName() = {

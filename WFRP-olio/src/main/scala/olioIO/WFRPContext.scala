@@ -92,12 +92,12 @@ class WFRPContext extends SqliteJdbcContext(CamelCase, "wfrpdb") with SQLiteQuer
             None
       }*/
   
-  implicit val encodeAvailability: MappedEncoding[Availability, String] =
+  /*implicit val encodeAvailability: MappedEncoding[Availability, String] =
       MappedEncoding[Availability, String]{ a: Availability => a.idTag.value }
   // TODO: refactor that get!
   implicit val decodeAvailability: MappedEncoding[String, Availability] =
       MappedEncoding[String, Availability]
-        { str: String => Availability.byTag(str).map(_.asInstanceOf[Availability]).get }
+        { str: String => Availability.byTag(str).map(_.asInstanceOf[Availability]).get }*/
   
   /*
    * OLIO
