@@ -143,6 +143,7 @@ class EditItemHandler(
     this.comboCraftsmanship.addOnChange(onChangeCraftsmanship)
     this.editEnc.addFocusLostEvent(onChangedEnc)
     this.editCost.addFocusLostEvent(onChangedCost)
+    this.comboAvailability.addOnChange(onChangeAvailability)
     
     // Melee
     this.cbIsMelee.addOnCheck(onChangeIsMelee)
@@ -194,7 +195,7 @@ class EditItemHandler(
     comboCraftsmanship.getSelectionModel.select(aItem.craftsmanship)
     import Availability._
     if (aItem.availability.isDefined)
-      comboAvailability.getSelectionModel.select( Availability.byTag( aItem.availability.map(_.value).getOrElse(avgId.value) ).map(_.asInstanceOf[Availability]) )
+      comboAvailability.getSelectionModel.select( aItem.availability.getOrElse(avg) )
     cbIsMelee.setSelected(this.fCurrentWeaponMelee.value.isDefined)
     cbIsRanged.setSelected(this.fCurrentWeaponRanged.isDefined)
     
@@ -241,6 +242,15 @@ class EditItemHandler(
   
 
   def setStage(stage: Stage) = fStage = Some(stage)
+  
+  private def onChangeAvailability(
+      observable: jfxbv.ObservableValue[_ <: Option[Availability]],
+      oldValue: Option[Availability],
+      newValue: Option[Availability]
+      ) = {
+    if (this.fCurrentItem.isDefined)
+      fCurrentItem.get.update( lAvail.set(fCurrentItem.get.data)(newValue) )
+  }
   
   private def onChangedName() = {
     if (this.fCurrentItem.isDefined)

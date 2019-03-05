@@ -42,7 +42,9 @@ class TStorageRow[A <: TAbstractRow](aObject : A, aStorage : TStorage[A]) {
   def apply(): ObjectProperty[A] = this.fObjProperty
   
   def update(aObject : A) = {
+    println("Updating "+this.data.toString())
     this.fObjProperty.update(aObject)
+    println("Updated to "+aObject.toString())
   }
   
   def save(): Unit = {
