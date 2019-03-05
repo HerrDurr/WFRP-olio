@@ -3,12 +3,12 @@ package dataElements
 import scala.collection.mutable.Buffer
 //import dataElements.{TCachedRow, SQLiteQuerier}
 //import TCachedRow._
-import io.getquill.context.jdbc.JdbcContext
+//import io.getquill.context.jdbc.JdbcContext
 //import dataElements.TRowTrait
 import dataElements.CachableObjects._
 
-class TCachingStorage[D <: TAbstractRow](aCompanion : TCachableRowCompanion[D],
-    aContext : JdbcContext[_,_] with SQLiteQuerier) extends TStorage[D](aCompanion, aContext) {
+class TCachingStorage[D <: TAbstractRow](aCompanion : TCachableRowCompanion[D]/*,
+    aContext : JdbcContext[_,_] with SQLiteQuerier*/) extends TStorage[D](aCompanion) {
   
   /*import aContext._
   

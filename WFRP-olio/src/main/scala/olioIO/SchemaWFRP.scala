@@ -14,6 +14,8 @@ import dataElements.SQLiteQuerier
 import dataElements.TCachingStorage
 import dataElements.CachableObjects._
 import dataElements.Rows._
+import dataElements.TStorage
+import scala.collection.mutable.Buffer
 
 //import io.getquill.{SqliteJdbcContext, SqliteDialect, CamelCase, MappedEncoding}
 //import io.getquill.context.Context
@@ -86,7 +88,7 @@ object SchemaWFRP {
       dbContext.loadAll[Skill]
     }
     
-    private lazy val fCache = new TCachingStorage[Skill](this, dbContext)
+    private lazy val fCache = new TCachingStorage[Skill](this)
     def cache: TCachingStorage[Skill] = this.fCache
   }
   
@@ -127,16 +129,18 @@ object SchemaWFRP {
     val lDescription = lens[Talent] >> 'description
     
     def createNew: Talent = new Talent(Id(-1), Name(""), None, TalentExplain.-, None)
+    
     /**
      * Commatext of Talent Ids
      */
     case class Talents(val value: String) extends AnyVal
+    
     def loadRows: List[Talent] = {
       import dbContext._
       loadAll[Talent]
     }
     
-    private lazy val fCache = new TCachingStorage[Talent](this, dbContext)
+    private lazy val fCache = new TCachingStorage[Talent](this)
     def cache: TCachingStorage[Talent] = this.fCache
   }
   
@@ -191,7 +195,7 @@ object SchemaWFRP {
       loadAll[Availability]
     }
     
-    private lazy val fCache = new TCachingStorage[Availability](this, dbContext)
+    private lazy val fCache = new TCachingStorage[Availability](this)
     def cache: TCachingStorage[Availability] = this.fCache
   }
   
@@ -247,7 +251,7 @@ object SchemaWFRP {
     
     def loadRows: List[Item] = dbContext.loadAll[Item]
     
-    private lazy val fCache = new TCachingStorage[Item](this, dbContext)
+    private lazy val fCache = new TCachingStorage[Item](this)
     def cache: TCachingStorage[Item] = this.fCache
   }
   //case class Craftsmanship(val value: String) extends AnyVal //MappedTo[Char]
@@ -353,7 +357,7 @@ object SchemaWFRP {
       run(q).headOption
     }
     
-    private lazy val fCache = new TCachingStorage[WeaponQuality](this, dbContext)
+    private lazy val fCache = new TCachingStorage[WeaponQuality](this)
     def cache: TCachingStorage[WeaponQuality] = this.fCache
   }
   
@@ -460,7 +464,7 @@ object SchemaWFRP {
     
     def loadRows : List[Career] = dbContext.loadAll[Career]
     
-    private lazy val fCache = new TCachingStorage[Career](this, dbContext)
+    private lazy val fCache = new TCachingStorage[Career](this)
     def cache: TCachingStorage[Career] = this.fCache
   }
   
@@ -477,7 +481,7 @@ object SchemaWFRP {
     
     def loadRows: List[Race] = dbContext.loadAll[Race]
     
-    private lazy val fCache = new TCachingStorage[Race](this, dbContext)
+    private lazy val fCache = new TCachingStorage[Race](this)
     def cache: TCachingStorage[Race] = this.fCache
   }
   
@@ -488,8 +492,28 @@ object SchemaWFRP {
       skills: Option[TrainedSkill.TrainedSkills]) extends TCommonRowWithId(id.value) {
      
     import dbContext._ 
+    // TRowTrait
     def saveToDB: Unit = insertOrUpdate(this, (o : Olio) => o.id == lift(this.id))
     def deleteFromDB : Unit = deleteRow(this, (o : Olio) => o.id == lift(this.id))
+    
+    def attributeStorage : TStorage[AttributeSet] = {
+      import AttributeSet.Id
+      val storage = new TStorage[AttributeSet](AttributeSet)
+      val attIds = new Buffer[Id]
+      attIds += baseAttributes
+      if (advancedAttributes.isDefined)
+        attIds += advancedAttributes.get
+      
+    }
+    
+    def totalAttributes : AttributeSet = {
+      /*if (advancedAttributes.isEmpty)
+        baseAttributes
+      else
+        baseAttributes + advancedAttributes.get
+        * 
+        */???
+    }
   }
   object Olio extends TCommonRowCompanionWithId[Olio] {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
@@ -526,6 +550,14 @@ object SchemaWFRP {
     import dbContext._ 
     def saveToDB: Unit = insertOrUpdate(this, (a : AttributeSet) => a.id == lift(this.id))
     def deleteFromDB : Unit = deleteRow(this, (a : AttributeSet) => a.id == lift(this.id))
+    
+    def +(other : AttributeSet): AttributeSet = {
+      import AttributeSet.Id
+      new AttributeSet(Id(-1), this.weaponSkill + other.weaponSkill, this.ballisticSkill + other.ballisticSkill, this.strength + other.strength,
+          this.toughness + other.toughness, this.agility + other.agility, this.intelligence + other.intelligence, this.willPower + other.willPower,
+          this.fellowship + other.fellowship, this.attacks + other.attacks, this.wounds + other.wounds, this.magic + other.magic)
+    }
+    
   }
   
   object AttributeSet extends TCommonRowCompanionWithId[AttributeSet] {
@@ -593,6 +625,7 @@ object SchemaWFRP {
     def createEmpty: AttributeSet = {
       this.createEmpty(AttributeSet.Id(-1))
     }
+    
     /*def byId(aId: Id): AttributeSet = {
       import dbContext._
       val q = quote {
@@ -613,13 +646,21 @@ object SchemaWFRP {
     }
   }
   
-  case class TrainedSkill(id: TrainedSkill.Id, skill: Skill, level: TrainedSkill.Level,
-      trainedCareer: Option[Career]) extends TCommonRowWithId(id.value) {
+  /**
+   * A skill that an Olio has training in.
+   * 
+   * @param trainedCareer The latest Career this Skill was trained in.
+   */
+  case class TrainedSkill(id: TrainedSkill.Id, skill: Skill.Id, level: TrainedSkill.Level,
+      trainedCareer: Option[Career.Id]) extends TCommonRowWithId(id.value) {
      
     import dbContext._ 
     def saveToDB: Unit = insertOrUpdate(this, (tS : TrainedSkill) => tS.id == lift(this.id))
     def deleteFromDB : Unit = deleteRow(this, (tS : TrainedSkill) => tS.id == lift(this.id))
   }
+  /**
+   * Companion for [[SchemaWFRP.TrainedSkill]]. 
+   */
   object TrainedSkill extends TCommonRowCompanionWithId[TrainedSkill] {
     case class Id(val value: Integer) extends AnyVal
     case class Level(val value: Short) extends AnyVal

@@ -1,15 +1,13 @@
 package dataElements
 
 import scala.collection.mutable.Buffer
-import dataElements.{SQLiteQuerier}
-import io.getquill.context.jdbc.JdbcContext
-//import dataElements.TRowTrait
+//import io.getquill.context.jdbc.JdbcContext
 import Rows._
 
-class TStorage[D <: TAbstractRow](aCompanion : TRowCompanion[D],
-    aContext : JdbcContext[_,_] with SQLiteQuerier) {
+class TStorage[D <: TAbstractRow](aCompanion : TRowCompanion[D]/*,
+    aContext : JdbcContext[_,_] with SQLiteQuerier*/) {
   
-  import aContext._
+  //import aContext._
   
   private val fRows: Buffer[TStorageRow[D]] = Buffer()
   
@@ -41,8 +39,12 @@ class TStorage[D <: TAbstractRow](aCompanion : TRowCompanion[D],
     this.fRows.find{ r: TStorageRow[D] => aRowItem.filterFunc(r.data) }
   }
   
-  def getStorageRow(aRowItem : D): TStorageRow[D] = {
+  /*def getStorageRow(aRowItem : D): TStorageRow[D] = {
     this.find(aRowItem).getOrElse( TStorageRow.createNewRow(aRowItem, this) )
+  }*/
+  
+  def addRows(aRows : Traversable[D]) = {
+    aRows.foreach( TStorageRow(_, this) )
   }
   
   def addToStorage(aStorageRow : TStorageRow[D]): Unit = {
