@@ -488,36 +488,60 @@ object SchemaWFRP {
   
   // TODO: Career Table and flesh out Olio Table
   case class Olio(id: Olio.Id, name: Olio.Name, race: Race.Id, baseAttributes: AttributeSet.Id,
-      advancedAttributes: Option[AttributeSet.Id], careers: Option[Career.Careers], talents: Option[Talent.Talents],
+      advancedAttributes: Option[AttributeSet.Id], movement: Olio.M, insanityPoints: Olio.IP,
+      fatePoints: Olio.FP, careers: Option[Career.Careers], talents: Option[Talent.Talents],
       skills: Option[TrainedSkill.TrainedSkills]) extends TCommonRowWithId(id.value) {
      
+    private var fAttributeStorage: Option[TStorage[AttributeSet]] = None
+    
     import dbContext._ 
     // TRowTrait
     def saveToDB: Unit = insertOrUpdate(this, (o : Olio) => o.id == lift(this.id))
     def deleteFromDB : Unit = deleteRow(this, (o : Olio) => o.id == lift(this.id))
     
-    def attributeStorage : TStorage[AttributeSet] = {
-      import AttributeSet.Id
-      val storage = new TStorage[AttributeSet](AttributeSet)
-      val attIds = new Buffer[Id]
-      attIds += baseAttributes
+    def baseAttSet : AttributeSet = {
+      AttributeSet.byId(baseAttributes.value, attributeStorage).map(_.asInstanceOf[AttributeSet]).get
+    }
+    
+    def advAttSet : Option[AttributeSet] = {
       if (advancedAttributes.isDefined)
-        attIds += advancedAttributes.get
-      
+        AttributeSet.byId(advancedAttributes.get.value, attributeStorage).map(_.asInstanceOf[AttributeSet])
+      else
+        None
+    }
+    
+    def attributeStorage : TStorage[AttributeSet] = {
+      if (fAttributeStorage.isEmpty)
+      {
+        import AttributeSet.Id
+        val storage = new TStorage[AttributeSet](AttributeSet)
+        fAttributeStorage = Some(storage)
+        val attIds = new Buffer[Id]
+        attIds += baseAttributes
+        if (advancedAttributes.isDefined)
+          attIds += advancedAttributes.get
+        val getQ = quote {
+          query[AttributeSet].filter{ aSet: AttributeSet => attIds.contains(aSet.id) }
+        }
+        val sets: List[AttributeSet] = run(getQ)
+        storage.addRows(sets)
+      }
+      fAttributeStorage.get
     }
     
     def totalAttributes : AttributeSet = {
-      /*if (advancedAttributes.isEmpty)
-        baseAttributes
+      if (advAttSet.isEmpty)
+        baseAttSet
       else
-        baseAttributes + advancedAttributes.get
-        * 
-        */???
+        baseAttSet + advAttSet.get
     }
   }
   object Olio extends TCommonRowCompanionWithId[Olio] {
     case class Id(val value: Int) extends AnyVal //MappedTo[Int]
     case class Name(val value: String) extends AnyVal //MappedTo[String]
+    case class M(val value: Short) extends AnyVal
+    case class IP(val value: Short) extends AnyVal
+    case class FP(val value: Short) extends AnyVal
     
     def loadRows: List[Olio] = dbContext.loadAll[Olio]
   }

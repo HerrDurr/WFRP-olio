@@ -8,6 +8,9 @@ import olioIO.SchemaWFRP.Olio._
 import scalafx.beans.property.ObjectProperty
 import scalafx.scene.control.TableColumn
 import dataUI.ControlFactory._
+import dataElements.TStorage
+import dataElements.TStorageRow
+import scalafx.collections.ObservableBuffer
 
 trait EditOlioInterface {
   
@@ -41,6 +44,9 @@ class EditOlioWFRPHandler(
   private var fAdvanceAttributes : ObjectProperty[Option[AttributeSet]] = ObjectProperty(this, "Advance", None)
   private var fTotalAttributes : ObjectProperty[Option[AttributeSet]] = ObjectProperty(this, "Total", None)
   
+  private var fAttributeStorage: Option[TStorage[AttributeSet]] = None
+  private var fAttributeBuffer : ObservableBuffer[AttributeSet] = ObservableBuffer()
+  
   
   
   def editOlio(aOlio: Olio) = {
@@ -50,7 +56,21 @@ class EditOlioWFRPHandler(
   
   private def resetOlio(aOlio : Olio) = {
     this.fCurrentOlio.value = Some(aOlio)
-    //this.fStartingAttributes.value = Some(aOlio.baseAttributes)
+    // This inits the AttributeSet rows as well
+    this.fAttributeStorage = Some( aOlio.attributeStorage )
+    this.fStartingAttributes.value = AttributeSet.byId(aOlio.baseAttributes.value, fAttributeStorage.get)
+                                                 .map(_.asInstanceOf[AttributeSet])
+    this.fAdvanceAttributes.value = AttributeSet.byId(aOlio.advancedAttributes.map(_.value).getOrElse(-1), fAttributeStorage.get)
+                                                 .map(_.asInstanceOf[AttributeSet])
+    if (fAdvanceAttributes.value.isEmpty) {
+      this.fAdvanceAttributes.value = Some( AttributeSet.createEmpty )
+      TStorageRow.createNewRow(fAdvanceAttributes.value.get, fAttributeStorage.get)
+    }
+    
+    this.fTotalAttributes.value = Some( fStartingAttributes.value.get + fAdvanceAttributes.value.get )
+    
+    fAttributeBuffer.clear()
+    fAttributeBuffer ++= Seq(fStartingAttributes.value.get, fAdvanceAttributes.value.get, fTotalAttributes.value.get)
   }
   
   private def resetUI = {
@@ -67,13 +87,15 @@ class EditOlioWFRPHandler(
    */
   private def initMainProfileTable: Unit = {
     import AttributeSet._
+    
+    tblMainProfile.items = this.fAttributeBuffer
     //val colWS = new TableColumn[AttributeSet, Int] {
     //}
     //val setToWS = {aSet : AttributeSet => aSet.weaponSkill}
     
-    /*val colWS: TableColumn[AttributeSet, Short] = tableColumnNew(
+    val colWS: TableColumn[AttributeSet, Short] = tableColumnNew(
         WS(0),
-        { aSet : AttributeSet => aSet.weaponSkil }
+        { aSet : AttributeSet => aSet.weaponSkill }
         { aNewSet : AttributeSet => fItemCurrent = aNewItem },
         lWS,
         { aVal: Short => WS(aVal) }
@@ -83,7 +105,7 @@ class EditOlioWFRPHandler(
       
       
       
-    }*/
+    }
   }
   
 }
