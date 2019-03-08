@@ -10,7 +10,6 @@ import olioMain._
 import java.awt.Insets._
 import scala.Vector
 import scala.io.Codec.decoder2codec
-import olioGUI.OlioPanel
 
 class WeaponPanel(olioPanel: OlioPanel, index: Int) extends BoxPanel(Orientation.Horizontal) {
   

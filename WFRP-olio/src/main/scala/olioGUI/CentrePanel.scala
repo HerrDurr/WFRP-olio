@@ -3,9 +3,6 @@ package olioGUI
 import scala.swing._
 import olioMain._
 import scala.swing.event._
-import olioGUI.AttributePanel
-import olioGUI.LeftPanel
-import olioGUI.OlioPanel
 
 
 class CentrePanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {

@@ -32,16 +32,16 @@ object WFRPOlioMain extends JFXApp {
       maximized = true
       val placeHolderOlio = new oldOlio
           
-      val borderPane = new BorderPane
+      /*val borderPane = new BorderPane
       {
         placeHolderOlio.setName("Seppo")
         placeHolderOlio.setRace("Human")
         placeHolderOlio.career.change("Dung Shoveler")
         center = new OlioSheet(placeHolderOlio)        
-      }
+      }*/
       //content.add(borderPane)
       //quillTest();
-      content.add(testItem2)//testItems)
+      //content.add(testItem2)//testItems)
       // Slick is utter poop
       //SlickTest.testConfig
       //testDB
@@ -50,6 +50,8 @@ object WFRPOlioMain extends JFXApp {
       //DataHelperWFRP.copyOldTalentDataToDB(placeHolderOlio)
       //Thread.sleep(5000)
       testEditItem()
+      
+      content.add( editOlio(Olio.createNew) )
       
       
     }

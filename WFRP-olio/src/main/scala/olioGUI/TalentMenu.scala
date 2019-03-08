@@ -1,8 +1,6 @@
 package olioGUI
 
 import scala.swing._
-import olioGUI.TalentSelector
-import olioGUI.OlioPanel
 
 class TalentMenu(olioPanel: OlioPanel) extends BoxPanel(Orientation.Horizontal) {
   

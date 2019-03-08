@@ -9,8 +9,6 @@ import olioIO.SaverLoader
 import java.io.File
 import javax.swing.JFileChooser
 import java.awt.Font
-import olioGUI.OlioPanel
-import olioGUI.AttributeSelectionPanel
 import java.nio.charset.CodingErrorAction
 
 object Sheet extends SimpleSwingApplication {

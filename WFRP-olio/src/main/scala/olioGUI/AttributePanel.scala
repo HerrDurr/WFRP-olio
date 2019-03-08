@@ -3,8 +3,6 @@ package olioGUI
 import scala.swing._
 import olioMain._
 import scala.swing.event._
-import olioGUI.WeaponPanel
-import olioGUI.OlioPanel
 
 class AttributePanel(olioPanel: OlioPanel) extends GridPanel(4,8) {
   

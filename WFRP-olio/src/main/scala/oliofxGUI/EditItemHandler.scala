@@ -29,6 +29,7 @@ import dataWFRP.Resources._
 import scalafx.stage.Stage
 import dataElements.CachableObjects._
 import dataElements.TStorageRow
+import dataElements.TStorageRow
 
 //import javafx.beans.value.ObservableValue
 
@@ -174,7 +175,7 @@ class EditItemHandler(
     this.fCurrentWeaponRanged = None
     //if (aItem.isDefined)
     //{
-      this.fCurrentItem = Some(Item.cache.getStorageRow(aItem))
+      this.fCurrentItem = Item.cache.find(aItem)
       this.fCurrentWeaponMelee.value = aItem.weaponMelee
       this.fCurrentWeaponRanged = aItem.weaponRanged
     //}
@@ -306,7 +307,7 @@ class EditItemHandler(
   def getCurrentItem: Item = {
     if (this.fCurrentItem.isEmpty)
     {
-      this.fCurrentItem = Some(Item.cache.getStorageRow( Item.createNew ))
+      this.fCurrentItem = Some( TStorageRow.createNewRow( Item.createNew, Item.cache ) )
     }
     this.fCurrentItem.get.data
   }

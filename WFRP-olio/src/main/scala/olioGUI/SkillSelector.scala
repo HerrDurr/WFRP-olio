@@ -6,8 +6,6 @@ import javax.swing.SpinnerListModel
 import scala.swing.event._
 import java.awt.Color
 import scala.Vector
-import olioGUI.OlioPanel
-import olioGUI.Spinner
 
 class SkillSelector (olioPanel: OlioPanel, skill: Skill) extends FlowPanel {
   

@@ -7,7 +7,6 @@ import olioMain.{Olio, Weapon, Group}
 import scala.io.Source
 import java.awt.Color
 import scala.collection.mutable.Buffer
-import olioIO.CorruptedDataFileException
 
 object SaverLoader {
   

@@ -3,8 +3,6 @@ package olioGUI
 import scala.swing._
 import olioMain.Olio
 import javax.swing.border.Border
-import olioGUI.SkillSelector
-import olioGUI.OlioPanel
 
 /*import scala.io.Source
 import scala.io.Codec

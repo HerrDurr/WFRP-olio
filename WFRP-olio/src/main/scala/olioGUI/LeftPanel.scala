@@ -2,8 +2,6 @@ package olioGUI
 
 import scala.swing._
 import scala.swing.BorderPanel.Position._
-import olioGUI.OlioPanel
-import olioGUI.HitPanel
 
 class LeftPanel(olioPanel: OlioPanel) extends BoxPanel(Orientation.Vertical) {
   

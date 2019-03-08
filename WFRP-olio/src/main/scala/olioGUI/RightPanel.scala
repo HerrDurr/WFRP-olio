@@ -4,8 +4,6 @@ import olioMain._
 import scala.swing._
 import event._
 import javax.swing.JFrame
-import olioGUI.WeaponPanel
-import olioGUI.OlioPanel
 
 //import scala.swing.BorderPanel.Position._
 

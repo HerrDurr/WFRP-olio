@@ -4,8 +4,6 @@ import scala.swing._
 import javax.imageio._
 import javax.swing.ImageIcon
 import scala.Vector
-import olioGUI.ArmourPanel
-import olioGUI.OlioPanel
 
 class HitPanel(olioPanel: OlioPanel) extends Label with SequentialContainer.Wrapper {
   

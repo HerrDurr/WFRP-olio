@@ -5,7 +5,6 @@ import java.io.IOException
 import java.io.Reader
 import scala.collection.mutable.Buffer
 import olioMain._
-import olioIO.CorruptedDataFileException
 
 object DataIO {
   

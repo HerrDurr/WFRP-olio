@@ -45,13 +45,18 @@ class EditOlioWFRPHandler(
   private var fTotalAttributes : ObjectProperty[Option[AttributeSet]] = ObjectProperty(this, "Total", None)
   
   private var fAttributeStorage: Option[TStorage[AttributeSet]] = None
-  private var fAttributeBuffer : ObservableBuffer[AttributeSet] = ObservableBuffer()
+  private val fAttributeBuffer : ObservableBuffer[AttributeSet] = ObservableBuffer()
+  /**
+   * A function needed for the TableColumn factory method.
+   */
+  private val newSetFunc: AttributeSet => Unit = { aNewSet : AttributeSet => fAttributeBuffer.replaceAll( (fAttributeBuffer.find( _.id == aNewSet.id ).get), aNewSet ) }
   
   
   
   def editOlio(aOlio: Olio) = {
     resetOlio(aOlio)
     resetUI
+    initMainProfileTable
   }
   
   private def resetOlio(aOlio : Olio) = {
@@ -60,11 +65,20 @@ class EditOlioWFRPHandler(
     this.fAttributeStorage = Some( aOlio.attributeStorage )
     this.fStartingAttributes.value = AttributeSet.byId(aOlio.baseAttributes.value, fAttributeStorage.get)
                                                  .map(_.asInstanceOf[AttributeSet])
+    if (fStartingAttributes.value.isEmpty) {
+      this.fStartingAttributes.value = Some( AttributeSet.createEmpty )
+      TStorageRow.createNewRow(fStartingAttributes.value.get, fAttributeStorage.get)
+    }
     this.fAdvanceAttributes.value = AttributeSet.byId(aOlio.advancedAttributes.map(_.value).getOrElse(-1), fAttributeStorage.get)
                                                  .map(_.asInstanceOf[AttributeSet])
     if (fAdvanceAttributes.value.isEmpty) {
+      //println("fAdvanceAttributes is Empty, creating new set...")
       this.fAdvanceAttributes.value = Some( AttributeSet.createEmpty )
       TStorageRow.createNewRow(fAdvanceAttributes.value.get, fAttributeStorage.get)
+      /*if (fAdvanceAttributes.value.isDefined)
+        println("Set creation successful!")
+      else
+        println("Set creation unsuccessful!")*/
     }
     
     this.fTotalAttributes.value = Some( fStartingAttributes.value.get + fAdvanceAttributes.value.get )
@@ -83,29 +97,74 @@ class EditOlioWFRPHandler(
   }
   
   /**
-   * Initialize the columns of the Main Profile
+   * Initialize the columns of the Main Profile. This is horrible, but making it any more generic
+   * and abstract than it already is hurts my head.
    */
   private def initMainProfileTable: Unit = {
     import AttributeSet._
     
     tblMainProfile.items = this.fAttributeBuffer
-    //val colWS = new TableColumn[AttributeSet, Int] {
-    //}
-    //val setToWS = {aSet : AttributeSet => aSet.weaponSkill}
     
+    //val setToWS : AttributeSet => WS = { aSet : AttributeSet => aSet.weaponSkill }
     val colWS: TableColumn[AttributeSet, Short] = tableColumnNew(
         WS(0),
-        { aSet : AttributeSet => aSet.weaponSkill }
-        { aNewSet : AttributeSet => fItemCurrent = aNewItem },
+        { aSet : AttributeSet => aSet.weaponSkill },
+        newSetFunc,
         lWS,
         { aVal: Short => WS(aVal) }
     )
+    val colBS: TableColumn[AttributeSet, Short] = tableColumnNew(
+        BS(0),
+        { aSet : AttributeSet => aSet.ballisticSkill },
+        newSetFunc,
+        lBS,
+        { aVal: Short => BS(aVal) }
+    )
+    val colS: TableColumn[AttributeSet, Short] = tableColumnNew(
+        S(0),
+        { aSet : AttributeSet => aSet.strength },
+        newSetFunc,
+        lS,
+        { aVal: Short => S(aVal) }
+    )
+    val colT: TableColumn[AttributeSet, Short] = tableColumnNew(
+        T(0),
+        { aSet : AttributeSet => aSet.toughness },
+        newSetFunc,
+        lT,
+        { aVal: Short => T(aVal) }
+    )
+    val colAg: TableColumn[AttributeSet, Short] = tableColumnNew(
+        Ag(0),
+        { aSet : AttributeSet => aSet.agility },
+        newSetFunc,
+        lAg,
+        { aVal: Short => Ag(aVal) }
+    )
+    val colInt: TableColumn[AttributeSet, Short] = tableColumnNew(
+        Int(0),
+        { aSet : AttributeSet => aSet.intelligence },
+        newSetFunc,
+        lInt,
+        { aVal: Short => Int(aVal) }
+    )
+    val colWP: TableColumn[AttributeSet, Short] = tableColumnNew(
+        WP(0),
+        { aSet : AttributeSet => aSet.willPower },
+        newSetFunc,
+        lWP,
+        { aVal: Short => WP(aVal) }
+    )
+    val colFel: TableColumn[AttributeSet, Short] = tableColumnNew(
+        Fel(0),
+        { aSet : AttributeSet => aSet.fellowship },
+        newSetFunc,
+        lFel,
+        { aVal: Short => Fel(aVal) }
+    )
     
-    with tblMainProfile {
-      
-      
-      
-    }
+    tblMainProfile.columns ++= List(colWS, colBS, colS, colT, colAg, colInt, colWP, colFel)
+    tblMainProfile.editable = true
   }
   
 }

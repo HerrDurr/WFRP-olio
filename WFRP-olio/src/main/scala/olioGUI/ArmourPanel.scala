@@ -3,8 +3,6 @@ package olioGUI
 import scala.swing._
 import javax.swing.SpinnerNumberModel
 import scala.swing.event._
-import olioGUI.Spinner
-import olioGUI.OlioPanel
 
 class ArmourPanel(olioPanel: OlioPanel, index: Int, hitMin: Int, hitMax: Int) extends BoxPanel(Orientation.Vertical) {
   

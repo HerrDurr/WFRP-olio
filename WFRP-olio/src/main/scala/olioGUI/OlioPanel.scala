@@ -5,7 +5,6 @@ import scala.swing.event._
 import scala.swing.BorderPanel.Position._
 import olioMain._
 import java.awt.Font
-import olioGUI.CentrePanel
 
 class OlioPanel(val olio: Olio, val whFont: Font, val whFontBold: Font) extends BorderPanel {
   

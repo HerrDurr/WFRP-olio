@@ -12,7 +12,6 @@ import java.awt.Insets._
 import javax.swing.JFileChooser
 import java.io.File
 import javax.swing.SpinnerNumberModel
-import olioGUI.OlioPanel
 
 class TopPanel(olioPanel: OlioPanel) extends FlowPanel {
   

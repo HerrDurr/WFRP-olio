@@ -8,7 +8,6 @@ import shapeless._
 import dataWFRP.Types._
 import shapeless.Generic
 import dataElements.CachableObjects.{TCachableRowObject, TCachableRowCompanion}
-import dataElements.CachableObjects.TCachableRowCompanion
 import io.getquill.context.jdbc.JdbcContext
 import dataElements.SQLiteQuerier
 import dataElements.TCachingStorage
@@ -516,14 +515,14 @@ object SchemaWFRP {
         import AttributeSet.Id
         val storage = new TStorage[AttributeSet](AttributeSet)
         fAttributeStorage = Some(storage)
-        val attIds = new Buffer[Id]
+        val attIds: Buffer[Id] = Buffer()
         attIds += baseAttributes
         if (advancedAttributes.isDefined)
           attIds += advancedAttributes.get
         val getQ = quote {
-          query[AttributeSet].filter{ aSet: AttributeSet => attIds.contains(aSet.id) }
+          query[AttributeSet].filter{ aSet: AttributeSet => liftQuery(attIds.toList).contains(aSet.id) }
         }
-        val sets: List[AttributeSet] = run(getQ)
+        val sets: List[AttributeSet] = run( /*AttributeSet.queryIdSet(liftQuery(attIds.toList)) ) */getQ )
         storage.addRows(sets)
       }
       fAttributeStorage.get
@@ -544,6 +543,9 @@ object SchemaWFRP {
     case class FP(val value: Short) extends AnyVal
     
     def loadRows: List[Olio] = dbContext.loadAll[Olio]
+    def createNew: Olio = {
+      new Olio(Id(-1), Name(""), Race.Id(0), AttributeSet.Id(0), None, M(4), IP(0), FP(0), None, None, None)
+    }
   }
   
   
@@ -588,46 +590,48 @@ object SchemaWFRP {
     case class Id(val value: Integer) extends AnyVal
     case class WS(val value: Short) extends AnyVal {
       def name = "Weapon Skill"
+      def +(other : WS) = new WS((value + other.value).toShort)
     }
     case class BS(val value: Short) extends AnyVal {
       def name = "Ballistic Skill"
+      def +(other : BS) = new BS((value + other.value).toShort)
     }
     case class S(val value: Short) extends AnyVal {
       def name = "Strength"
+      def +(other : S) = new S((value + other.value).toShort)
     }
     case class T(val value: Short) extends AnyVal {
       def name = "Toughness"
+      def +(other : T) = new T((value + other.value).toShort)
     }
     case class Ag(val value: Short) extends AnyVal {
       def name = "Agility"
+      def +(other : Ag) = new Ag((value + other.value).toShort)
     }
     case class Int(val value: Short) extends AnyVal {
       def name = "Intelligence"
+      def +(other : Int) = new Int((value + other.value).toShort)
     }
     case class WP(val value: Short) extends AnyVal {
       def name = "Will Power"
+      def +(other : WP) = new WP((value + other.value).toShort)
     }
     case class Fel(val value: Short) extends AnyVal {
       def name = "Fellowship"
+      def +(other : Fel) = new Fel((value + other.value).toShort)
     }
     case class A(val value: Short) extends AnyVal {
       def name = "Attacks"
+      def +(other : A) = new A((value + other.value).toShort)
     }
     case class W(val value: Short) extends AnyVal {
       def name = "Wounds"
+      def +(other : W) = new W((value + other.value).toShort)
     }
     case class Mag(val value: Short) extends AnyVal {
       def name = "Magic"
+      def +(other : Mag) = new Mag((value + other.value).toShort)
     }
-    /*case class M(val value: Short) extends AnyVal {
-      def name = "Movement"
-    }
-    case class IP(val value: Short) extends AnyVal {
-      def name = "Insanity Points"
-    }
-    case class FP(val value: Short) extends AnyVal {
-      def name = "Fate Points"
-    }*/
     
     val lId  = lens[AttributeSet] >> 'id
     val lWS  = lens[AttributeSet] >> 'weaponSkill
@@ -650,6 +654,11 @@ object SchemaWFRP {
       this.createEmpty(AttributeSet.Id(-1))
     }
     
+    import dbContext._
+    val queryIdSet = quote { (ids: Query[Id]) =>
+      query[AttributeSet].filter(aS => ids.contains(aS.id))
+    }
+    
     /*def byId(aId: Id): AttributeSet = {
       import dbContext._
       val q = quote {
@@ -661,7 +670,7 @@ object SchemaWFRP {
   
     def queryById(aId: AttributeSet.Id) =
     {
-      import dbContext._
+      //import dbContext._
       // Eclipse's compiler ain't happy about this, but it seems fine?
       val q = quote {
         query[AttributeSet].filter{ aSet: AttributeSet => aSet.id == lift(aId) }

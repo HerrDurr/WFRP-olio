@@ -10,9 +10,6 @@ import java.io.File
 import java.awt.Font
 import javax.swing.JFileChooser
 import olioIO.SaverLoader
-import olioGUI.OlioPanel
-import olioGUI.AttributeSelectionPanel
-import olioGUI.GroupPanel
 import java.nio.charset.CodingErrorAction
 
 class GMPanel extends BorderPanel {

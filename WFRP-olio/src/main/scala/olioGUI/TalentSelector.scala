@@ -4,7 +4,6 @@ import scala.swing._
 import scala.swing.event._
 import olioMain.Talent
 import java.awt.Color
-import olioGUI.OlioPanel
 
 class TalentSelector(olioPanel: OlioPanel, talent: Talent) extends BoxPanel(Orientation.Horizontal) {
   
