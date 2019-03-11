@@ -127,7 +127,7 @@ object SchemaWFRP {
     val lSubType = lens[Talent] >> 'subType
     val lDescription = lens[Talent] >> 'description
     
-    def createNew: Talent = new Talent(Id(-1), Name(""), None, TalentExplain.-, None)
+    def createNew: Talent = new Talent(Id(getNewIndex), Name(""), None, TalentExplain.-, None)
     
     /**
      * Commatext of Talent Ids
@@ -362,7 +362,8 @@ object SchemaWFRP {
   
   
   case class WeaponMelee(id: Item.Id, twoHanded: WeaponMelee.TwoHanded, damageModifier: Option[WeaponMelee.DamageMod], 
-      qualities: Array[WeaponQuality.IdTag], /*qualitiesRaw: Option[String]*/ weaponGroupTalentId: Option[Talent.Id]) {
+      qualities: Array[WeaponQuality.IdTag], /*qualitiesRaw: Option[String]*/ weaponGroupTalentId: Option[Talent.Id])
+      extends TCachableRowObjectWithId(id.value) {
     /*
     def initProperties =
     {
@@ -374,8 +375,11 @@ object SchemaWFRP {
     }
     * 
     */
+    import dbContext._
+    def saveToDB: Unit = insertOrUpdate(this, (wM: WeaponMelee) => wM.id == lift(this.id))
+    def deleteFromDB: Unit = deleteRow(this, (wM: WeaponMelee) => wM.id == lift(this.id))
   }
-  object WeaponMelee {
+  object WeaponMelee extends TCachableRowCompanionWithId[WeaponMelee] {
     case class TwoHanded(val value: Boolean) extends AnyVal //MappedTo[Boolean]
     case class DamageMod(val value: Short) extends AnyVal //MappedTo[Short]
     //case class Qualities(val value: String) extends MappedTo[String]
@@ -390,8 +394,13 @@ object SchemaWFRP {
       new WeaponMelee(aItem.id, TwoHanded(false), None, Array(), None)
     }
     def createNew = {
-      new WeaponMelee(Item.Id(-1), TwoHanded(false), None, Array(), None)
+      new WeaponMelee(Item.Id(this.getNewIndex), TwoHanded(false), None, Array(), None)
     }
+    
+    
+    def loadRows: List[WeaponMelee] = dbContext.loadAll[WeaponMelee]
+    private lazy val fCache = new TCachingStorage[WeaponMelee](this)
+    def cache: TCachingStorage[WeaponMelee] = this.fCache
   }
   
   
@@ -544,8 +553,17 @@ object SchemaWFRP {
     
     def loadRows: List[Olio] = dbContext.loadAll[Olio]
     def createNew: Olio = {
-      new Olio(Id(-1), Name(""), Race.Id(0), AttributeSet.Id(0), None, M(4), IP(0), FP(0), None, None, None)
+      new Olio(Id(this.getNewIndex), Name(""), Race.Id(0), AttributeSet.Id(0), None, M(4), IP(0), FP(0), None, None, None)
     }
+    
+    import dbContext._
+    //import io.getquill.dsl.DynamicQueryDSL._
+    val dbQuery = quote {
+      query[Olio]
+    }
+    
+    def oliosFromDB(olioIds: Seq[Id]) =
+      dynamicQuery[Olio].filterIf(olioIds.nonEmpty)( olio => quote(liftQuery(olioIds).contains(olio.id)) )
   }
   
   
@@ -646,12 +664,12 @@ object SchemaWFRP {
     val lW   = lens[AttributeSet] >> 'wounds
     val lMag = lens[AttributeSet] >> 'magic
     
-    def createEmpty(id: Id): AttributeSet = {
+    private def createEmpty(id: Id): AttributeSet = {
       new AttributeSet( id, WS(0), BS(0), S(0), T(0), Ag(0), Int(0), WP(0), Fel(0),
                         A(0), W(0), Mag(0) )//M(0), , IP(0), FP(0) )
     }
     def createEmpty: AttributeSet = {
-      this.createEmpty(AttributeSet.Id(-1))
+      this.createEmpty( AttributeSet.Id(this.getNewIndex) )
     }
     
     import dbContext._

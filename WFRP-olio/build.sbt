@@ -11,7 +11,7 @@ lazy val commonSettings = Seq(
 
 
 val sqliteJDBCVer = "3.18.0"
-val quillVer = "2.6.0"
+val quillVer = "3.1.0" //"2.6.0"
 
 lazy val macroModule = project.in(file("macros"))
   .settings(commonSettings: _*)

@@ -10,6 +10,7 @@ class TStorage[D <: TAbstractRow](aCompanion : TRowCompanion[D]/*,
   //import aContext._
   
   private val fRows: Buffer[TStorageRow[D]] = Buffer()
+  //private var fNewIndex : Int = 0
   
   
   // save all rows (check what's new, changed, deleted?)
@@ -53,6 +54,11 @@ class TStorage[D <: TAbstractRow](aCompanion : TRowCompanion[D]/*,
     else
       throw new Exception(s"Row $aStorageRow already in Storage!")
   }
+  
+  /*def getNewIndex: Int = {
+    fNewIndex -= 1
+    fNewIndex
+  }*/
   
   /*def addAsNew(aRow : D): TStorageRow[D] = {
      val aNewStorageRow = TStorageRow.createNewRow(aRow, this)

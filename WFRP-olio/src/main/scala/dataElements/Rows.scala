@@ -20,8 +20,15 @@ object Rows {
   
   trait TCommonRowCompanionWithId[A <: TCommonRowWithId] extends TRowCompanion[A] /*with TQueriableById[A]*/ {
     
+    private var newIndex = 0
+    
     def byId(id : Integer, aStorage : TStorage[A]): Option[TCommonRowWithId] = {
       aStorage.getRows.find(_.data.rowId == id).map( _.data.asInstanceOf[TCommonRowWithId] )
+    }
+    
+    def getNewIndex = {
+      newIndex -= 1
+      newIndex
     }
     
   }

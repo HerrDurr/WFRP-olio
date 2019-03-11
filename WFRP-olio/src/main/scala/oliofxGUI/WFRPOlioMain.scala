@@ -12,6 +12,8 @@ import scalafx.scene.layout.BorderPane.sfxBorderPane2jfx
 import olioIO.SchemaWFRP._
 import scala.concurrent.ExecutionContext.Implicits.global
 import EditItem._
+import dataElements.TStorage
+
 //import olioIO.DataHelperWFRP
 
 
@@ -51,7 +53,16 @@ object WFRPOlioMain extends JFXApp {
       //Thread.sleep(5000)
       testEditItem()
       
-      content.add( editOlio(Olio.createNew) )
+      val olioStorage = new TStorage[Olio](Olio)
+//      olioStorage.addRows(dbContext.run( Olio.oliosFromDB(Seq(Olio.Id(0))) ))
+      import dbContext._
+      //val olioIds: Seq[Olio.Id] = Seq(Olio.Id(0))
+      val q = quote{
+        query[Olio].filter{o : Olio => o.id == lift( Olio.Id(0) )}
+        //dynamicQuery[Olio].filterIf(olioIds.nonEmpty){ olio => quote( liftQuery(olioIds).contains(olio.id) ) }
+      }
+      olioStorage.addRows(dbContext.run( q ))
+      content.add(editOlio( Olio.byId(0, olioStorage).map(_.asInstanceOf[Olio]).getOrElse(Olio.createNew) ))
       
       
     }
