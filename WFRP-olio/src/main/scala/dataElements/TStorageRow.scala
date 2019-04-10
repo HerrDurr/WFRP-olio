@@ -6,16 +6,17 @@ import RowStatus._
 import javafx.beans.{value => jfxbv}
 import dataElements.CachableObjects._
 
-class TStorageRow[A <: TAbstractRow](aObject : A, aStorage : TStorage[A]) {
+class TStorageRow[A <: TAbstractRow](aObject : A, aStorage : TStorage[A]) extends ObjectProperty[A](aStorage, "", aObject) {
   
-  private val fObjProperty : ObjectProperty[A] = ObjectProperty(aObject)
+  //private val fObjProperty : ObjectProperty[A] = ObjectProperty(aObject)
   private var fStatus : RowStatus = Unchanged
   this.init()
   // add to aCache
   aStorage.addToStorage(this)
   
   private def init(): Unit = {
-    this.fObjProperty.delegate.addOnChange(onChangeRow)
+//    this.fObjProperty.delegate.addOnChange(onChangeRow)
+    this.delegate.addOnChange(onChangeRow)
   }
   
   private def onChangeRow(
@@ -37,13 +38,14 @@ class TStorageRow[A <: TAbstractRow](aObject : A, aStorage : TStorage[A]) {
    */
   def delete = this.updateStatus(Deleted)
   
-  def data: A = this.fObjProperty.value
+  def data: A = this.value //this.fObjProperty.value
   
-  def apply(): ObjectProperty[A] = this.fObjProperty
+  //def apply(): ObjectProperty[A] = this.fObjProperty
   
-  def update(aObject : A) = {
+  def updateDebug(aObject : A) = {
     println("Updating "+this.data.toString())
-    this.fObjProperty.update(aObject)
+//    this.fObjProperty.update(aObject)
+    this.update(aObject)
     println("Updated to "+aObject.toString())
   }
   
