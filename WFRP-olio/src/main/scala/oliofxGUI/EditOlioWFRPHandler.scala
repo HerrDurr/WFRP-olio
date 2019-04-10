@@ -2,15 +2,15 @@ package oliofxGUI
 
 import scalafxml.core.macros.sfxml
 import scalafxml.core.FXMLLoader
-import scalafx.scene.control.{TextField, ListView, TableView}
+import scalafx.scene.control.{TextField, ListView, TableView, TableColumn}
+import scalafx.beans.property.ObjectProperty
+import scalafx.collections.ObservableBuffer
+import javafx.scene.control.{TableColumn => jfxTableColumn}
 import olioIO.SchemaWFRP.{Olio, Career, Race, AttributeSet, Skill, Talent}
 import olioIO.SchemaWFRP.Olio._
-import scalafx.beans.property.ObjectProperty
-import scalafx.scene.control.TableColumn
 import dataUI.ControlFactory._
 import dataElements.TStorage
 import dataElements.TStorageRow
-import scalafx.collections.ObservableBuffer
 
 trait EditOlioInterface {
   
@@ -49,7 +49,9 @@ class EditOlioWFRPHandler(
   /**
    * A function needed for the TableColumn factory method.
    */
-  private val newSetFunc: AttributeSet => Unit = { aNewSet : AttributeSet => fAttributeBuffer.replaceAll( (fAttributeBuffer.find( _.id == aNewSet.id ).get), aNewSet ) }
+  private val newSetFunc: AttributeSet => Unit = {
+    aNewSet : AttributeSet => fAttributeBuffer.replaceAll( (fAttributeBuffer.find( _.id == aNewSet.id ).get), aNewSet )
+  }
   
   
   
@@ -90,10 +92,12 @@ class EditOlioWFRPHandler(
   private def resetUI = {
     
     this.edName.text = this.fCurrentOlio.value.map(_.name.value).getOrElse("")
-    this.edRace.text = Race.byId( this.fCurrentOlio.value.map(_.race)
+    this.edRace.text = Race.byId( 
+                                  this.fCurrentOlio.value.map(_.race)
                                                          .map(_.value) //{ o: Olio => o.race.value }
-                                                         .get )
-                                                               .map(_.asInstanceOf[Race].name.value).getOrElse("")
+                                                         .get
+                                )
+                                 .map(_.asInstanceOf[Race].name.value).getOrElse("")
   }
   
   /**
@@ -162,8 +166,11 @@ class EditOlioWFRPHandler(
         lFel,
         { aVal: Short => Fel(aVal) }
     )
+    val mainCols = List(colWS, colBS, colS, colT, colAg, colInt, colWP, colFel)
     
-    tblMainProfile.columns ++= List(colWS, colBS, colS, colT, colAg, colInt, colWP, colFel)
+    // We always want the rows in the specific order they're already in.
+    mainCols.foreach( _.setSortable(false) )
+    tblMainProfile.columns ++= ( mainCols.map(_.delegate) )
     tblMainProfile.editable = true
   }
   

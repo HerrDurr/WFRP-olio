@@ -107,7 +107,18 @@ object ControlFactory {
   
   
   /**
-   * MAGICK FUCKEN POPSICKELS! Reduced version, slightly clearer
+   * Use this function to create a TableColumn for a Case Class property [B]
+   * of a parent Case Class [A]. Note: the actual type does not include B, but
+   * the type it wraps [Head]! 
+   * 
+   * MAGICK FUCKEN POPSICKELS! Reduced version, slightly clearer.
+   * 
+   * @param aPropDummy A dummy value of the property [B], required (for now)
+   * @param aPropFromObjFunc Func that takes the parent case class [A] and returns the property [B]
+   * @param aSetCurrentFunc The OnChange func: what to do with the new parent case class [A] if a change is made in this column. Usually for setting some private "current" observable.
+   * @param aLens A Shapeless Lens from parent [A] to property [B]
+   * @param aNewBFunc A Func that produces the property [B] Case Class from a value of the type it wraps [Head]. TODO: this should be possible generically
+   * @return TableColumn[A, Head] where Head is the type wrapped by B
    */
   def tableColumnNew[A, B, ReprB <: HList, Head, J1 >: Head,
                      AtoB <: A => B,

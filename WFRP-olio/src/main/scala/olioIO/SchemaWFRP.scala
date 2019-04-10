@@ -551,6 +551,8 @@ object SchemaWFRP {
     case class IP(val value: Short) extends AnyVal
     case class FP(val value: Short) extends AnyVal
     
+    val lRace = lens[Olio] >> 'race
+    
     def loadRows: List[Olio] = dbContext.loadAll[Olio]
     def createNew: Olio = {
       new Olio(Id(this.getNewIndex), Name(""), Race.Id(0), AttributeSet.Id(0), None, M(4), IP(0), FP(0), None, None, None)
