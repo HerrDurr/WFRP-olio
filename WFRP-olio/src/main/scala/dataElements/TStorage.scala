@@ -19,6 +19,8 @@ class TStorage[D <: TAbstractRow](aCompanion : TRowCompanion[D]/*,
   }
   
   def getRows = this.fRows.toVector
+  
+  def rowCount = this.fRows.length
 
   // discard changes? no need yet, but good to implement maybe 
   

@@ -18,9 +18,10 @@ class WFRPContext extends SqliteJdbcContext(CamelCase, "wfrpdb") with SQLiteQuer
   implicit val encodeAttributeSetId = MappedEncoding[AttributeSet.Id, Int](_.value)
   implicit val decodeAttributeSetId = MappedEncoding[Int, AttributeSet.Id](AttributeSet.Id(_))
   
-  implicit val encodeAttributeSet = MappedEncoding[AttributeSet, Int](_.id.value)
-  implicit val decodeAttributeSet: MappedEncoding[Int, AttributeSet] =
-      MappedEncoding[Int, AttributeSet]{ value: Int => AttributeSet.queryById(AttributeSet.Id(value)).getOrElse(AttributeSet.createEmpty) }
+  // This was dangerous, it seems. Resulted in some kind of endless loop or other...
+  //implicit val encodeAttributeSet = MappedEncoding[AttributeSet, Int](_.id.value)
+  //implicit val decodeAttributeSet: MappedEncoding[Int, AttributeSet] =
+  //    MappedEncoding[Int, AttributeSet]{ value: Int => AttributeSet.queryById(AttributeSet.Id(value)).getOrElse(AttributeSet.createEmpty) }
   
   implicit val encodeSkillListWithOptionals = MappedEncoding[Array[Array[Skill.Id]], Option[String]] { 
     skills : Array[Array[Skill.Id]] => ArrayedIntOpsToCommaOps( skills.map( _.map(_.value) ) )//.getOrElse("") 
