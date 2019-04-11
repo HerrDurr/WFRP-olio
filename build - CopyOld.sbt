@@ -13,20 +13,18 @@ lazy val commonSettings = Seq(
 val sqliteJDBCVer = "3.18.0"
 val quillVer = "3.1.0" //"2.6.0"
 
-//lazy val macroModule = project.in(file("macros"))
-//  .settings(commonSettings: _*)
-//  .settings(
-//    libraryDependencies ++= Seq(
-//      "org.scala-lang" % "scala-reflect", // macros
-//      "org.scala-lang" % "scala-compiler" //macros
-//    ).map(_ % scalaVer),
-//    libraryDependencies ++= Seq(
-//      "org.xerial" % "sqlite-jdbc" % sqliteJDBCVer, // SQLite JDBC
-//      "io.getquill" %% "quill-jdbc" % quillVer // Quill
-//    )
-//  )
-  
-lazy val porrasKirjasto = RootProject(build = uri("file:///E:/Ohjelmointi/git/PorrasKirjasto"))
+lazy val macroModule = project.in(file("macros"))
+  .settings(commonSettings: _*)
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.scala-lang" % "scala-reflect", // macros
+      "org.scala-lang" % "scala-compiler" //macros
+    ).map(_ % scalaVer),
+    libraryDependencies ++= Seq(
+      "org.xerial" % "sqlite-jdbc" % sqliteJDBCVer, // SQLite JDBC
+      "io.getquill" %% "quill-jdbc" % quillVer // Quill
+    )
+  )
 
 lazy val root = project.in(file("."))
   .settings(commonSettings: _*)
@@ -45,5 +43,4 @@ lazy val root = project.in(file("."))
     ),
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
   )
-  .dependsOn(porrasKirjasto)
-//  .dependsOn(macroModule)
+  .dependsOn(macroModule)

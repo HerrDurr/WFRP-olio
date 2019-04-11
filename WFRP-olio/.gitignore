@@ -1,6 +1,6 @@
 /.cache-main
 /bin
-/.classpath
+.classpath
 /.settings
 /.project
 /.worksheet

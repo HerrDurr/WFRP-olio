@@ -110,6 +110,7 @@ class EditOlioWFRPHandler(
     tblMainProfile.items = this.fAttributeBuffer
     
     //val setToWS : AttributeSet => WS = { aSet : AttributeSet => aSet.weaponSkill }
+    // @ControlFactory
     val colWS: TableColumn[AttributeSet, Short] = tableColumnNew(
         WS(0),
         { aSet : AttributeSet => aSet.weaponSkill },
